@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">WeightTracker</string>
+    <string name="back">Back</string>
+    <string name="next">Next</string>
+    <string name="finish">Finish</string>
+    <string name="welcome_message">Welcome to weight tracker!</string>
+    <string name="name">Name</string>
+    <string name="birthday">Birthday</string>
+    <string name="gender">Gender</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+    <string name="weight">Weight</string>
+    <string name="pounds">Pounds</string>
+    <string name="lb">lbs</string>
+    <string name="kilograms">Kilograms</string>
+    <string name="kg">kg</string>
+    <string name="height">Height</string>
+    <string name="centimeters">Centimeters</string>
+    <string name="cm">cm</string>
+    <string name="feet">Feet</string>
+    <string name="ft">ft</string>
+    <string name="inches">Inches</string>
+    <string name="in">in</string>
+</resources>

@@ -1,0 +1,121 @@
+package com.rappsantiago.weighttracker.profile;
+
+import android.os.Bundle;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.Button;
+
+import com.rappsantiago.weighttracker.R;
+
+/**
+ * Created by rappsantiago28 on 3/13/16.
+ */
+public class ProfileSetupActivity extends AppCompatActivity {
+
+    private ViewPager mViewPager;
+
+    private PagerAdapter mPagerAdapter;
+
+    private Button mBtnBack;
+
+    private Button mBtnNext;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_profile_setup);
+
+        mViewPager = (ViewPager) findViewById(R.id.view_pager);
+        mPagerAdapter = new ProfileSetupPagerAdapter(getSupportFragmentManager());
+        mViewPager.setAdapter(mPagerAdapter);
+
+        mBtnBack = (Button) findViewById(R.id.btn_back);
+        mBtnNext = (Button) findViewById(R.id.btn_next);
+    }
+
+    @Override
+    public void onBackPressed() {
+        performBackAction();
+    }
+
+    public void performBackOrNextAction(View view) {
+        final int btnId = view.getId();
+
+        mBtnBack.setEnabled(true);
+        mBtnNext.setEnabled(true);
+
+        switch (btnId) {
+            case R.id.btn_back:
+                performBackAction();
+                break;
+
+            case R.id.btn_next:
+                performNextAction();
+                break;
+
+            default:
+                throw new IllegalStateException();
+        }
+    }
+
+    private void performBackAction() {
+        int currentPage = mViewPager.getCurrentItem();
+
+        switch (currentPage) {
+            case ProfileSetupPagerAdapter.PAGE_WELCOME:
+                // this is the first page so no previous action
+                break;
+
+            case ProfileSetupPagerAdapter.PAGE_NAME_BIRTHDAY_GENDER:
+                mViewPager.setCurrentItem(ProfileSetupPagerAdapter.PAGE_WELCOME, true);
+
+                // disable back button after going to the first page
+                mBtnBack.setEnabled(false);
+                break;
+
+            case ProfileSetupPagerAdapter.PAGE_WEIGHT_HEIGHT:
+                mViewPager.setCurrentItem(ProfileSetupPagerAdapter.PAGE_NAME_BIRTHDAY_GENDER, true);
+                break;
+
+            case ProfileSetupPagerAdapter.PAGE_SUMMARY:
+                mViewPager.setCurrentItem(ProfileSetupPagerAdapter.PAGE_WEIGHT_HEIGHT, true);
+
+                // set text back to 'Back'
+                mBtnNext.setText(R.string.next);
+                break;
+
+            default:
+                throw new IllegalArgumentException("Unknown page : " + currentPage);
+        }
+    }
+
+    private void performNextAction() {
+        int currentPage = mViewPager.getCurrentItem();
+
+        switch (currentPage) {
+            case ProfileSetupPagerAdapter.PAGE_WELCOME:
+                mViewPager.setCurrentItem(ProfileSetupPagerAdapter.PAGE_NAME_BIRTHDAY_GENDER, true);
+                break;
+
+            case ProfileSetupPagerAdapter.PAGE_NAME_BIRTHDAY_GENDER:
+                mViewPager.setCurrentItem(ProfileSetupPagerAdapter.PAGE_WEIGHT_HEIGHT, true);
+                break;
+
+            case ProfileSetupPagerAdapter.PAGE_WEIGHT_HEIGHT:
+                mViewPager.setCurrentItem(ProfileSetupPagerAdapter.PAGE_SUMMARY, true);
+                // set text to 'Finish' after going to the last page
+                mBtnNext.setText(R.string.finish);
+                break;
+
+            case ProfileSetupPagerAdapter.PAGE_SUMMARY:
+                // this is the last page so do finish action
+                finish();
+                break;
+
+            default:
+                throw new IllegalArgumentException("Unknown page : " + currentPage);
+        }
+    }
+}
