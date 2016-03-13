@@ -1,5 +1,6 @@
 package com.rappsantiago.weighttracker;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -14,6 +15,8 @@ public class MainActivity extends AppCompatActivity {
 
     private SharedPreferences mSharedPrefs;
 
+    private static final int REQUEST_PROFILE_SETUP = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,7 +29,21 @@ public class MainActivity extends AppCompatActivity {
         if (!isProfileSetupComplete) {
             // launch profile setup page
             Intent setupProfileActivity = new Intent(this, ProfileSetupActivity.class);
-            startActivity(setupProfileActivity);
+            startActivityForResult(setupProfileActivity, REQUEST_PROFILE_SETUP);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case REQUEST_PROFILE_SETUP:
+                if (Activity.RESULT_OK == resultCode) {
+                    // save profile
+                }
+                break;
+
+            default:
+                throw new IllegalArgumentException("Unknown request code : " + requestCode);
         }
     }
 }
