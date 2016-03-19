@@ -22,4 +22,15 @@
     <string name="ft">ft</string>
     <string name="inches">Inches</string>
     <string name="in">in</string>
+
+    <!-- String Arrays -->
+    <string-array name="arr_weight_unit">
+        <item>@string/kilograms</item>
+        <item>@string/pounds</item>
+    </string-array>
+
+    <string-array name="arr_height_unit">
+        <item>@string/centimeters</item>
+        <item>@string/inches</item>
+    </string-array>
 </resources>
