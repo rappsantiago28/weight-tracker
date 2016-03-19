@@ -36,19 +36,19 @@ public class WeightTrackerDbHelper extends SQLiteOpenHelper {
                     Profile.COL_NAME + " TEXT," +
                     Profile.COL_BIRTHDAY + " INTEGER," +
                     Profile.COL_GENDER + " TEXT," +
-                    Profile.COL_WEIGHT + " INTEGER," +
-                    Profile.COL_HEIGHT + ");";
+                    Profile.COL_WEIGHT + " REAL," +
+                    Profile.COL_HEIGHT + " REAL);";
 
     private static final String SQL_CREATE_TABLE_PROGRESS =
             "CREATE TABLE " + Progress.TABLE_NAME + " (" +
                     Progress._ID + " INTEGER PRIMARY KEY," +
-                    Progress.COL_NEW_WEIGHT + " INTEGER," +
+                    Progress.COL_NEW_WEIGHT + " REAL," +
                     Progress.COL_TIMESTAMP + " INTEGER);";
 
     private static final String SQL_CREATE_TABLE_GOAL =
             "CREATE TABLE " + Goal.TABLE_NAME + " (" +
                     Goal._ID + " INTEGER PRIMARY KEY," +
-                    Goal.COL_TARGET_WEIGHT + " INTEGER," +
+                    Goal.COL_TARGET_WEIGHT + " REAL," +
                     Goal.COL_DUE_DATE + " INTEGER," +
                     Goal.COL_REMIDER_DURATION + " INTEGER," +
                     Goal.COL_REMINDER_DAY + " INTEGER);";

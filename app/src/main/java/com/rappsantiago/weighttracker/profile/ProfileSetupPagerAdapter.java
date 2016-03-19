@@ -36,24 +36,36 @@ public class ProfileSetupPagerAdapter extends FragmentStatePagerAdapter {
 
     public static final int PAGE_SUMMARY = 3;
 
-    private static final Map<Integer, Fragment> PAGE_MAPPING;
+    private final Map<Integer, Fragment> mPageMapping;
 
-    static {
-        PAGE_MAPPING = new HashMap<>();
-        PAGE_MAPPING.put(PAGE_WELCOME, new WelcomePageFragment());
-        PAGE_MAPPING.put(PAGE_NAME_BIRTHDAY_GENDER, new NameBirthdayGenderFragment());
-        PAGE_MAPPING.put(PAGE_WEIGHT_HEIGHT, new WeightHeightFragment());
-        PAGE_MAPPING.put(PAGE_SUMMARY, new ProfileSetupSummaryFragment());
-    }
+    private Fragment mWelcomePageFragment;
+
+    private Fragment mNameBirthdayGenderFragment;
+
+    private Fragment mWeightHeightFragment;
+
+    private Fragment mProfileSetupSummaryFragment;
 
     public ProfileSetupPagerAdapter(FragmentManager fm) {
         super(fm);
+
+        mPageMapping = new HashMap<>();
+
+        mWelcomePageFragment = new WelcomePageFragment();
+        mNameBirthdayGenderFragment = new NameBirthdayGenderFragment();
+        mWeightHeightFragment = new WeightHeightFragment();
+        mProfileSetupSummaryFragment = new ProfileSetupSummaryFragment();
+
+        mPageMapping.put(PAGE_WELCOME, mWelcomePageFragment);
+        mPageMapping.put(PAGE_NAME_BIRTHDAY_GENDER, mNameBirthdayGenderFragment);
+        mPageMapping.put(PAGE_WEIGHT_HEIGHT, mWeightHeightFragment);
+        mPageMapping.put(PAGE_SUMMARY, mProfileSetupSummaryFragment);
     }
 
     @Override
     public Fragment getItem(int position) {
-        if (PAGE_MAPPING.containsKey(position)) {
-            return PAGE_MAPPING.get(position);
+        if (mPageMapping.containsKey(position)) {
+            return mPageMapping.get(position);
         } else {
             throw new IllegalArgumentException("Unknown position: " + position);
         }
@@ -61,6 +73,6 @@ public class ProfileSetupPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public int getCount() {
-        return PAGE_MAPPING.size();
+        return mPageMapping.size();
     }
 }

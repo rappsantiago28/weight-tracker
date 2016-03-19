@@ -16,10 +16,14 @@
 
 package com.rappsantiago.weighttracker.profile;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.view.PagerAdapter;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -30,13 +34,17 @@ import com.rappsantiago.weighttracker.R;
  */
 public class ProfileSetupActivity extends AppCompatActivity {
 
+    private static final String TAG = ProfileSetupActivity.class.getSimpleName();
+
     private ViewPager mViewPager;
 
-    private PagerAdapter mPagerAdapter;
+    private FragmentStatePagerAdapter mPagerAdapter;
 
     private Button mBtnBack;
 
     private Button mBtnNext;
+
+    private Bundle mProfileData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +57,8 @@ public class ProfileSetupActivity extends AppCompatActivity {
 
         mBtnBack = (Button) findViewById(R.id.btn_back);
         mBtnNext = (Button) findViewById(R.id.btn_next);
+
+        mProfileData = new Bundle();
     }
 
     @Override
@@ -110,6 +120,9 @@ public class ProfileSetupActivity extends AppCompatActivity {
     private void performNextAction() {
         int currentPage = mViewPager.getCurrentItem();
 
+        // save page data before going to next page
+        savePageData(currentPage);
+
         switch (currentPage) {
             case ProfileSetupPagerAdapter.PAGE_WELCOME:
                 mViewPager.setCurrentItem(ProfileSetupPagerAdapter.PAGE_NAME_BIRTHDAY_GENDER, true);
@@ -127,11 +140,31 @@ public class ProfileSetupActivity extends AppCompatActivity {
 
             case ProfileSetupPagerAdapter.PAGE_SUMMARY:
                 // this is the last page so do finish action
+                Intent resultIntent = new Intent();
+                resultIntent.putExtras(mProfileData);
+
+                setResult(Activity.RESULT_OK, resultIntent);
                 finish();
                 break;
 
             default:
                 throw new IllegalArgumentException("Unknown page : " + currentPage);
+        }
+    }
+
+    private void savePageData(int currentPage) {
+
+        Fragment currentFragment = mPagerAdapter.getItem(currentPage);
+
+        if (currentFragment instanceof FragmentWithProfileData) {
+            FragmentWithProfileData currentFragmentData = (FragmentWithProfileData) currentFragment;
+            Bundle pageData = currentFragmentData.getProfileData();
+            if (null != pageData) {
+                Log.d(TAG, "pageData = " + pageData);
+                mProfileData.putAll(pageData);
+            }
+        } else {
+            throw new IllegalStateException();
         }
     }
 }

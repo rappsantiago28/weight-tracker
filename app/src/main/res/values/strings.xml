@@ -6,6 +6,7 @@
     <string name="welcome_message">Welcome to weight tracker!</string>
     <string name="name">Name</string>
     <string name="birthday">Birthday</string>
+    <string name="set_date">Set Date</string>
     <string name="gender">Gender</string>
     <string name="male">Male</string>
     <string name="female">Female</string>

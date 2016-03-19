@@ -27,11 +27,16 @@ import com.rappsantiago.weighttracker.R;
 /**
  * Created by rappsantiago28 on 3/13/16.
  */
-public class WeightHeightFragment extends Fragment {
+public class WeightHeightFragment extends Fragment implements FragmentWithProfileData {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_weight_height, container, false);
         return view;
+    }
+
+    @Override
+    public Bundle getProfileData() {
+        return null;
     }
 }
