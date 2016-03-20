@@ -19,6 +19,7 @@ package com.rappsantiago.weighttracker.profile;
 import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,7 +57,7 @@ public class NameBirthdayGenderFragment extends Fragment
         View view = inflater.inflate(R.layout.fragment_name_birthday_gender, container, false);
 
         mTxtName = (EditText) view.findViewById(R.id.txt_name);
-        TextView dateText = (TextView) view.findViewById(R.id.txt_birthday);
+        TextView dateText = (TextView) view.findViewById(R.id.lbl_birthday);
         RadioButton rdoMale = (RadioButton) view.findViewById(R.id.rdo_male);
         RadioButton rdoFemale = (RadioButton) view.findViewById(R.id.rdo_female);
 
@@ -80,7 +81,7 @@ public class NameBirthdayGenderFragment extends Fragment
 
     @Override
     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-        LocalDate date = new LocalDate(year, monthOfYear, dayOfMonth);
+        LocalDate date = new LocalDate(year, monthOfYear + 1, dayOfMonth);
         mBirthday = date.toDate().getTime();
     }
 

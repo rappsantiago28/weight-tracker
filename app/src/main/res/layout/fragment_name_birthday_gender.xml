@@ -35,7 +35,7 @@
         android:text="@string/birthday" />
 
     <TextView
-        android:id="@+id/txt_birthday"
+        android:id="@+id/lbl_birthday"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/set_date"/>

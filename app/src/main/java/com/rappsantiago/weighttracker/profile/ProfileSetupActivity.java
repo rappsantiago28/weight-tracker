@@ -133,6 +133,11 @@ public class ProfileSetupActivity extends AppCompatActivity {
                 break;
 
             case ProfileSetupPagerAdapter.PAGE_WEIGHT_HEIGHT:
+                // set summary
+                Fragment currentFragment = mPagerAdapter.getItem(ProfileSetupPagerAdapter.PAGE_SUMMARY);
+                ProfileSetupSummaryFragment summaryFragment = (ProfileSetupSummaryFragment) currentFragment;
+                summaryFragment.refreshProfileData(mProfileData);
+
                 mViewPager.setCurrentItem(ProfileSetupPagerAdapter.PAGE_SUMMARY, true);
                 // set text to 'Finish' after going to the last page
                 mBtnNext.setText(R.string.finish);

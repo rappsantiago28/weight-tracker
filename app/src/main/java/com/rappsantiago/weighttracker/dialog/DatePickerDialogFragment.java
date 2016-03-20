@@ -20,6 +20,7 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.util.Log;
 import android.widget.DatePicker;
 
 import org.joda.time.DateTime;
@@ -44,7 +45,7 @@ public class DatePickerDialogFragment extends DialogFragment {
         int monthOfYear = now.getMonthOfYear();
         int dayOfMonth = now.getDayOfMonth();
 
-        return new DatePickerDialog(getActivity(), mOnDateSetListener, year, monthOfYear, dayOfMonth);
+        return new DatePickerDialog(getActivity(), mOnDateSetListener, year, monthOfYear - 1, dayOfMonth);
     }
 
 }
