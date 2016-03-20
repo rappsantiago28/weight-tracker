@@ -47,14 +47,24 @@ public final class WeightTrackerContract {
 
         public static final String GENDER_FEMALE = "F";
 
+        public static final String WEIGHT_UNIT_KILOGRAMS = "Kg";
+
+        public static final String WEIGHT_UNIT_POUNDS = "Lb";
+
+        public static final String HEIGHT_UNIT_CENTIMETERS = "Cm";
+
+        public static final String HEIGHT_UNIT_FOOT_INCHES = "FtIn";
+
         public static final String COL_NAME = "name";
 
         public static final String COL_BIRTHDAY = "birthday";
 
         public static final String COL_GENDER = "gender";
 
+        // weight will be stored as kilograms
         public static final String COL_WEIGHT = "weight";
 
+        // height will be stored as centimeters
         public static final String COL_HEIGHT = "height";
     }
 

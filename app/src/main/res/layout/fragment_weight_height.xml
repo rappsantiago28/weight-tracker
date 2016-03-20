@@ -33,7 +33,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:inputType="numberDecimal" />
+            android:inputType="numberDecimal"
+            android:hint="@string/kilograms" />
 
         <Spinner
             android:id="@+id/dropdown_weight_unit"
@@ -53,10 +54,20 @@
 
         <EditText
             android:id="@+id/txt_height"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:inputType="numberDecimal" />
+            android:inputType="numberDecimal"
+            android:hint="@string/centimeters" />
+
+        <EditText
+            android:id="@+id/txt_height_inches"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:inputType="numberDecimal"
+            android:visibility="gone"
+            android:hint="@string/inches" />
 
         <Spinner
             android:id="@+id/dropdown_height_unit"

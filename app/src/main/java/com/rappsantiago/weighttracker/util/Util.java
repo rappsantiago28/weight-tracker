@@ -29,5 +29,13 @@ public final class Util {
         return (null != str && !str.trim().isEmpty());
     }
 
+    public static double poundsToKilograms(double pounds) {
+        return pounds / 2.2;
+    }
+
+    public static double kilogramsToPounds(double kilograms) {
+        return kilograms * 2.2;
+    }
+
     private Util() {}
 }

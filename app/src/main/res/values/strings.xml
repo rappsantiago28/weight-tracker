@@ -18,10 +18,11 @@
     <string name="height">Height</string>
     <string name="centimeters">Centimeters</string>
     <string name="cm">cm</string>
-    <string name="feet">Feet</string>
+    <string name="foot">Foot</string>
     <string name="ft">ft</string>
     <string name="inches">Inches</string>
     <string name="in">in</string>
+    <string name="foot_inches">Foot\' Inches\"</string>
 
     <!-- String Arrays -->
     <string-array name="arr_weight_unit">
@@ -31,6 +32,6 @@
 
     <string-array name="arr_height_unit">
         <item>@string/centimeters</item>
-        <item>@string/inches</item>
+        <item>@string/foot_inches</item>
     </string-array>
 </resources>
