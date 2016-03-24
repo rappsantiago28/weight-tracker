@@ -26,6 +26,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.rappsantiago.weighttracker.R;
 
@@ -69,9 +70,6 @@ public class ProfileSetupActivity extends AppCompatActivity {
     public void performBackOrNextAction(View view) {
         final int btnId = view.getId();
 
-        mBtnBack.setEnabled(true);
-        mBtnNext.setEnabled(true);
-
         switch (btnId) {
             case R.id.btn_back:
                 performBackAction();
@@ -88,6 +86,9 @@ public class ProfileSetupActivity extends AppCompatActivity {
 
     private void performBackAction() {
         int currentPage = mViewPager.getCurrentItem();
+
+        mBtnBack.setEnabled(true);
+        mBtnNext.setEnabled(true);
 
         switch (currentPage) {
             case ProfileSetupPagerAdapter.PAGE_WELCOME:
@@ -121,7 +122,17 @@ public class ProfileSetupActivity extends AppCompatActivity {
         int currentPage = mViewPager.getCurrentItem();
 
         // save page data before going to next page
-        savePageData(currentPage);
+        boolean isDataSaved = savePageData(currentPage);
+
+        if (ProfileSetupPagerAdapter.PAGE_WELCOME != currentPage &&
+                ProfileSetupPagerAdapter.PAGE_SUMMARY != currentPage &&
+                !isDataSaved) {
+            Toast.makeText(this, "Please complete the form", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        mBtnBack.setEnabled(true);
+        mBtnNext.setEnabled(true);
 
         switch (currentPage) {
             case ProfileSetupPagerAdapter.PAGE_WELCOME:
@@ -157,19 +168,53 @@ public class ProfileSetupActivity extends AppCompatActivity {
         }
     }
 
-    private void savePageData(int currentPage) {
+    private boolean savePageData(int currentPage) {
 
         Fragment currentFragment = mPagerAdapter.getItem(currentPage);
 
         if (currentFragment instanceof FragmentWithProfileData) {
             FragmentWithProfileData currentFragmentData = (FragmentWithProfileData) currentFragment;
             Bundle pageData = currentFragmentData.getProfileData();
-            if (null != pageData) {
-                Log.d(TAG, "pageData = " + pageData);
-                mProfileData.putAll(pageData);
+
+            if (null == pageData) {
+                return false;
             }
+
+            // validate entries
+            for (String key : pageData.keySet()) {
+                Object obj = pageData.get(key);
+
+                if (null == obj) {
+                    return false;
+                }
+
+                // inches is allowed to be 0
+                if (WeightHeightFragment.KEY_HEIGHT_INCHES == key) {
+                    continue;
+                }
+
+                if (obj instanceof String) { // name
+                    if (((String) obj).trim().isEmpty()) {
+                        return false;
+                    }
+                } else if (obj instanceof Double) { // weight, height
+                    if (0 >= ((Double) obj).doubleValue()) {
+                        return false;
+                    }
+                } else if (obj instanceof Long) { // birthday
+                    if (0 >= ((Long) obj).longValue()) {
+                        return false;
+                    }
+                }
+
+            }
+
+            Log.d(TAG, "pageData = " + pageData);
+            mProfileData.putAll(pageData);
+
+            return true;
         } else {
-            throw new IllegalStateException();
+            return false;
         }
     }
 }

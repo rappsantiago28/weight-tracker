@@ -16,6 +16,11 @@
 
 package com.rappsantiago.weighttracker.util;
 
+import com.rappsantiago.weighttracker.profile.NameBirthdayGenderFragment;
+
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 /**
  * Created by rappsantiago28 on 3/19/16.
  */
@@ -35,6 +40,11 @@ public final class Util {
 
     public static double kilogramsToPounds(double kilograms) {
         return kilograms * 2.2;
+    }
+
+    public static String getReadableDate(long dateInMillis) {
+        DateTimeFormatter formatter = DateTimeFormat.forPattern("MMMM dd, yyyy");
+        return formatter.print(dateInMillis);
     }
 
     private Util() {}

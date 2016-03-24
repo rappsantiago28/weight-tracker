@@ -26,6 +26,7 @@ import android.widget.TextView;
 
 import com.rappsantiago.weighttracker.R;
 import com.rappsantiago.weighttracker.provider.WeightTrackerContract;
+import com.rappsantiago.weighttracker.util.Util;
 
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
@@ -73,8 +74,7 @@ public class ProfileSetupSummaryFragment extends Fragment implements FragmentWit
 
         if (profileData.containsKey(NameBirthdayGenderFragment.KEY_BIRTHDAY)) {
             long birthdayInMillis = profileData.getLong(NameBirthdayGenderFragment.KEY_BIRTHDAY);
-            DateTimeFormatter formatter = DateTimeFormat.forPattern("MMMM dd, yyyy");
-            mBirthday.setText(formatter.print(birthdayInMillis));
+            mBirthday.setText(Util.getReadableDate(birthdayInMillis));
         }
 
         if (profileData.containsKey(NameBirthdayGenderFragment.KEY_GENDER)) {

@@ -19,7 +19,6 @@ package com.rappsantiago.weighttracker.profile;
 import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,8 +30,11 @@ import android.widget.TextView;
 import com.rappsantiago.weighttracker.R;
 import com.rappsantiago.weighttracker.dialog.DatePickerDialogFragment;
 import com.rappsantiago.weighttracker.provider.WeightTrackerContract;
+import com.rappsantiago.weighttracker.util.Util;
 
 import org.joda.time.LocalDate;
+
+import java.util.Date;
 
 /**
  * Created by rappsantiago28 on 3/13/16.
@@ -48,7 +50,9 @@ public class NameBirthdayGenderFragment extends Fragment
 
     private EditText mTxtName;
 
-    private long mBirthday;
+    private TextView mLblBirthday;
+
+    private long mBirthdayInMillis;
 
     private String mGender;
 
@@ -57,11 +61,19 @@ public class NameBirthdayGenderFragment extends Fragment
         View view = inflater.inflate(R.layout.fragment_name_birthday_gender, container, false);
 
         mTxtName = (EditText) view.findViewById(R.id.txt_name);
-        TextView dateText = (TextView) view.findViewById(R.id.lbl_birthday);
+        mLblBirthday = (TextView) view.findViewById(R.id.lbl_birthday);
         RadioButton rdoMale = (RadioButton) view.findViewById(R.id.rdo_male);
         RadioButton rdoFemale = (RadioButton) view.findViewById(R.id.rdo_female);
 
-        dateText.setOnClickListener(mSetDateClickListener);
+        if (0 >= mBirthdayInMillis) {
+            mBirthdayInMillis = new Date().getTime();
+            mLblBirthday.setText(Util.getReadableDate(mBirthdayInMillis));
+        } else {
+            mLblBirthday.setText(Util.getReadableDate(mBirthdayInMillis));
+        }
+
+        mLblBirthday.setOnClickListener(mSetDateClickListener);
+
         rdoMale.setOnClickListener(mRadioButtonsClickListener);
         rdoFemale.setOnClickListener(mRadioButtonsClickListener);
 
@@ -73,7 +85,7 @@ public class NameBirthdayGenderFragment extends Fragment
         Bundle bundle = new Bundle();
 
         bundle.putString(KEY_NAME, mTxtName.getText().toString());
-        bundle.putLong(KEY_BIRTHDAY, mBirthday);
+        bundle.putLong(KEY_BIRTHDAY, mBirthdayInMillis);
         bundle.putString(KEY_GENDER, mGender);
 
         return bundle;
@@ -82,7 +94,8 @@ public class NameBirthdayGenderFragment extends Fragment
     @Override
     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
         LocalDate date = new LocalDate(year, monthOfYear + 1, dayOfMonth);
-        mBirthday = date.toDate().getTime();
+        mBirthdayInMillis = date.toDate().getTime();
+        mLblBirthday.setText(Util.getReadableDate(mBirthdayInMillis));
     }
 
     private View.OnClickListener mSetDateClickListener = new View.OnClickListener() {
