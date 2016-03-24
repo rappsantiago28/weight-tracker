@@ -38,7 +38,8 @@
         android:id="@+id/lbl_birthday"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/set_date"/>
+        android:text="@string/set_date"
+        android:background="?android:attr/selectableItemBackground" />
 
     <TextView
         android:layout_width="wrap_content"

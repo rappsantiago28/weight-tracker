@@ -28,6 +28,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.rappsantiago.weighttracker.MainActivity;
 import com.rappsantiago.weighttracker.R;
 
 import java.util.HashSet;

@@ -40,6 +40,12 @@ public final class Util {
         return kilograms * 2.2;
     }
 
+    public static double footInchesToCentimeters(double foot, double inches) {
+        double footInCentimeters = foot * 30.48;
+        double inchInCentimeters = inches * 2.54;
+        return footInCentimeters + inchInCentimeters;
+    }
+
     public static String getReadableDate(long dateInMillis) {
         DateTimeFormatter formatter = DateTimeFormat.forPattern("MMMM dd, yyyy");
         return formatter.print(dateInMillis);
