@@ -30,6 +30,9 @@ import android.widget.Toast;
 
 import com.rappsantiago.weighttracker.R;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Created by rappsantiago28 on 3/13/16.
  */
@@ -122,12 +125,10 @@ public class ProfileSetupActivity extends AppCompatActivity {
         int currentPage = mViewPager.getCurrentItem();
 
         // save page data before going to next page
-        boolean isDataSaved = savePageData(currentPage);
+        boolean isPageValid = saveAndValidatePageData(currentPage);
 
-        if (ProfileSetupPagerAdapter.PAGE_WELCOME != currentPage &&
-                ProfileSetupPagerAdapter.PAGE_SUMMARY != currentPage &&
-                !isDataSaved) {
-            Toast.makeText(this, "Please complete the form", Toast.LENGTH_SHORT).show();
+        if (!isPageValid) {
+            Toast.makeText(this, R.string.profile_setup_warning_message, Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -168,53 +169,71 @@ public class ProfileSetupActivity extends AppCompatActivity {
         }
     }
 
-    private boolean savePageData(int currentPage) {
+    private boolean saveAndValidatePageData(int currentPage) {
 
         Fragment currentFragment = mPagerAdapter.getItem(currentPage);
 
-        if (currentFragment instanceof FragmentWithProfileData) {
-            FragmentWithProfileData currentFragmentData = (FragmentWithProfileData) currentFragment;
+        if (currentFragment instanceof PageWithData) {
+            PageWithData currentFragmentData = (PageWithData) currentFragment;
             Bundle pageData = currentFragmentData.getProfileData();
 
             if (null == pageData) {
                 return false;
             }
 
+            Set<String> errors = new HashSet<>();
+
             // validate entries
             for (String key : pageData.keySet()) {
                 Object obj = pageData.get(key);
 
                 if (null == obj) {
-                    return false;
-                }
-
-                // inches is allowed to be 0
-                if (WeightHeightFragment.KEY_HEIGHT_INCHES == key) {
+                    errors.add(key);
                     continue;
                 }
 
                 if (obj instanceof String) { // name
                     if (((String) obj).trim().isEmpty()) {
-                        return false;
+                        errors.add(key);
                     }
                 } else if (obj instanceof Double) { // weight, height
+
+                    // inches is allowed to be 0 if foot is not less than or equal to 0
+                    if (WeightHeightFragment.KEY_HEIGHT_INCHES == key) {
+                        if (errors.contains(WeightHeightFragment.KEY_HEIGHT)) {
+                            if (0 >= ((Double) obj).doubleValue()) {
+                                errors.add(key);
+                            } else {
+                                errors.remove(WeightHeightFragment.KEY_HEIGHT);
+                            }
+                        } else {
+                            continue;
+                        }
+                    }
+
                     if (0 >= ((Double) obj).doubleValue()) {
-                        return false;
+                        errors.add(key);
                     }
                 } else if (obj instanceof Long) { // birthday
                     if (0 >= ((Long) obj).longValue()) {
-                        return false;
+                        errors.add(key);
                     }
                 }
-
             }
 
-            Log.d(TAG, "pageData = " + pageData);
-            mProfileData.putAll(pageData);
+            boolean withNoErrors = errors.isEmpty();
 
-            return true;
+            if (withNoErrors) {
+                Log.d(TAG, "pageData = " + pageData);
+                mProfileData.putAll(pageData);
+            } else {
+                Log.d(TAG, errors.toString());
+                currentFragmentData.showWarningMessage(errors);
+            }
+
+            return withNoErrors;
         } else {
-            return false;
+            return true;
         }
     }
 }

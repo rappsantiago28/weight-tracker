@@ -16,8 +16,6 @@
 
 package com.rappsantiago.weighttracker.util;
 
-import com.rappsantiago.weighttracker.profile.NameBirthdayGenderFragment;
-
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 

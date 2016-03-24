@@ -23,6 +23,7 @@
     <string name="inches">Inches</string>
     <string name="in">in</string>
     <string name="foot_inches">Foot\' Inches\"</string>
+    <string name="profile_setup_warning_message">Please complete the form</string>
 
     <!-- String Arrays -->
     <string-array name="arr_weight_unit">

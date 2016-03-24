@@ -18,7 +18,6 @@ package com.rappsantiago.weighttracker.profile;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,16 +27,10 @@ import com.rappsantiago.weighttracker.R;
 import com.rappsantiago.weighttracker.provider.WeightTrackerContract;
 import com.rappsantiago.weighttracker.util.Util;
 
-import org.joda.time.LocalDate;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-
-import java.text.SimpleDateFormat;
-
 /**
  * Created by rappsantiago28 on 3/13/16.
  */
-public class ProfileSetupSummaryFragment extends Fragment implements FragmentWithProfileData {
+public class ProfileSetupSummaryFragment extends Fragment {
 
     private TextView mName;
 
@@ -60,11 +53,6 @@ public class ProfileSetupSummaryFragment extends Fragment implements FragmentWit
         mHeight = (TextView) view.findViewById(R.id.lbl_height);
 
         return view;
-    }
-
-    @Override
-    public Bundle getProfileData() {
-        return null;
     }
 
     public void refreshProfileData(Bundle profileData) {
@@ -97,7 +85,7 @@ public class ProfileSetupSummaryFragment extends Fragment implements FragmentWit
                 weightUnit = getString(R.string.pounds);
             }
 
-            mWeight.setText(String.format("%f %s", profileData.getDouble(WeightHeightFragment.KEY_WEIGHT), weightUnit));
+            mWeight.setText(String.format("%.2f %s", profileData.getDouble(WeightHeightFragment.KEY_WEIGHT), weightUnit));
         }
 
         if (profileData.containsKey(WeightHeightFragment.KEY_HEIGHT) &&
@@ -108,12 +96,12 @@ public class ProfileSetupSummaryFragment extends Fragment implements FragmentWit
 
             if (heightUnit.equals(WeightTrackerContract.Profile.HEIGHT_UNIT_CENTIMETERS)) {
 
-                mHeight.setText(String.format("%f %s", height, getString(R.string.centimeters)));
+                mHeight.setText(String.format("%.2f %s", height, getString(R.string.centimeters)));
             } else if (heightUnit.equals(WeightTrackerContract.Profile.HEIGHT_UNIT_FOOT_INCHES) &&
                     profileData.containsKey(WeightHeightFragment.KEY_HEIGHT_INCHES)) {
 
                 double heightInches = profileData.getDouble(WeightHeightFragment.KEY_HEIGHT_INCHES);
-                mHeight.setText(String.format("%f %s, %f %s",
+                mHeight.setText(String.format("%.2f %s, %.2f %s",
                         height, getString(R.string.foot),
                         heightInches, getString(R.string.inches)));
             }

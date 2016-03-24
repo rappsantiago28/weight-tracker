@@ -29,12 +29,14 @@ import android.widget.Spinner;
 import com.rappsantiago.weighttracker.R;
 import com.rappsantiago.weighttracker.util.Util;
 
+import java.util.Set;
+
 import static com.rappsantiago.weighttracker.provider.WeightTrackerContract.*;
 
 /**
  * Created by rappsantiago28 on 3/13/16.
  */
-public class WeightHeightFragment extends Fragment implements FragmentWithProfileData, AdapterView.OnItemSelectedListener {
+public class WeightHeightFragment extends Fragment implements PageWithData, AdapterView.OnItemSelectedListener {
 
     public static final String KEY_WEIGHT = "WeightHeightFragment.KEY_WEIGHT";
 
@@ -109,6 +111,11 @@ public class WeightHeightFragment extends Fragment implements FragmentWithProfil
         data.putString(KEY_HEIGHT_UNIT, heightUnit);
 
         return data;
+    }
+
+    @Override
+    public void showWarningMessage(Set<String> errors) {
+
     }
 
     private String getWeightUnit() {

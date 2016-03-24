@@ -18,9 +18,12 @@ package com.rappsantiago.weighttracker.profile;
 
 import android.os.Bundle;
 
+import java.util.Set;
+
 /**
  * Created by rappsantiago28 on 3/19/16.
  */
-public interface FragmentWithProfileData {
+public interface PageWithData {
     public Bundle getProfileData();
+    public void showWarningMessage(Set<String> errors);
 }

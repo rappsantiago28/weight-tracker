@@ -24,10 +24,12 @@ import android.view.ViewGroup;
 
 import com.rappsantiago.weighttracker.R;
 
+import java.util.Set;
+
 /**
  * Created by rappsantiago28 on 3/13/16.
  */
-public class WelcomePageFragment extends Fragment implements FragmentWithProfileData {
+public class WelcomePageFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -35,8 +37,4 @@ public class WelcomePageFragment extends Fragment implements FragmentWithProfile
         return view;
     }
 
-    @Override
-    public Bundle getProfileData() {
-        return null;
-    }
 }

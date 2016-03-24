@@ -35,12 +35,13 @@ import com.rappsantiago.weighttracker.util.Util;
 import org.joda.time.LocalDate;
 
 import java.util.Date;
+import java.util.Set;
 
 /**
  * Created by rappsantiago28 on 3/13/16.
  */
 public class NameBirthdayGenderFragment extends Fragment
-        implements FragmentWithProfileData, DatePickerDialog.OnDateSetListener {
+        implements PageWithData, DatePickerDialog.OnDateSetListener {
 
     public static final String KEY_NAME = "NameBirthdayGenderFragment.KEY_NAME";
 
@@ -89,6 +90,11 @@ public class NameBirthdayGenderFragment extends Fragment
         bundle.putString(KEY_GENDER, mGender);
 
         return bundle;
+    }
+
+    @Override
+    public void showWarningMessage(Set<String> errors) {
+
     }
 
     @Override
