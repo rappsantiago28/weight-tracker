@@ -36,6 +36,7 @@
     <string name="invalid_name">Invalid name</string>
     <string name="invalid_weight">Invalid weight</string>
     <string name="invalid_height">Invalid height</string>
+    <string name="unit_of_measurement">Unit of measurement</string>
 
     <!-- String Arrays -->
     <string-array name="arr_weight_unit">
@@ -43,8 +44,25 @@
         <item>@string/pounds</item>
     </string-array>
 
+    <string name="val_kilograms" translatable="false">Kg</string>
+    <string name="val_pounds" translatable="false">Lb</string>
+
+    <string-array name="arr_weight_values">
+        <item>@string/val_kilograms</item>
+        <item>@string/val_pounds</item>
+    </string-array>
+
     <string-array name="arr_height_unit">
         <item>@string/centimeters</item>
         <item>@string/foot_inches</item>
     </string-array>
+
+    <string name="val_centimeters" translatable="false">Cm</string>
+    <string name="val_foot_inches" translatable="false">FtIn</string>
+
+    <string-array name="arr_height_values">
+        <item>@string/val_centimeters</item>
+        <item>@string/val_foot_inches</item>
+    </string-array>
+
 </resources>

@@ -39,6 +39,7 @@ import android.view.View;
 import com.rappsantiago.weighttracker.profile.NameBirthdayGenderFragment;
 import com.rappsantiago.weighttracker.profile.ProfileSetupActivity;
 import com.rappsantiago.weighttracker.profile.WeightHeightFragment;
+import com.rappsantiago.weighttracker.settings.SettingsActivity;
 import com.rappsantiago.weighttracker.util.Util;
 
 import static com.rappsantiago.weighttracker.provider.WeightTrackerContract.*;
@@ -163,6 +164,8 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.action_settings) {
+            Intent settings = new Intent(this, SettingsActivity.class);
+            startActivity(settings);
             return true;
         }
 
