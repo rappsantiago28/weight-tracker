@@ -25,5 +25,6 @@ import java.util.Set;
  */
 public interface PageWithData {
     public Bundle getProfileData();
-    public void showWarningMessage(Set<String> errors);
+    public void showErrorMessage(Set<String> errors);
+    public void clearErrorMessage();
 }

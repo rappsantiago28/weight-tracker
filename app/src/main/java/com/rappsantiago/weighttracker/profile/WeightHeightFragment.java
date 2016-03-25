@@ -17,13 +17,13 @@
 package com.rappsantiago.weighttracker.profile;
 
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.rappsantiago.weighttracker.R;
@@ -48,15 +48,15 @@ public class WeightHeightFragment extends Fragment implements PageWithData, Adap
 
     public static final String KEY_HEIGHT_UNIT = "WeightHeightFragment.KEY_HEIGHT_UNIT";
 
-    private EditText mTxtWeight;
+    private TextInputLayout mTxtWeightWrapper;
 
     private ArrayAdapter<CharSequence> mWeightUnitAdapter;
 
     private int mWeightUnitPos;
 
-    private EditText mTxtHeight;
+    private TextInputLayout mTxtHeightWrapper;
 
-    private EditText mTxtHeightInches;
+    private TextInputLayout mTxtHeightInchesWrapper;
 
     private ArrayAdapter<CharSequence> mHeightUnitAdapter;
 
@@ -66,9 +66,9 @@ public class WeightHeightFragment extends Fragment implements PageWithData, Adap
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_weight_height, container, false);
 
-        mTxtWeight = (EditText) view.findViewById(R.id.txt_weight);
-        mTxtHeight = (EditText) view.findViewById(R.id.txt_height);
-        mTxtHeightInches = (EditText) view.findViewById(R.id.txt_height_inches);
+        mTxtWeightWrapper = (TextInputLayout) view.findViewById(R.id.txt_weight_wrapper);
+        mTxtHeightWrapper = (TextInputLayout) view.findViewById(R.id.txt_height_wrapper);
+        mTxtHeightInchesWrapper = (TextInputLayout) view.findViewById(R.id.txt_height_inches_wrapper);
 
         Spinner weightUnitDropdown = (Spinner) view.findViewById(R.id.dropdown_weight_unit);
         mWeightUnitAdapter = ArrayAdapter.createFromResource(
@@ -89,14 +89,14 @@ public class WeightHeightFragment extends Fragment implements PageWithData, Adap
     public Bundle getProfileData() {
         Bundle data = new Bundle();
 
-        String strWeight = mTxtWeight.getText().toString();
+        String strWeight = mTxtWeightWrapper.getEditText().getText().toString();
         double weight = Util.parseDouble(strWeight, 0.0);
         String weightUnit = getWeightUnit();
 
-        String strHeight = mTxtHeight.getText().toString();
+        String strHeight = mTxtHeightWrapper.getEditText().getText().toString();
         double height = Util.parseDouble(strHeight, 0.0);
 
-        String strHeightInches = mTxtHeightInches.getText().toString();
+        String strHeightInches = mTxtHeightInchesWrapper.getEditText().getText().toString();
         double heightInches = Util.parseDouble(strHeightInches, 0.0);
 
         String heightUnit = getHeightUnit();
@@ -114,8 +114,33 @@ public class WeightHeightFragment extends Fragment implements PageWithData, Adap
     }
 
     @Override
-    public void showWarningMessage(Set<String> errors) {
+    public void showErrorMessage(Set<String> errors) {
+        if (errors.contains(KEY_WEIGHT)) {
+            mTxtWeightWrapper.setError(getString(R.string.invalid_weight));
+        }
 
+        if (errors.contains(KEY_HEIGHT)) {
+            mTxtHeightWrapper.setError(getString(R.string.invalid_height));
+        }
+
+        if (errors.contains(KEY_HEIGHT_INCHES)) {
+            mTxtHeightInchesWrapper.setError(getString(R.string.invalid_height));
+        }
+    }
+
+    @Override
+    public void clearErrorMessage() {
+        mTxtWeightWrapper.setErrorEnabled(false);
+        mTxtHeightWrapper.setErrorEnabled(false);
+        mTxtHeightInchesWrapper.setErrorEnabled(false);
+
+        mTxtWeightWrapper.requestFocus();
+        mTxtHeightWrapper.requestFocus();
+        mTxtHeightInchesWrapper.requestFocus();
+
+        if (null != getView()) {
+            getView().requestFocus();
+        }
     }
 
     private String getWeightUnit() {
@@ -163,17 +188,17 @@ public class WeightHeightFragment extends Fragment implements PageWithData, Adap
         switch (viewId) {
             case R.id.dropdown_weight_unit:
                 mWeightUnitPos = position;
-                mTxtWeight.setHint(mWeightUnitAdapter.getItem(position));
+                mTxtWeightWrapper.setHint(mWeightUnitAdapter.getItem(position));
                 break;
 
             case R.id.dropdown_height_unit:
                 mHeightUnitPos = position;
                 if (0 == position) {
-                    mTxtHeight.setHint(R.string.centimeters);
-                    mTxtHeightInches.setVisibility(View.GONE);
+                    mTxtHeightWrapper.setHint(getString(R.string.centimeters));
+                    mTxtHeightInchesWrapper.setVisibility(View.GONE);
                 } else if (1 == position) {
-                    mTxtHeight.setHint(R.string.foot);
-                    mTxtHeightInches.setVisibility(View.VISIBLE);
+                    mTxtHeightWrapper.setHint(getString(R.string.foot));
+                    mTxtHeightInchesWrapper.setVisibility(View.VISIBLE);
                 }
                 break;
 

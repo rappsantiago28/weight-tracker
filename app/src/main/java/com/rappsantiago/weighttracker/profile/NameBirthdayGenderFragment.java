@@ -18,12 +18,12 @@ package com.rappsantiago.weighttracker.profile;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
@@ -49,7 +49,7 @@ public class NameBirthdayGenderFragment extends Fragment
 
     public static final String KEY_GENDER = "NameBirthdayGenderFragment.KEY_GENDER";
 
-    private EditText mTxtName;
+    private TextInputLayout mTxtNameWrapper;
 
     private TextView mLblBirthday;
 
@@ -61,7 +61,7 @@ public class NameBirthdayGenderFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_name_birthday_gender, container, false);
 
-        mTxtName = (EditText) view.findViewById(R.id.txt_name);
+        mTxtNameWrapper = (TextInputLayout) view.findViewById(R.id.txt_name_wrapper);
         mLblBirthday = (TextView) view.findViewById(R.id.lbl_birthday);
         RadioButton rdoMale = (RadioButton) view.findViewById(R.id.rdo_male);
         RadioButton rdoFemale = (RadioButton) view.findViewById(R.id.rdo_female);
@@ -85,7 +85,7 @@ public class NameBirthdayGenderFragment extends Fragment
     public Bundle getProfileData() {
         Bundle bundle = new Bundle();
 
-        bundle.putString(KEY_NAME, mTxtName.getText().toString());
+        bundle.putString(KEY_NAME, mTxtNameWrapper.getEditText().getText().toString());
         bundle.putLong(KEY_BIRTHDAY, mBirthdayInMillis);
         bundle.putString(KEY_GENDER, mGender);
 
@@ -93,8 +93,20 @@ public class NameBirthdayGenderFragment extends Fragment
     }
 
     @Override
-    public void showWarningMessage(Set<String> errors) {
+    public void showErrorMessage(Set<String> errors) {
+        if (errors.contains(KEY_NAME)) {
+            mTxtNameWrapper.setError(getString(R.string.invalid_name));
+        }
+    }
 
+    @Override
+    public void clearErrorMessage() {
+        mTxtNameWrapper.setErrorEnabled(false);
+        mTxtNameWrapper.requestFocus();
+
+        if (null != getView()) {
+            getView().requestFocus();
+        }
     }
 
     @Override

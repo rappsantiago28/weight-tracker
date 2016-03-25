@@ -23,12 +23,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.rappsantiago.weighttracker.MainActivity;
 import com.rappsantiago.weighttracker.R;
 
 import java.util.HashSet;
@@ -56,9 +56,13 @@ public class ProfileSetupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_setup);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
         mViewPager = (ViewPager) findViewById(R.id.view_pager);
         mPagerAdapter = new ProfileSetupPagerAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(mPagerAdapter);
+        mViewPager.setOffscreenPageLimit(3);
 
         mBtnBack = (Button) findViewById(R.id.btn_back);
         mBtnNext = (Button) findViewById(R.id.btn_next);
@@ -73,6 +77,8 @@ public class ProfileSetupActivity extends AppCompatActivity {
 
     public void performBackOrNextAction(View view) {
         final int btnId = view.getId();
+
+        clearErrorMessage();
 
         switch (btnId) {
             case R.id.btn_back:
@@ -91,7 +97,10 @@ public class ProfileSetupActivity extends AppCompatActivity {
     private void performBackAction() {
         int currentPage = mViewPager.getCurrentItem();
 
-        mBtnBack.setEnabled(true);
+        if (ProfileSetupPagerAdapter.PAGE_WELCOME != currentPage) {
+            mBtnBack.setEnabled(true);
+        }
+
         mBtnNext.setEnabled(true);
 
         switch (currentPage) {
@@ -229,12 +238,21 @@ public class ProfileSetupActivity extends AppCompatActivity {
                 mProfileData.putAll(pageData);
             } else {
                 Log.d(TAG, errors.toString());
-                currentFragmentData.showWarningMessage(errors);
+                currentFragmentData.showErrorMessage(errors);
             }
 
             return withNoErrors;
         } else {
             return true;
+        }
+    }
+
+    private void clearErrorMessage() {
+        int currentPage = mViewPager.getCurrentItem();
+        Fragment currentFragment = mPagerAdapter.getItem(currentPage);
+
+        if (currentFragment instanceof PageWithData) {
+            ((PageWithData) currentFragment).clearErrorMessage();
         }
     }
 }
