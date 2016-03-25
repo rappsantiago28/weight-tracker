@@ -24,6 +24,15 @@
     <string name="in">in</string>
     <string name="foot_inches">Foot\' Inches\"</string>
     <string name="profile_setup_warning_message">Please complete the form</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="profile">Profile</string>
+    <string name="progress_history">Progress History</string>
+    <string name="statistics">Statistics</string>
+    <string name="communicate">Communicate</string>
+    <string name="share">Share</string>
+    <string name="send">Send</string>
+    <string name="action_settings">Settings</string>
 
     <!-- String Arrays -->
     <string-array name="arr_weight_unit">
