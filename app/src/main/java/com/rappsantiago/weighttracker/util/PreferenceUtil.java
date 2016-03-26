@@ -30,9 +30,9 @@ import java.util.Set;
  */
 public final class PreferenceUtil {
 
-    private static final String PREF_KEY_WEIGHT_UNIT = "pref_key_weight_unit";
+    public static final String PREF_KEY_WEIGHT_UNIT = "pref_key_weight_unit";
 
-    private static final String PREF_KEY_HEIGHT_UNIT = "pref_key_height_unit";
+    public static final String PREF_KEY_HEIGHT_UNIT = "pref_key_height_unit";
 
     private static final Set<String> VALID_WEIGHT_UNITS = new HashSet<>();
 

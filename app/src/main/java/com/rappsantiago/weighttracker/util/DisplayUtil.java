@@ -148,5 +148,32 @@ public final class DisplayUtil {
         return formattedHeight;
     }
 
+    public static String getReadableUnit(Context context, String unit) {
+        String readableUnit = "";
+
+        switch (unit) {
+            case Profile.WEIGHT_UNIT_KILOGRAMS:
+                readableUnit = context.getString(R.string.kilograms);
+                break;
+
+            case Profile.WEIGHT_UNIT_POUNDS:
+                readableUnit = context.getString(R.string.pounds);
+                break;
+
+            case Profile.HEIGHT_UNIT_CENTIMETERS:
+                readableUnit = context.getString(R.string.centimeters);
+                break;
+
+            case Profile.HEIGHT_UNIT_FOOT_INCHES:
+                readableUnit = context.getString(R.string.foot_inches);
+                break;
+
+            default:
+                throw new IllegalArgumentException();
+        }
+
+        return readableUnit;
+    }
+
     private DisplayUtil() {}
 }
