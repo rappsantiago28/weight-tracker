@@ -30,6 +30,7 @@ import android.widget.TextView;
 import com.rappsantiago.weighttracker.R;
 import com.rappsantiago.weighttracker.dialog.DatePickerDialogFragment;
 import com.rappsantiago.weighttracker.provider.WeightTrackerContract;
+import com.rappsantiago.weighttracker.util.DisplayUtil;
 import com.rappsantiago.weighttracker.util.Util;
 
 import org.joda.time.LocalDate;
@@ -68,9 +69,9 @@ public class NameBirthdayGenderFragment extends Fragment
 
         if (0 >= mBirthdayInMillis) {
             mBirthdayInMillis = new Date().getTime();
-            mLblBirthday.setText(Util.getReadableDate(mBirthdayInMillis));
+            mLblBirthday.setText(DisplayUtil.getReadableDate(mBirthdayInMillis));
         } else {
-            mLblBirthday.setText(Util.getReadableDate(mBirthdayInMillis));
+            mLblBirthday.setText(DisplayUtil.getReadableDate(mBirthdayInMillis));
         }
 
         mLblBirthday.setOnClickListener(mSetDateClickListener);
@@ -113,7 +114,7 @@ public class NameBirthdayGenderFragment extends Fragment
     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
         LocalDate date = new LocalDate(year, monthOfYear + 1, dayOfMonth);
         mBirthdayInMillis = date.toDate().getTime();
-        mLblBirthday.setText(Util.getReadableDate(mBirthdayInMillis));
+        mLblBirthday.setText(DisplayUtil.getReadableDate(mBirthdayInMillis));
     }
 
     private View.OnClickListener mSetDateClickListener = new View.OnClickListener() {

@@ -19,7 +19,6 @@ package com.rappsantiago.weighttracker.util;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.text.TextUtils;
 
 import static com.rappsantiago.weighttracker.provider.WeightTrackerContract.*;
 

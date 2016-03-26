@@ -53,10 +53,5 @@ public final class Util {
         return new double[]{foot, inches};
     }
 
-    public static String getReadableDate(long dateInMillis) {
-        DateTimeFormatter formatter = DateTimeFormat.forPattern("MMMM dd, yyyy");
-        return formatter.print(dateInMillis);
-    }
-
     private Util() {}
 }

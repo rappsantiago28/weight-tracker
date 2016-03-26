@@ -25,6 +25,7 @@ import android.widget.TextView;
 
 import com.rappsantiago.weighttracker.R;
 import com.rappsantiago.weighttracker.provider.WeightTrackerContract;
+import com.rappsantiago.weighttracker.util.DisplayUtil;
 import com.rappsantiago.weighttracker.util.Util;
 
 /**
@@ -62,30 +63,20 @@ public class ProfileSetupSummaryFragment extends Fragment {
 
         if (profileData.containsKey(NameBirthdayGenderFragment.KEY_BIRTHDAY)) {
             long birthdayInMillis = profileData.getLong(NameBirthdayGenderFragment.KEY_BIRTHDAY);
-            mBirthday.setText(Util.getReadableDate(birthdayInMillis));
+            mBirthday.setText(DisplayUtil.getReadableDate(birthdayInMillis));
         }
 
         if (profileData.containsKey(NameBirthdayGenderFragment.KEY_GENDER)) {
             String gender = profileData.getString(NameBirthdayGenderFragment.KEY_GENDER);
-
-            if (gender.equals(WeightTrackerContract.Profile.GENDER_MALE)) {
-                mGender.setText(R.string.male);
-            } else if (gender.equals(WeightTrackerContract.Profile.GENDER_FEMALE)) {
-                mGender.setText(R.string.female);
-            }
+            mGender.setText(DisplayUtil.getReadableGender(getContext(), gender));
         }
 
         if (profileData.containsKey(WeightHeightFragment.KEY_WEIGHT) &&
                 profileData.containsKey(WeightHeightFragment.KEY_WEIGHT_UNIT)) {
+
             String weightUnit = profileData.getString(WeightHeightFragment.KEY_WEIGHT_UNIT);
-
-            if (weightUnit.equals(WeightTrackerContract.Profile.WEIGHT_UNIT_KILOGRAMS)) {
-                weightUnit = getString(R.string.kilograms);
-            } else if (weightUnit.equals(WeightTrackerContract.Profile.WEIGHT_UNIT_POUNDS)) {
-                weightUnit = getString(R.string.pounds);
-            }
-
-            mWeight.setText(String.format("%.2f %s", profileData.getDouble(WeightHeightFragment.KEY_WEIGHT), weightUnit));
+            double weight = profileData.getDouble(WeightHeightFragment.KEY_WEIGHT);
+            mWeight.setText(DisplayUtil.getFormattedWeight(getContext(), weight, weightUnit));
         }
 
         if (profileData.containsKey(WeightHeightFragment.KEY_HEIGHT) &&
@@ -93,18 +84,13 @@ public class ProfileSetupSummaryFragment extends Fragment {
 
             double height = profileData.getDouble(WeightHeightFragment.KEY_HEIGHT);
             String heightUnit = profileData.getString(WeightHeightFragment.KEY_HEIGHT_UNIT);
+            double heightInches = 0.0;
 
-            if (heightUnit.equals(WeightTrackerContract.Profile.HEIGHT_UNIT_CENTIMETERS)) {
-
-                mHeight.setText(String.format("%.2f %s", height, getString(R.string.centimeters)));
-            } else if (heightUnit.equals(WeightTrackerContract.Profile.HEIGHT_UNIT_FOOT_INCHES) &&
-                    profileData.containsKey(WeightHeightFragment.KEY_HEIGHT_INCHES)) {
-
-                double heightInches = profileData.getDouble(WeightHeightFragment.KEY_HEIGHT_INCHES);
-                mHeight.setText(String.format("%.2f %s, %.2f %s",
-                        height, getString(R.string.foot),
-                        heightInches, getString(R.string.inches)));
+            if (profileData.containsKey(WeightHeightFragment.KEY_HEIGHT_INCHES)) {
+                heightInches = profileData.getDouble(WeightHeightFragment.KEY_HEIGHT_INCHES);
             }
+
+            mHeight.setText(DisplayUtil.getFormattedHeight(getContext(), height, heightInches, heightUnit));
         }
     }
 }
