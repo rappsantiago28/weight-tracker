@@ -101,15 +101,15 @@ public class MainActivity extends AppCompatActivity
             }
         }
 
+        mProfileFragment = new ProfileFragment();
+        mHistoryFragment = new HistoryFragment();
+        mStatisticsFragment = new StatisticsFragment();
+
         if (!isProfileSetupComplete) {
             // launch profile setup page
             Intent setupProfileActivity = new Intent(this, ProfileSetupActivity.class);
             startActivityForResult(setupProfileActivity, REQUEST_PROFILE_SETUP);
         } else {
-            mProfileFragment = new ProfileFragment();
-            mHistoryFragment = new HistoryFragment();
-            mStatisticsFragment = new StatisticsFragment();
-
             replaceMainContent(mProfileFragment);
         }
     }
@@ -155,6 +155,8 @@ public class MainActivity extends AppCompatActivity
                         Log.d(TAG, "weightUnit = " + weightUnit + ", heightUnit = " + heightUnit);
                         PreferenceUtil.setWeightUnit(this, weightUnit);
                         PreferenceUtil.setHeightUnit(this, heightUnit);
+
+                        replaceMainContent(mProfileFragment);
                     }
                 }
                 break;
@@ -234,7 +236,7 @@ public class MainActivity extends AppCompatActivity
         Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.main_content);
 
         if (null == currentFragment || !currentFragment.getClass().equals(fragment.getClass())) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.main_content, fragment).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.main_content, fragment).commitAllowingStateLoss();
         }
     }
 }
