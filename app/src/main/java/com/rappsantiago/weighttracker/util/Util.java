@@ -46,6 +46,13 @@ public final class Util {
         return footInCentimeters + inchInCentimeters;
     }
 
+    public static double[] centimetersToFootInches(double centimeters) {
+        double footOnly = centimeters / 30.48;
+        double foot = Math.floor(footOnly);
+        double inches = (footOnly - foot) * 12;
+        return new double[]{foot, inches};
+    }
+
     public static String getReadableDate(long dateInMillis) {
         DateTimeFormatter formatter = DateTimeFormat.forPattern("MMMM dd, yyyy");
         return formatter.print(dateInMillis);
