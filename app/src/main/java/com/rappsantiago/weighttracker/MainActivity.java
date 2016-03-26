@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity
             Intent setupProfileActivity = new Intent(this, ProfileSetupActivity.class);
             startActivityForResult(setupProfileActivity, REQUEST_PROFILE_SETUP);
         } else {
-            replaceMainContent(mProfileFragment);
+            replaceMainContent(mProfileFragment, R.string.profile);
         }
     }
 
@@ -156,7 +156,7 @@ public class MainActivity extends AppCompatActivity
                         PreferenceUtil.setWeightUnit(this, weightUnit);
                         PreferenceUtil.setHeightUnit(this, heightUnit);
 
-                        replaceMainContent(mProfileFragment);
+                        replaceMainContent(mProfileFragment, R.string.profile);
                     }
                 }
                 break;
@@ -201,15 +201,15 @@ public class MainActivity extends AppCompatActivity
 
         switch (itemId) {
             case R.id.nav_profile:
-                replaceMainContent(mProfileFragment);
+                replaceMainContent(mProfileFragment, R.string.profile);
                 break;
 
             case R.id.nav_history:
-                replaceMainContent(mHistoryFragment);
+                replaceMainContent(mHistoryFragment, R.string.history);
                 break;
 
             case R.id.nav_statistics:
-                replaceMainContent(mStatisticsFragment);
+                replaceMainContent(mStatisticsFragment, R.string.statistics);
                 break;
 
             case R.id.nav_share:
@@ -228,7 +228,7 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    private void replaceMainContent(Fragment fragment) {
+    private void replaceMainContent(Fragment fragment, int resTitle) {
         if (null == fragment) {
             throw new NullPointerException();
         }
@@ -237,6 +237,7 @@ public class MainActivity extends AppCompatActivity
 
         if (null == currentFragment || !currentFragment.getClass().equals(fragment.getClass())) {
             getSupportFragmentManager().beginTransaction().replace(R.id.main_content, fragment).commitAllowingStateLoss();
+            getSupportActionBar().setTitle(resTitle);
         }
     }
 }
