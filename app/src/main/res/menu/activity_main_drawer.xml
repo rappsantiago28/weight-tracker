@@ -8,9 +8,9 @@
             android:title="@string/profile" />
 
         <item
-            android:id="@+id/nav_progress_history"
+            android:id="@+id/nav_history"
             android:icon="@mipmap/ic_launcher"
-            android:title="@string/progress_history" />
+            android:title="@string/history" />
 
         <item
             android:id="@+id/nav_statistics"
@@ -26,9 +26,9 @@
                 android:title="@string/share" />
 
             <item
-                android:id="@+id/nav_send"
+                android:id="@+id/nav_about"
                 android:icon="@mipmap/ic_launcher"
-                android:title="@string/send" />
+                android:title="@string/about" />
         </menu>
     </item>
 

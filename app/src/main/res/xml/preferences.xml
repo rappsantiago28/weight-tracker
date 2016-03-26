@@ -7,7 +7,7 @@
 
         <ListPreference
             android:title="@string/weight"
-            android:key="perf_key_weight_unit"
+            android:key="pref_key_weight_unit"
             android:dialogTitle="@string/weight"
             android:entries="@array/arr_weight_unit"
             android:entryValues="@array/arr_weight_values"
@@ -15,7 +15,7 @@
 
         <ListPreference
             android:title="@string/height"
-            android:key="perf_key_height_unit"
+            android:key="pref_key_height_unit"
             android:dialogTitle="@string/height"
             android:entries="@array/arr_height_unit"
             android:entryValues="@array/arr_height_values"

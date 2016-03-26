@@ -16,9 +16,11 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".profile.ProfileSetupActivity" />
+        <activity android:name=".profile.ProfileSetupActivity"
+            android:parentActivityName=".MainActivity" />
 
-        <activity android:name=".settings.SettingsActivity" />
+        <activity android:name=".settings.SettingsActivity"
+            android:parentActivityName=".MainActivity" />
 
         <provider
             android:name=".provider.WeightTrackerProvider"

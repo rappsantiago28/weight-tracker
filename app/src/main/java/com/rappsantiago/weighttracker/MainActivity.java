@@ -21,6 +21,7 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
@@ -40,6 +41,7 @@ import com.rappsantiago.weighttracker.profile.NameBirthdayGenderFragment;
 import com.rappsantiago.weighttracker.profile.ProfileSetupActivity;
 import com.rappsantiago.weighttracker.profile.WeightHeightFragment;
 import com.rappsantiago.weighttracker.settings.SettingsActivity;
+import com.rappsantiago.weighttracker.util.PreferenceUtil;
 import com.rappsantiago.weighttracker.util.Util;
 
 import static com.rappsantiago.weighttracker.provider.WeightTrackerContract.*;
@@ -134,7 +136,13 @@ public class MainActivity extends AppCompatActivity
                         values.put(Profile.COL_HEIGHT, Util.footInchesToCentimeters(height, inches));
                     }
 
-                    getContentResolver().insert(Profile.CONTENT_URI, values);
+                    Uri profileUri = getContentResolver().insert(Profile.CONTENT_URI, values);
+
+                    if (null != profileUri) {
+                        Log.d(TAG, "weightUnit = " + weightUnit + ", heightUnit = " + heightUnit);
+                        PreferenceUtil.setWeightUnit(this, weightUnit);
+                        PreferenceUtil.setHeightUnit(this, heightUnit);
+                    }
                 }
                 break;
 
