@@ -14,32 +14,34 @@
  *  limitations under the License.
  **/
 
-package com.rappsantiago.weighttracker.settings;
+package com.rappsantiago.weighttracker;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
-import com.rappsantiago.weighttracker.R;
-
 /**
- * Created by rappsantiago28 on 3/25/16.
+ * Created by rappsantiago28 on 3/26/16.
+ *
+ * Parent Activity for Activities with single Fragment inside
  */
-public class SettingsActivity extends AppCompatActivity {
+public abstract class SimpleActivityWithFragment extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_settings);
+        setContentView(R.layout.activity_with_fragment);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle(R.string.action_settings);
+        getSupportActionBar().setTitle(getResTitle());
 
-        getFragmentManager().beginTransaction().replace(R.id.content, new SettingsFragment()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.content,
+                getContent()).commit();
     }
 
     @Override
@@ -54,4 +56,8 @@ public class SettingsActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    protected abstract int getResTitle();
+
+    protected abstract Fragment getContent();
 }

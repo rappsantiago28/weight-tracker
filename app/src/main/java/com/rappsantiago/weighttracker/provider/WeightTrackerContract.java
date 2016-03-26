@@ -79,9 +79,9 @@ public final class WeightTrackerContract {
         public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE +
                 "/vnd." + AUTHORITY + "." + TABLE_NAME;
 
-        public static final String COL_TIMESTAMP = "timestamp";
-
         public static final String COL_NEW_WEIGHT = "new_weight";
+
+        public static final String COL_TIMESTAMP = "timestamp";
     }
 
     public static abstract class Goal implements BaseColumns {

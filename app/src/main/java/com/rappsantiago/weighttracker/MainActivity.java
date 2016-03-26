@@ -19,11 +19,9 @@ package com.rappsantiago.weighttracker;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -41,6 +39,7 @@ import android.view.View;
 import com.rappsantiago.weighttracker.profile.NameBirthdayGenderFragment;
 import com.rappsantiago.weighttracker.profile.ProfileSetupActivity;
 import com.rappsantiago.weighttracker.profile.WeightHeightFragment;
+import com.rappsantiago.weighttracker.progress.AddProgressActivity;
 import com.rappsantiago.weighttracker.settings.SettingsActivity;
 import com.rappsantiago.weighttracker.util.PreferenceUtil;
 import com.rappsantiago.weighttracker.util.Util;
@@ -51,8 +50,6 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
 
     private static final String TAG = MainActivity.class.getSimpleName();
-
-    private SharedPreferences mSharedPrefs;
 
     private static final int REQUEST_PROFILE_SETUP = 0;
 
@@ -70,35 +67,14 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        setupFab();
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
-        mSharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        setupNavigationDrawer(toolbar);
 
         boolean isProfileSetupComplete = false;
 
         try (Cursor cursor = getContentResolver().query(Profile.CONTENT_URI, null, null, null, null)) {
             isProfileSetupComplete = cursor.getCount() > 0;
-            if (cursor.moveToFirst()) {
-                for (String col : cursor.getColumnNames()) {
-                    Log.d(TAG, col + " : " + cursor.getString(cursor.getColumnIndex(col)));
-                }
-            }
         }
 
         mProfileFragment = new ProfileFragment();
@@ -112,6 +88,29 @@ public class MainActivity extends AppCompatActivity
         } else {
             replaceMainContent(mProfileFragment, R.string.profile);
         }
+    }
+
+    private void setupFab() {
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent addProgressIntent = new Intent(MainActivity.this, AddProgressActivity.class);
+                startActivity(addProgressIntent);
+            }
+        });
+    }
+
+    private void setupNavigationDrawer(Toolbar toolbar) {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+        navigationView.setCheckedItem(R.id.nav_profile);
     }
 
     @Override

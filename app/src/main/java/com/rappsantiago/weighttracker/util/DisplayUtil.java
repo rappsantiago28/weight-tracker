@@ -19,7 +19,6 @@ package com.rappsantiago.weighttracker.util;
 import android.content.Context;
 
 import com.rappsantiago.weighttracker.R;
-import com.rappsantiago.weighttracker.profile.NameBirthdayGenderFragment;
 
 import static com.rappsantiago.weighttracker.provider.WeightTrackerContract.*;
 

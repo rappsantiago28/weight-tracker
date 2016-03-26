@@ -22,6 +22,9 @@
         <activity android:name=".settings.SettingsActivity"
             android:parentActivityName=".MainActivity" />
 
+        <activity android:name=".progress.AddProgressActivity"
+            android:parentActivityName=".MainActivity" />
+
         <provider
             android:name=".provider.WeightTrackerProvider"
             android:authorities="com.rappsantiago.weighttracker.provider"
