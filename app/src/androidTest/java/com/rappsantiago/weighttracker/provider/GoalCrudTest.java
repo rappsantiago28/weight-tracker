@@ -32,8 +32,6 @@ public class GoalCrudTest extends WeightTrackerBaseCrudTest {
 
     @Override
     protected ContentValues valuesToInsert() {
-        final String tDay = "6";
-        final String tDuration = "999";
         final String tDueDate = Long.toString(new Date().getTime());
         final String tTargetWeight = "99";
 
@@ -41,8 +39,6 @@ public class GoalCrudTest extends WeightTrackerBaseCrudTest {
 
         values.put(Goal.COL_TARGET_WEIGHT, tTargetWeight);
         values.put(Goal.COL_DUE_DATE, tDueDate);
-        values.put(Goal.COL_REMIDER_DURATION, tDuration);
-        values.put(Goal.COL_REMINDER_DAY, tDay);
 
         return values;
     }
@@ -68,15 +64,11 @@ public class GoalCrudTest extends WeightTrackerBaseCrudTest {
     protected String[] columns() {
         return new String[]{
                 Goal.COL_TARGET_WEIGHT,
-                Goal.COL_DUE_DATE,
-                Goal.COL_REMIDER_DURATION,
-                Goal.COL_REMINDER_DAY};
+                Goal.COL_DUE_DATE};
     }
 
     @Override
     protected ContentValues valuesToUpdate() {
-        final String tDay = "5";
-        final String tDuration = "888";
         final String tDueDate = Long.toString(new Date().getTime());
         final String tTargetWeight = "99";
 
@@ -84,8 +76,6 @@ public class GoalCrudTest extends WeightTrackerBaseCrudTest {
 
         values.put(Goal.COL_TARGET_WEIGHT, tTargetWeight);
         values.put(Goal.COL_DUE_DATE, tDueDate);
-        values.put(Goal.COL_REMIDER_DURATION, tDuration);
-        values.put(Goal.COL_REMINDER_DAY, tDay);
 
         return values;
     }

@@ -49,9 +49,7 @@ public class WeightTrackerDbHelper extends SQLiteOpenHelper {
             "CREATE TABLE " + Goal.TABLE_NAME + " (" +
                     Goal._ID + " INTEGER PRIMARY KEY," +
                     Goal.COL_TARGET_WEIGHT + " REAL," +
-                    Goal.COL_DUE_DATE + " INTEGER," +
-                    Goal.COL_REMIDER_DURATION + " INTEGER," +
-                    Goal.COL_REMINDER_DAY + " INTEGER);";
+                    Goal.COL_DUE_DATE + " INTEGER)";
 
     private static final String SQL_DROP_TABLE_PROFILE = "DROP TABLE IF EXISTS " + Profile.TABLE_NAME;
 

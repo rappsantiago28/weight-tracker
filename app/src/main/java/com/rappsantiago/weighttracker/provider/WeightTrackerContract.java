@@ -98,9 +98,5 @@ public final class WeightTrackerContract {
         public static final String COL_TARGET_WEIGHT = "target_weight";
 
         public static final String COL_DUE_DATE = "due_date";
-
-        public static final String COL_REMIDER_DURATION = "reminder_duration";
-
-        public static final String COL_REMINDER_DAY = "reminder_day";
     }
 }
