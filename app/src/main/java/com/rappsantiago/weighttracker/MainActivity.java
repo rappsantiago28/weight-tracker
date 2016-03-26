@@ -27,6 +27,7 @@ import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -54,6 +55,12 @@ public class MainActivity extends AppCompatActivity
     private SharedPreferences mSharedPrefs;
 
     private static final int REQUEST_PROFILE_SETUP = 0;
+
+    private ProfileFragment mProfileFragment;
+
+    private HistoryFragment mHistoryFragment;
+
+    private StatisticsFragment mStatisticsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +105,12 @@ public class MainActivity extends AppCompatActivity
             // launch profile setup page
             Intent setupProfileActivity = new Intent(this, ProfileSetupActivity.class);
             startActivityForResult(setupProfileActivity, REQUEST_PROFILE_SETUP);
+        } else {
+            mProfileFragment = new ProfileFragment();
+            mHistoryFragment = new HistoryFragment();
+            mStatisticsFragment = new StatisticsFragment();
+
+            replaceMainContent(mProfileFragment);
         }
     }
 
@@ -182,8 +195,46 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
+        int itemId = item.getItemId();
+
+        switch (itemId) {
+            case R.id.nav_profile:
+                replaceMainContent(mProfileFragment);
+                break;
+
+            case R.id.nav_history:
+                replaceMainContent(mHistoryFragment);
+                break;
+
+            case R.id.nav_statistics:
+                replaceMainContent(mStatisticsFragment);
+                break;
+
+            case R.id.nav_share:
+                break;
+
+            case R.id.nav_about:
+                break;
+
+            default:
+                throw new IllegalArgumentException();
+        }
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
+
         return true;
+    }
+
+    private void replaceMainContent(Fragment fragment) {
+        if (null == fragment) {
+            throw new NullPointerException();
+        }
+
+        Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.main_content);
+
+        if (null == currentFragment || !currentFragment.getClass().equals(fragment.getClass())) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.main_content, fragment).commit();
+        }
     }
 }
