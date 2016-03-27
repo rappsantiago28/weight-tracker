@@ -26,7 +26,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 
 import com.rappsantiago.weighttracker.R;
 import com.rappsantiago.weighttracker.provider.DbConstants;

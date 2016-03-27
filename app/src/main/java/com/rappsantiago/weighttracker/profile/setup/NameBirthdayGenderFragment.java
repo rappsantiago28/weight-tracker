@@ -31,6 +31,7 @@ import com.rappsantiago.weighttracker.R;
 import com.rappsantiago.weighttracker.dialog.DatePickerDialogFragment;
 import com.rappsantiago.weighttracker.provider.WeightTrackerContract;
 import com.rappsantiago.weighttracker.util.DisplayUtil;
+import com.rappsantiago.weighttracker.util.Util;
 
 import org.joda.time.LocalDate;
 
@@ -67,7 +68,7 @@ public class NameBirthdayGenderFragment extends Fragment
         RadioButton rdoFemale = (RadioButton) view.findViewById(R.id.rdo_female);
 
         if (0 >= mBirthdayInMillis) {
-            mBirthdayInMillis = new Date().getTime();
+            mBirthdayInMillis = Util.getCurrentDateInMillis();
             mLblBirthday.setText(DisplayUtil.getReadableDate(mBirthdayInMillis));
         } else {
             mLblBirthday.setText(DisplayUtil.getReadableDate(mBirthdayInMillis));

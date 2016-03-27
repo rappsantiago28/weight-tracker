@@ -16,8 +16,11 @@
 
 package com.rappsantiago.weighttracker.util;
 
+import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+
+import java.util.Calendar;
 
 /**
  * Created by rappsantiago28 on 3/19/16.
@@ -51,6 +54,11 @@ public final class Util {
         double foot = Math.floor(footOnly);
         double inches = (footOnly - foot) * 12;
         return new double[]{foot, inches};
+    }
+
+    public static long getCurrentDateInMillis() {
+        LocalDate localDate = new LocalDate();
+        return localDate.toDate().getTime();
     }
 
     private Util() {}

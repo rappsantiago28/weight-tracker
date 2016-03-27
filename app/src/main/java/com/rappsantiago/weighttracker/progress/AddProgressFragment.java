@@ -22,6 +22,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,12 +40,12 @@ import org.joda.time.LocalDate;
 
 import static com.rappsantiago.weighttracker.provider.WeightTrackerContract.*;
 
-import java.util.Date;
-
 /**
  * Created by rappsantiago28 on 3/26/16.
  */
 public class AddProgressFragment extends Fragment implements DatePickerDialog.OnDateSetListener {
+
+    private static final String TAG = AddProgressFragment.class.getSimpleName();
 
     private TextInputLayout mTxtNewWeightWrapper;
 
@@ -63,7 +64,7 @@ public class AddProgressFragment extends Fragment implements DatePickerDialog.On
         mBtnDone = (Button) view.findViewById(R.id.btn_done);
 
         if (0 >= mDateInMillis) {
-            mDateInMillis = new Date().getTime();
+            mDateInMillis = Util.getCurrentDateInMillis();
             mLblDate.setText(DisplayUtil.getReadableDate(mDateInMillis));
         } else {
             mLblDate.setText(DisplayUtil.getReadableDate(mDateInMillis));
@@ -94,7 +95,7 @@ public class AddProgressFragment extends Fragment implements DatePickerDialog.On
             double newWeight = Util.parseDouble(strNewWeight, -1);
 
             String weightUnit = PreferenceUtil.getWeightUnit(getContext());
-            
+
             if (Profile.WEIGHT_UNIT_POUNDS.equals(weightUnit)) {
                 newWeight = Util.poundsToKilograms(newWeight);
             }
@@ -107,6 +108,8 @@ public class AddProgressFragment extends Fragment implements DatePickerDialog.On
             ContentValues values = new ContentValues();
             values.put(Progress.COL_NEW_WEIGHT, newWeight);
             values.put(Progress.COL_TIMESTAMP, mDateInMillis);
+
+            Log.d(TAG, "date = " + mDateInMillis);
 
             Uri progressUri = getActivity().getContentResolver().insert(Progress.CONTENT_URI, values);
 
