@@ -24,7 +24,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -52,6 +51,10 @@ public class MainActivity extends AppCompatActivity
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private static final int REQUEST_PROFILE_SETUP = 0;
+
+    private static final String KEY_CURRENT_PAGE = "MainActivity.KEY_CURRENT_PAGE";
+
+    private int mCurrentPage;
 
     private ProfileFragment mProfileFragment;
 
@@ -86,8 +89,21 @@ public class MainActivity extends AppCompatActivity
             Intent setupProfileActivity = new Intent(this, ProfileSetupActivity.class);
             startActivityForResult(setupProfileActivity, REQUEST_PROFILE_SETUP);
         } else {
-            replaceMainContent(mProfileFragment, R.string.profile);
+
+            mCurrentPage = R.id.nav_profile;
+
+            if (null != savedInstanceState) {
+                mCurrentPage = savedInstanceState.getInt(KEY_CURRENT_PAGE);
+            }
+
+            doNavigationAction(mCurrentPage);
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(KEY_CURRENT_PAGE, mCurrentPage);
     }
 
     private void setupFab() {
@@ -198,17 +214,30 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         int itemId = item.getItemId();
 
+        doNavigationAction(itemId);
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+
+        return true;
+    }
+
+    private void doNavigationAction(int itemId) {
+
         switch (itemId) {
             case R.id.nav_profile:
                 replaceMainContent(mProfileFragment, R.string.profile);
+                mCurrentPage = R.id.nav_profile;
                 break;
 
             case R.id.nav_history:
                 replaceMainContent(mHistoryFragment, R.string.history);
+                mCurrentPage = R.id.nav_history;
                 break;
 
             case R.id.nav_statistics:
                 replaceMainContent(mStatisticsFragment, R.string.statistics);
+                mCurrentPage = R.id.nav_statistics;
                 break;
 
             case R.id.nav_share:
@@ -220,11 +249,6 @@ public class MainActivity extends AppCompatActivity
             default:
                 throw new IllegalArgumentException();
         }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-
-        return true;
     }
 
     private void replaceMainContent(Fragment fragment, int resTitle) {
