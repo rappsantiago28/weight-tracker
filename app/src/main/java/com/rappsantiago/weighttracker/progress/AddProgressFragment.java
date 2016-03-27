@@ -32,6 +32,7 @@ import android.widget.TextView;
 import com.rappsantiago.weighttracker.R;
 import com.rappsantiago.weighttracker.dialog.DatePickerDialogFragment;
 import com.rappsantiago.weighttracker.util.DisplayUtil;
+import com.rappsantiago.weighttracker.util.PreferenceUtil;
 import com.rappsantiago.weighttracker.util.Util;
 
 import org.joda.time.LocalDate;
@@ -91,6 +92,12 @@ public class AddProgressFragment extends Fragment implements DatePickerDialog.On
 
             String strNewWeight = mTxtNewWeightWrapper.getEditText().getText().toString();
             double newWeight = Util.parseDouble(strNewWeight, -1);
+
+            String weightUnit = PreferenceUtil.getWeightUnit(getContext());
+            
+            if (Profile.WEIGHT_UNIT_POUNDS.equals(weightUnit)) {
+                newWeight = Util.poundsToKilograms(newWeight);
+            }
 
             if (0 >= newWeight) {
                 mTxtNewWeightWrapper.setError(getString(R.string.invalid_weight));

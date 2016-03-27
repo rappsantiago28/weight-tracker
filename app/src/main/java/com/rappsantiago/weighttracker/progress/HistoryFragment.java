@@ -29,6 +29,7 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
 import com.rappsantiago.weighttracker.R;
+import com.rappsantiago.weighttracker.provider.DbConstants;
 
 import static com.rappsantiago.weighttracker.provider.WeightTrackerContract.*;
 
@@ -41,7 +42,7 @@ public class HistoryFragment extends Fragment implements LoaderManager.LoaderCal
 
     private ListView mListView;
 
-    private SimpleCursorAdapter mCursorAdapter;
+    private HistoryCursorAdapter mCursorAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -49,10 +50,7 @@ public class HistoryFragment extends Fragment implements LoaderManager.LoaderCal
 
         mListView = (ListView) view;
 
-        mCursorAdapter = new SimpleCursorAdapter(getContext(),
-            android.R.layout.simple_list_item_2, null,
-            new String[]{Progress.COL_NEW_WEIGHT, Progress.COL_TIMESTAMP},
-            new int[]{android.R.id.text1, android.R.id.text2}, 0);
+        mCursorAdapter = new HistoryCursorAdapter(getContext());
 
         mListView.setAdapter(mCursorAdapter);
 
@@ -73,7 +71,8 @@ public class HistoryFragment extends Fragment implements LoaderManager.LoaderCal
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(getContext(), Progress.CONTENT_URI, null, null, null, null);
+        return new CursorLoader(getContext(), Progress.CONTENT_URI,
+                DbConstants.COLUMNS_PROGRESS, null, null, null);
     }
 
     @Override

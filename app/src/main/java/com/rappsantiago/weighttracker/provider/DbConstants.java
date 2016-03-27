@@ -21,6 +21,7 @@ package com.rappsantiago.weighttracker.provider;
  */
 public final class DbConstants {
 
+    // [ Profile - START
     public static final int IDX_PROFILE_ID = 0;
 
     public static final int IDX_PROFILE_NAME = 1;
@@ -41,6 +42,21 @@ public final class DbConstants {
             WeightTrackerContract.Profile.COL_WEIGHT,
             WeightTrackerContract.Profile.COL_HEIGHT
     };
+    // Profile - END ]
+
+    // [ Progress - START
+    public static final int IDX_PROGRESS_ID = 0;
+
+    public static final int IDX_PROGRESS_NEW_WEIGHT = 1;
+
+    public static final int IDX_PROGRESS_TIMESTAMP = 2;
+
+    public static final String[] COLUMNS_PROGRESS = {
+            WeightTrackerContract.Progress._ID,
+            WeightTrackerContract.Progress.COL_NEW_WEIGHT,
+            WeightTrackerContract.Progress.COL_TIMESTAMP
+    };
+    // Progress - END ]
 
     private DbConstants() {}
 }
