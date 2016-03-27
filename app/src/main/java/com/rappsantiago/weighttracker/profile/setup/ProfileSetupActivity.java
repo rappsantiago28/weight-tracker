@@ -14,7 +14,7 @@
  *  limitations under the License.
  **/
 
-package com.rappsantiago.weighttracker.profile;
+package com.rappsantiago.weighttracker.profile.setup;
 
 import android.app.Activity;
 import android.content.Intent;

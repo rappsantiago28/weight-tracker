@@ -14,7 +14,7 @@
  *  limitations under the License.
  **/
 
-package com.rappsantiago.weighttracker;
+package com.rappsantiago.weighttracker.profile;
 
 import android.database.Cursor;
 import android.os.Bundle;
@@ -27,6 +27,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.rappsantiago.weighttracker.R;
 import com.rappsantiago.weighttracker.provider.DbConstants;
 import com.rappsantiago.weighttracker.util.DisplayUtil;
 

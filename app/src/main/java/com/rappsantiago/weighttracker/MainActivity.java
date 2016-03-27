@@ -35,10 +35,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.rappsantiago.weighttracker.profile.NameBirthdayGenderFragment;
-import com.rappsantiago.weighttracker.profile.ProfileSetupActivity;
-import com.rappsantiago.weighttracker.profile.WeightHeightFragment;
+import com.rappsantiago.weighttracker.profile.ProfileFragment;
+import com.rappsantiago.weighttracker.profile.setup.NameBirthdayGenderFragment;
+import com.rappsantiago.weighttracker.profile.setup.ProfileSetupActivity;
+import com.rappsantiago.weighttracker.profile.setup.WeightHeightFragment;
 import com.rappsantiago.weighttracker.progress.AddProgressActivity;
+import com.rappsantiago.weighttracker.progress.HistoryFragment;
+import com.rappsantiago.weighttracker.progress.StatisticsFragment;
 import com.rappsantiago.weighttracker.settings.SettingsActivity;
 import com.rappsantiago.weighttracker.util.PreferenceUtil;
 import com.rappsantiago.weighttracker.util.Util;

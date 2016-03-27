@@ -14,7 +14,7 @@
  *  limitations under the License.
  **/
 
-package com.rappsantiago.weighttracker.profile;
+package com.rappsantiago.weighttracker.profile.setup;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -24,9 +24,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.rappsantiago.weighttracker.R;
-import com.rappsantiago.weighttracker.provider.WeightTrackerContract;
 import com.rappsantiago.weighttracker.util.DisplayUtil;
-import com.rappsantiago.weighttracker.util.Util;
 
 /**
  * Created by rappsantiago28 on 3/13/16.

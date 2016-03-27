@@ -14,17 +14,24 @@
  *  limitations under the License.
  **/
 
-package com.rappsantiago.weighttracker.profile;
+package com.rappsantiago.weighttracker.progress;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
-import java.util.Set;
+import com.rappsantiago.weighttracker.R;
 
 /**
- * Created by rappsantiago28 on 3/19/16.
+ * Created by rappsantiago28 on 3/26/16.
  */
-public interface PageWithData {
-    public Bundle getProfileData();
-    public void showErrorMessage(Set<String> errors);
-    public void clearErrorMessage();
+public class StatisticsFragment extends Fragment {
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_statistics, container, false);
+        return view;
+    }
 }

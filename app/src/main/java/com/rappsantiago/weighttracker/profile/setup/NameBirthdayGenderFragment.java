@@ -14,7 +14,7 @@
  *  limitations under the License.
  **/
 
-package com.rappsantiago.weighttracker.profile;
+package com.rappsantiago.weighttracker.profile.setup;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;
@@ -31,7 +31,6 @@ import com.rappsantiago.weighttracker.R;
 import com.rappsantiago.weighttracker.dialog.DatePickerDialogFragment;
 import com.rappsantiago.weighttracker.provider.WeightTrackerContract;
 import com.rappsantiago.weighttracker.util.DisplayUtil;
-import com.rappsantiago.weighttracker.util.Util;
 
 import org.joda.time.LocalDate;
 

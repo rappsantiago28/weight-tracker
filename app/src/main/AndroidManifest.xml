@@ -16,7 +16,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".profile.ProfileSetupActivity"
+        <activity android:name=".profile.setup.ProfileSetupActivity"
             android:parentActivityName=".MainActivity" />
 
         <activity android:name=".settings.SettingsActivity"
