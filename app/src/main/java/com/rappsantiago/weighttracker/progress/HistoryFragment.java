@@ -71,7 +71,7 @@ public class HistoryFragment extends Fragment implements LoaderManager.LoaderCal
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         return new CursorLoader(getContext(), Progress.CONTENT_URI,
-                DbConstants.COLUMNS_PROGRESS, null, null, null);
+                DbConstants.COLUMNS_PROGRESS, null, null, Progress.COL_TIMESTAMP + " DESC");
     }
 
     @Override
