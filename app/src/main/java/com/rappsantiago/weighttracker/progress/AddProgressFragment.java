@@ -18,6 +18,7 @@ package com.rappsantiago.weighttracker.progress;
 
 import android.app.DatePickerDialog;
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
@@ -32,6 +33,7 @@ import android.widget.TextView;
 
 import com.rappsantiago.weighttracker.R;
 import com.rappsantiago.weighttracker.dialog.DatePickerDialogFragment;
+import com.rappsantiago.weighttracker.provider.DbConstants;
 import com.rappsantiago.weighttracker.util.DisplayUtil;
 import com.rappsantiago.weighttracker.util.PreferenceUtil;
 import com.rappsantiago.weighttracker.util.Util;
@@ -111,10 +113,30 @@ public class AddProgressFragment extends Fragment implements DatePickerDialog.On
 
             Log.d(TAG, "date = " + mDateInMillis);
 
-            Uri progressUri = getActivity().getContentResolver().insert(Progress.CONTENT_URI, values);
+            try (Cursor cursor = getActivity().getContentResolver().query(
+                    Progress.CONTENT_URI,
+                    DbConstants.COLUMNS_PROGRESS,
+                    Progress.COL_TIMESTAMP + " = ?",
+                    new String[]{Long.toString(mDateInMillis)},
+                    null)) {
 
-            if (null != progressUri) {
-                getActivity().finish();
+                // check if progress for the day is already existing
+                if (null != cursor && 0 < cursor.getCount()) {
+                    int result = getActivity().getContentResolver().update(
+                            Progress.CONTENT_URI, values,
+                            Progress.COL_TIMESTAMP + " = ?",
+                            new String[]{Long.toString(mDateInMillis)});
+
+                    if (0 < result) {
+                        getActivity().finish();
+                    }
+                } else {
+                    Uri progressUri = getActivity().getContentResolver().insert(Progress.CONTENT_URI, values);
+
+                    if (null != progressUri) {
+                        getActivity().finish();
+                    }
+                }
             }
         }
     };
