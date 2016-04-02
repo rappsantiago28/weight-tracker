@@ -122,6 +122,9 @@ public class AddProgressFragment extends Fragment implements DatePickerDialog.On
 
                 // check if progress for the day is already existing
                 if (null != cursor && 0 < cursor.getCount()) {
+
+                    // TODO : add confirmation dialog
+
                     int result = getActivity().getContentResolver().update(
                             Progress.CONTENT_URI, values,
                             Progress.COL_TIMESTAMP + " = ?",

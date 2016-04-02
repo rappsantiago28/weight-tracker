@@ -184,7 +184,12 @@ public class MainActivity extends AppCompatActivity
                     if (0.0 < targetWeight) {
                         ContentValues goalValues = new ContentValues();
 
-                        goalValues.put(Goal.COL_TARGET_WEIGHT, targetWeight);
+                        if (Profile.WEIGHT_UNIT_KILOGRAMS.equals(weightUnit)) {
+                            goalValues.put(Goal.COL_TARGET_WEIGHT, targetWeight);
+                        } else {
+                            goalValues.put(Goal.COL_TARGET_WEIGHT, Util.poundsToKilograms(targetWeight));
+                        }
+
                         goalValues.put(Goal.COL_DUE_DATE, dueDateInMillis);
 
                         getContentResolver().insert(Goal.CONTENT_URI, goalValues);
