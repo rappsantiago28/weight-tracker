@@ -172,9 +172,23 @@ public class MainActivity extends AppCompatActivity
                     Uri profileUri = getContentResolver().insert(Profile.CONTENT_URI, profileValues);
 
                     if (null != profileUri) {
+                        // set default weight and height units
                         Log.d(TAG, "weightUnit = " + weightUnit + ", heightUnit = " + heightUnit);
                         PreferenceUtil.setWeightUnit(this, weightUnit);
                         PreferenceUtil.setHeightUnit(this, heightUnit);
+
+                        // make current weight as initial progress
+                        ContentValues progressValues = new ContentValues();
+
+                        if (Profile.WEIGHT_UNIT_KILOGRAMS.equals(weightUnit)) {
+                            progressValues.put(Progress.COL_NEW_WEIGHT, weight);
+                        } else {
+                            progressValues.put(Progress.COL_NEW_WEIGHT, Util.poundsToKilograms(weight));
+                        }
+
+                        progressValues.put(Progress.COL_TIMESTAMP, Util.getCurrentDateInMillis());
+
+                        getContentResolver().insert(Progress.CONTENT_URI, progressValues);
                     }
 
                     // save goal
