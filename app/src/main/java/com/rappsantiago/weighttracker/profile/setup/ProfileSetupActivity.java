@@ -119,8 +119,12 @@ public class ProfileSetupActivity extends AppCompatActivity {
                 mViewPager.setCurrentItem(ProfileSetupPagerAdapter.PAGE_NAME_BIRTHDAY_GENDER, true);
                 break;
 
-            case ProfileSetupPagerAdapter.PAGE_SUMMARY:
+            case ProfileSetupPagerAdapter.PAGE_TARGET_WEIGHT:
                 mViewPager.setCurrentItem(ProfileSetupPagerAdapter.PAGE_WEIGHT_HEIGHT, true);
+                break;
+
+            case ProfileSetupPagerAdapter.PAGE_SUMMARY:
+                mViewPager.setCurrentItem(ProfileSetupPagerAdapter.PAGE_TARGET_WEIGHT, true);
 
                 // set text back to 'Back'
                 mBtnNext.setText(R.string.next);
@@ -155,9 +159,17 @@ public class ProfileSetupActivity extends AppCompatActivity {
                 break;
 
             case ProfileSetupPagerAdapter.PAGE_WEIGHT_HEIGHT:
+                TargetWeightFragment targetWeightFragment =
+                        (TargetWeightFragment) mPagerAdapter.getItem(ProfileSetupPagerAdapter.PAGE_TARGET_WEIGHT);
+                targetWeightFragment.setWeightUnit(mProfileData.getString(WeightHeightFragment.KEY_WEIGHT_UNIT));
+
+                mViewPager.setCurrentItem(ProfileSetupPagerAdapter.PAGE_TARGET_WEIGHT, true);
+                break;
+
+            case ProfileSetupPagerAdapter.PAGE_TARGET_WEIGHT:
                 // set summary
-                Fragment currentFragment = mPagerAdapter.getItem(ProfileSetupPagerAdapter.PAGE_SUMMARY);
-                ProfileSetupSummaryFragment summaryFragment = (ProfileSetupSummaryFragment) currentFragment;
+                ProfileSetupSummaryFragment summaryFragment =
+                        (ProfileSetupSummaryFragment) mPagerAdapter.getItem(ProfileSetupPagerAdapter.PAGE_SUMMARY);
                 summaryFragment.refreshProfileData(mProfileData);
 
                 mViewPager.setCurrentItem(ProfileSetupPagerAdapter.PAGE_SUMMARY, true);
@@ -224,7 +236,13 @@ public class ProfileSetupActivity extends AppCompatActivity {
                     if (0 >= ((Double) obj).doubleValue()) {
                         errors.add(key);
                     }
-                } else if (obj instanceof Long) { // birthday
+                } else if (obj instanceof Long) { // birthday, due date
+
+                    // due date is optional
+                    if (TargetWeightFragment.KEY_DUE_DATE == key) {
+                        continue;
+                    }
+
                     if (0 >= ((Long) obj).longValue()) {
                         errors.add(key);
                     }

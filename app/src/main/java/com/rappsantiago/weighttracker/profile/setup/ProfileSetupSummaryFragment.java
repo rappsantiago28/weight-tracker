@@ -41,6 +41,10 @@ public class ProfileSetupSummaryFragment extends Fragment {
 
     private TextView mHeight;
 
+    private TextView mTargetWeight;
+
+    private TextView mDueDate;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile_setup_summary, container, false);
@@ -50,6 +54,8 @@ public class ProfileSetupSummaryFragment extends Fragment {
         mGender = (TextView) view.findViewById(R.id.lbl_gender);
         mWeight = (TextView) view.findViewById(R.id.lbl_weight);
         mHeight = (TextView) view.findViewById(R.id.lbl_height);
+        mTargetWeight = (TextView) view.findViewById(R.id.lbl_target_weight);
+        mDueDate = (TextView) view.findViewById(R.id.lbl_due_date);
 
         return view;
     }
@@ -89,6 +95,22 @@ public class ProfileSetupSummaryFragment extends Fragment {
             }
 
             mHeight.setText(DisplayUtil.getFormattedHeight(getContext(), height, heightInches, heightUnit));
+        }
+
+        if (profileData.containsKey(TargetWeightFragment.KEY_TARGET_WEIGHT)) {
+            String weightUnit = profileData.getString(WeightHeightFragment.KEY_WEIGHT_UNIT);
+            double targetWeight = profileData.getDouble(TargetWeightFragment.KEY_TARGET_WEIGHT);
+            mTargetWeight.setText(DisplayUtil.getFormattedWeight(getContext(), targetWeight, weightUnit));
+        }
+
+        if (profileData.containsKey(TargetWeightFragment.KEY_DUE_DATE)) {
+            long dueDateInMillis = profileData.getLong(TargetWeightFragment.KEY_DUE_DATE);
+
+            if (0 < dueDateInMillis) {
+                mDueDate.setText(DisplayUtil.getReadableDate(dueDateInMillis));
+            } else {
+                mDueDate.setText(R.string.not_applicable);
+            }
         }
     }
 }

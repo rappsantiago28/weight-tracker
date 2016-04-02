@@ -38,6 +38,7 @@ import android.view.View;
 import com.rappsantiago.weighttracker.profile.ProfileFragment;
 import com.rappsantiago.weighttracker.profile.setup.NameBirthdayGenderFragment;
 import com.rappsantiago.weighttracker.profile.setup.ProfileSetupActivity;
+import com.rappsantiago.weighttracker.profile.setup.TargetWeightFragment;
 import com.rappsantiago.weighttracker.profile.setup.WeightHeightFragment;
 import com.rappsantiago.weighttracker.progress.AddProgressActivity;
 import com.rappsantiago.weighttracker.progress.HistoryFragment;
@@ -137,11 +138,10 @@ public class MainActivity extends AppCompatActivity
         switch (requestCode) {
             case REQUEST_PROFILE_SETUP:
                 if (Activity.RESULT_OK == resultCode) {
-                    // save profile
+
                     Bundle profileData = data.getExtras();
 
-                    ContentValues values = new ContentValues();
-
+                    // save profile
                     String name = profileData.getString(NameBirthdayGenderFragment.KEY_NAME);
                     long birthdayInMillis = profileData.getLong(NameBirthdayGenderFragment.KEY_BIRTHDAY);
                     String gender = profileData.getString(NameBirthdayGenderFragment.KEY_GENDER);
@@ -150,32 +150,49 @@ public class MainActivity extends AppCompatActivity
                     double height = profileData.getDouble(WeightHeightFragment.KEY_HEIGHT);
                     String heightUnit = profileData.getString(WeightHeightFragment.KEY_HEIGHT_UNIT);
 
-                    values.put(Profile.COL_NAME, name);
-                    values.put(Profile.COL_BIRTHDAY, birthdayInMillis);
-                    values.put(Profile.COL_GENDER, gender);
+                    ContentValues profileValues = new ContentValues();
+
+                    profileValues.put(Profile.COL_NAME, name);
+                    profileValues.put(Profile.COL_BIRTHDAY, birthdayInMillis);
+                    profileValues.put(Profile.COL_GENDER, gender);
 
                     if (Profile.WEIGHT_UNIT_KILOGRAMS.equals(weightUnit)) {
-                        values.put(Profile.COL_WEIGHT, weight);
+                        profileValues.put(Profile.COL_WEIGHT, weight);
                     } else {
-                        values.put(Profile.COL_WEIGHT, Util.poundsToKilograms(weight));
+                        profileValues.put(Profile.COL_WEIGHT, Util.poundsToKilograms(weight));
                     }
 
                     if (Profile.HEIGHT_UNIT_CENTIMETERS.equals(heightUnit)) {
-                        values.put(Profile.COL_HEIGHT, height);
+                        profileValues.put(Profile.COL_HEIGHT, height);
                     } else {
                         double inches = profileData.getDouble(WeightHeightFragment.KEY_HEIGHT_INCHES);
-                        values.put(Profile.COL_HEIGHT, Util.footInchesToCentimeters(height, inches));
+                        profileValues.put(Profile.COL_HEIGHT, Util.footInchesToCentimeters(height, inches));
                     }
 
-                    Uri profileUri = getContentResolver().insert(Profile.CONTENT_URI, values);
+                    Uri profileUri = getContentResolver().insert(Profile.CONTENT_URI, profileValues);
 
                     if (null != profileUri) {
                         Log.d(TAG, "weightUnit = " + weightUnit + ", heightUnit = " + heightUnit);
                         PreferenceUtil.setWeightUnit(this, weightUnit);
                         PreferenceUtil.setHeightUnit(this, heightUnit);
-
-                        replaceMainContent(mProfileFragment, R.string.profile);
                     }
+
+                    // save goal
+                    double targetWeight = profileData.getDouble(TargetWeightFragment.KEY_TARGET_WEIGHT);
+                    long dueDateInMillis = profileData.getLong(TargetWeightFragment.KEY_DUE_DATE);
+
+                    if (0.0 < targetWeight) {
+                        ContentValues goalValues = new ContentValues();
+
+                        goalValues.put(Goal.COL_TARGET_WEIGHT, targetWeight);
+                        goalValues.put(Goal.COL_DUE_DATE, dueDateInMillis);
+
+                        getContentResolver().insert(Goal.CONTENT_URI, goalValues);
+                    } else {
+                        // user skipped and will set later
+                    }
+
+                    replaceMainContent(mProfileFragment, R.string.profile);
                 }
                 break;
 

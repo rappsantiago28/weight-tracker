@@ -40,6 +40,10 @@ public class ProfileFragment extends Fragment implements LoaderManager.LoaderCal
 
     private static final String TAG = ProfileFragment.class.getSimpleName();
 
+    private static final int LOAD_PROFILE = 0;
+
+    private static final int LOAD_GOAL = 1;
+
     private TextView mLblName;
 
     private TextView mLblBirthday;
@@ -50,6 +54,10 @@ public class ProfileFragment extends Fragment implements LoaderManager.LoaderCal
 
     private TextView mLblHeight;
 
+    private TextView mLblTargetWeight;
+
+    private TextView mLblDueDate;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
@@ -59,6 +67,8 @@ public class ProfileFragment extends Fragment implements LoaderManager.LoaderCal
         mLblGender = (TextView) view.findViewById(R.id.lbl_gender);
         mLblWeight = (TextView) view.findViewById(R.id.lbl_weight);
         mLblHeight = (TextView) view.findViewById(R.id.lbl_height);
+        mLblTargetWeight = (TextView) view.findViewById(R.id.lbl_target_weight);
+        mLblDueDate = (TextView) view.findViewById(R.id.lbl_due_date);
 
         return view;
     }
@@ -66,37 +76,75 @@ public class ProfileFragment extends Fragment implements LoaderManager.LoaderCal
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getLoaderManager().initLoader(0, null, this);
+        getLoaderManager().initLoader(LOAD_PROFILE, null, this);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        getLoaderManager().restartLoader(0, null, this);
+        getLoaderManager().restartLoader(LOAD_PROFILE, null, this);
     }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(getActivity(),
-                Profile.CONTENT_URI, DbConstants.COLUMNS_PROFILE, null, null, null);
+
+        switch (id) {
+            case LOAD_PROFILE:
+                return new CursorLoader(getActivity(),
+                        Profile.CONTENT_URI, DbConstants.COLUMNS_PROFILE, null, null, null);
+
+            case LOAD_GOAL:
+                return new CursorLoader(getActivity(),
+                        Goal.CONTENT_URI, DbConstants.COLUMNS_GOAL, null, null, null);
+
+            default:
+                throw new IllegalArgumentException();
+        }
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
 
-        if (null != data && (0 < data.getCount()) && data.moveToFirst()) {
-            String name = data.getString(DbConstants.IDX_PROFILE_NAME);
-            long birthdayInMillis = data.getLong(DbConstants.IDX_PROFILE_BIRTHDAY);
-            String gender = data.getString(DbConstants.IDX_PROFILE_GENDER);
-            double weight = data.getDouble(DbConstants.IDX_PROFILE_WEIGHT);
-            double height = data.getDouble(DbConstants.IDX_PROFILE_HEIGHT);
+        int id = loader.getId();
 
-            mLblName.setText(name);
-            mLblBirthday.setText(DisplayUtil.getReadableDate(birthdayInMillis));
-            mLblGender.setText(DisplayUtil.getReadableGender(getContext(), gender));
-            mLblWeight.setText(DisplayUtil.getFormattedWeight(getContext(), weight, null));
-            mLblHeight.setText(DisplayUtil.getFormattedHeight(getContext(), height, null));
+        switch (id) {
+            case LOAD_PROFILE:
+                if (null != data && (0 < data.getCount()) && data.moveToFirst()) {
+                    String name = data.getString(DbConstants.IDX_PROFILE_NAME);
+                    long birthdayInMillis = data.getLong(DbConstants.IDX_PROFILE_BIRTHDAY);
+                    String gender = data.getString(DbConstants.IDX_PROFILE_GENDER);
+                    double weight = data.getDouble(DbConstants.IDX_PROFILE_WEIGHT);
+                    double height = data.getDouble(DbConstants.IDX_PROFILE_HEIGHT);
+
+                    mLblName.setText(name);
+                    mLblBirthday.setText(DisplayUtil.getReadableDate(birthdayInMillis));
+                    mLblGender.setText(DisplayUtil.getReadableGender(getContext(), gender));
+                    mLblWeight.setText(DisplayUtil.getFormattedWeight(getContext(), weight, null));
+                    mLblHeight.setText(DisplayUtil.getFormattedHeight(getContext(), height, null));
+
+                    getLoaderManager().restartLoader(LOAD_GOAL, null, this);
+                }
+                break;
+
+            case LOAD_GOAL:
+                if (null != data && (0 < data.getCount()) && data.moveToFirst()) {
+                    double targetWeight = data.getDouble(DbConstants.IDX_GOAL_TARGET_WEIGHT);
+                    long dueDateInMillis = data.getLong(DbConstants.IDX_GOAL_DUE_DATE);
+
+                    mLblTargetWeight.setText(DisplayUtil.getFormattedWeight(getContext(), targetWeight, null));
+
+                    if (0 < dueDateInMillis) {
+                        mLblDueDate.setText(DisplayUtil.getReadableDate(dueDateInMillis));
+                    } else {
+                        mLblDueDate.setText(R.string.not_applicable);
+                    }
+                }
+                break;
+
+            default:
+                throw new IllegalArgumentException();
         }
+
     }
 
     @Override

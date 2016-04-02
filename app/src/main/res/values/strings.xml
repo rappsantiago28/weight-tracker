@@ -42,6 +42,9 @@
     <string name="new_weight">New weight</string>
     <string name="date">Date</string>
     <string name="done">Done</string>
+    <string name="target_weight">Target weight</string>
+    <string name="due_date">Due date</string>
+    <string name="not_applicable">N/A</string>
 
     <!-- String Arrays -->
     <string-array name="arr_weight_unit">

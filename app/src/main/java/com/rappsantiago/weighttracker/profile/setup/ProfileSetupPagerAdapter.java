@@ -34,7 +34,9 @@ public class ProfileSetupPagerAdapter extends FragmentStatePagerAdapter {
 
     public static final int PAGE_WEIGHT_HEIGHT = 2;
 
-    public static final int PAGE_SUMMARY = 3;
+    public static final int PAGE_TARGET_WEIGHT = 3;
+
+    public static final int PAGE_SUMMARY = 4;
 
     private final Map<Integer, Fragment> mPageMapping;
 
@@ -43,6 +45,8 @@ public class ProfileSetupPagerAdapter extends FragmentStatePagerAdapter {
     private Fragment mNameBirthdayGenderFragment;
 
     private Fragment mWeightHeightFragment;
+
+    private Fragment mTargetWeightFragment;
 
     private Fragment mProfileSetupSummaryFragment;
 
@@ -54,11 +58,13 @@ public class ProfileSetupPagerAdapter extends FragmentStatePagerAdapter {
         mWelcomePageFragment = new WelcomePageFragment();
         mNameBirthdayGenderFragment = new NameBirthdayGenderFragment();
         mWeightHeightFragment = new WeightHeightFragment();
+        mTargetWeightFragment = new TargetWeightFragment();
         mProfileSetupSummaryFragment = new ProfileSetupSummaryFragment();
 
         mPageMapping.put(PAGE_WELCOME, mWelcomePageFragment);
         mPageMapping.put(PAGE_NAME_BIRTHDAY_GENDER, mNameBirthdayGenderFragment);
         mPageMapping.put(PAGE_WEIGHT_HEIGHT, mWeightHeightFragment);
+        mPageMapping.put(PAGE_TARGET_WEIGHT, mTargetWeightFragment);
         mPageMapping.put(PAGE_SUMMARY, mProfileSetupSummaryFragment);
     }
 
