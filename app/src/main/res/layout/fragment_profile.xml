@@ -28,6 +28,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textStyle="bold"
         android:text="@string/name" />
 
     <TextView
@@ -38,6 +39,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textStyle="bold"
         android:text="@string/birthday" />
 
     <TextView
@@ -48,6 +50,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textStyle="bold"
         android:text="@string/gender" />
 
     <TextView
@@ -58,16 +61,29 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/weight" />
+        android:textStyle="bold"
+        android:text="@string/initial_weight" />
 
     <TextView
-        android:id="@+id/lbl_weight"
+        android:id="@+id/lbl_initial_weight"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:text="@string/current_weight" />
+
+    <TextView
+        android:id="@+id/lbl_current_weight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
         android:text="@string/height" />
 
     <TextView
@@ -79,6 +95,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textStyle="bold"
         android:text="@string/target_weight" />
 
     <TextView
@@ -89,10 +106,22 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textStyle="bold"
         android:text="@string/due_date" />
 
     <TextView
         android:id="@+id/lbl_due_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:text="@string/status" />
+
+    <TextView
+        android:id="@+id/lbl_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 

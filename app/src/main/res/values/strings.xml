@@ -45,6 +45,10 @@
     <string name="target_weight">Target weight</string>
     <string name="due_date">Due date</string>
     <string name="not_applicable">N/A</string>
+    <string name="status">Status</string>
+    <string name="initial_weight">Initial weight</string>
+    <string name="current_weight">Current weight</string>
+    <string name="percent_complete_format">%.2f%% complete</string>
 
     <!-- String Arrays -->
     <string-array name="arr_weight_unit">

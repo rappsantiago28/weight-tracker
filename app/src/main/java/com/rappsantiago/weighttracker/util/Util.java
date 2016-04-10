@@ -16,16 +16,20 @@
 
 package com.rappsantiago.weighttracker.util;
 
-import org.joda.time.LocalDate;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
+import android.content.Context;
+import android.database.Cursor;
 
-import java.util.Calendar;
+import static com.rappsantiago.weighttracker.provider.WeightTrackerContract.*;
+
+import org.joda.time.LocalDate;
 
 /**
  * Created by rappsantiago28 on 3/19/16.
  */
 public final class Util {
+
+    private Util() {
+    }
 
     public static double parseDouble(String str, double defaultVal) {
         return Util.isStringGood(str) ? Double.parseDouble(str) : defaultVal;
@@ -61,5 +65,59 @@ public final class Util {
         return localDate.toDate().getTime();
     }
 
-    private Util() {}
+    public static double getInitialWeight(Context context) {
+
+        try (Cursor cursor = context.getContentResolver().query(
+                Progress.CONTENT_URI,
+                new String[]{Progress.COL_NEW_WEIGHT},
+                null, null, Progress.COL_TIMESTAMP + " ASC LIMIT 1")) {
+
+            if (cursor.moveToFirst()) {
+                double initialWeight = cursor.getDouble(0);
+                return initialWeight;
+            }
+        }
+
+        return 0.0;
+    }
+
+    public static double getCurrentWeight(Context context) {
+
+        try (Cursor cursor = context.getContentResolver().query(
+                Progress.CONTENT_URI,
+                new String[]{Progress.COL_NEW_WEIGHT},
+                null, null, Progress.COL_TIMESTAMP + " DESC LIMIT 1")) {
+
+            if (cursor.moveToFirst()) {
+                double currentWeight = cursor.getDouble(0);
+                return currentWeight;
+            }
+        }
+
+        return 0.0;
+    }
+
+    public static double getTargetWeight(Context context) {
+
+        try (Cursor cursor = context.getContentResolver().query(
+                Goal.CONTENT_URI,
+                new String[]{Goal.COL_TARGET_WEIGHT},
+                null, null, Goal._ID + " ASC LIMIT 1")) {
+
+            if (cursor.moveToFirst()) {
+                double targetWeight = cursor.getDouble(0);
+                return targetWeight;
+            }
+        }
+
+        return 0.0;
+    }
+
+    public static double getPercentComplete(double initialWeight, double currentWeight, double targetWeight) {
+
+        double totalWeightDiff = Math.abs(initialWeight - targetWeight);
+        double progressInWeight = Math.abs(initialWeight - currentWeight);
+
+        return Math.abs(progressInWeight / totalWeightDiff);
+    }
 }

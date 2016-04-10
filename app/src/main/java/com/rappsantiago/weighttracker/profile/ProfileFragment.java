@@ -44,19 +44,25 @@ public class ProfileFragment extends Fragment implements LoaderManager.LoaderCal
 
     private static final int LOAD_GOAL = 1;
 
+    private static final int LOAD_WEIGHT_PROGRESS = 2;
+
     private TextView mLblName;
 
     private TextView mLblBirthday;
 
     private TextView mLblGender;
 
-    private TextView mLblWeight;
+    private TextView mLblInitialWeight;
+
+    private TextView mLblCurrentWeight;
 
     private TextView mLblHeight;
 
     private TextView mLblTargetWeight;
 
     private TextView mLblDueDate;
+
+    private TextView mLblStatus;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -65,10 +71,12 @@ public class ProfileFragment extends Fragment implements LoaderManager.LoaderCal
         mLblName = (TextView) view.findViewById(R.id.lbl_name);
         mLblBirthday = (TextView) view.findViewById(R.id.lbl_birthday);
         mLblGender = (TextView) view.findViewById(R.id.lbl_gender);
-        mLblWeight = (TextView) view.findViewById(R.id.lbl_weight);
+        mLblInitialWeight = (TextView) view.findViewById(R.id.lbl_initial_weight);
+        mLblCurrentWeight = (TextView) view.findViewById(R.id.lbl_current_weight);
         mLblHeight = (TextView) view.findViewById(R.id.lbl_height);
         mLblTargetWeight = (TextView) view.findViewById(R.id.lbl_target_weight);
         mLblDueDate = (TextView) view.findViewById(R.id.lbl_due_date);
+        mLblStatus = (TextView) view.findViewById(R.id.lbl_status);
 
         return view;
     }
@@ -97,6 +105,9 @@ public class ProfileFragment extends Fragment implements LoaderManager.LoaderCal
                 return new CursorLoader(getActivity(),
                         Goal.CONTENT_URI, DbConstants.COLUMNS_GOAL, null, null, null);
 
+            case LOAD_WEIGHT_PROGRESS:
+                return new WeightProgressCursorLoader(getActivity());
+
             default:
                 throw new IllegalArgumentException();
         }
@@ -119,7 +130,7 @@ public class ProfileFragment extends Fragment implements LoaderManager.LoaderCal
                     mLblName.setText(name);
                     mLblBirthday.setText(DisplayUtil.getReadableDate(birthdayInMillis));
                     mLblGender.setText(DisplayUtil.getReadableGender(getContext(), gender));
-                    mLblWeight.setText(DisplayUtil.getFormattedWeight(getContext(), weight, null));
+                    mLblCurrentWeight.setText(DisplayUtil.getFormattedWeight(getContext(), weight, null));
                     mLblHeight.setText(DisplayUtil.getFormattedHeight(getContext(), height, null));
 
                     getLoaderManager().restartLoader(LOAD_GOAL, null, this);
@@ -138,6 +149,20 @@ public class ProfileFragment extends Fragment implements LoaderManager.LoaderCal
                     } else {
                         mLblDueDate.setText(R.string.not_applicable);
                     }
+
+                    getLoaderManager().restartLoader(LOAD_WEIGHT_PROGRESS, null, this);
+                }
+                break;
+
+            case LOAD_WEIGHT_PROGRESS:
+                if (null != data && (0 < data.getCount()) && data.moveToFirst()) {
+                    double intialWeight = data.getDouble(WeightProgressCursorLoader.IDX_WEIGHT_PROGRESS_INITIAL_WEIGHT);
+                    double currentWeight = data.getDouble(WeightProgressCursorLoader.IDX_WEIGHT_PROGRESS_CURRENT_WEIGHT);
+                    double percentComplete = data.getDouble(WeightProgressCursorLoader.IDX_WEIGHT_PROGRESS_PERCENT_COMPLETE);
+
+                    mLblInitialWeight.setText(DisplayUtil.getFormattedWeight(getActivity(), intialWeight, null));
+                    mLblCurrentWeight.setText(DisplayUtil.getFormattedWeight(getActivity(), currentWeight, null));
+                    mLblStatus.setText(getString(R.string.percent_complete_format, percentComplete * 100.0));
                 }
                 break;
 
@@ -152,7 +177,7 @@ public class ProfileFragment extends Fragment implements LoaderManager.LoaderCal
         mLblName.setText("");
         mLblBirthday.setText("");
         mLblGender.setText("");
-        mLblWeight.setText("");
+        mLblCurrentWeight.setText("");
         mLblHeight.setText("");
     }
 }
