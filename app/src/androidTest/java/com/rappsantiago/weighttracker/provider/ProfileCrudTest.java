@@ -44,7 +44,6 @@ public class ProfileCrudTest extends WeightTrackerBaseCrudTest {
         values.put(Profile.COL_BIRTHDAY, tBirthday);
         values.put(Profile.COL_GENDER, tGender);
         values.put(Profile.COL_HEIGHT, tHeight);
-        values.put(Profile.COL_WEIGHT, tWeight);
 
         return values;
     }
@@ -72,8 +71,7 @@ public class ProfileCrudTest extends WeightTrackerBaseCrudTest {
                 Profile.COL_NAME,
                 Profile.COL_BIRTHDAY,
                 Profile.COL_GENDER,
-                Profile.COL_HEIGHT,
-                Profile.COL_WEIGHT};
+                Profile.COL_HEIGHT};
     }
 
     @Override
@@ -82,7 +80,6 @@ public class ProfileCrudTest extends WeightTrackerBaseCrudTest {
         final String tBirthday = Long.toString(new Date().getTime());
         final String tGender = "M";
         final String tHeight = "123";
-        final String tWeight = "99";
 
         ContentValues values = new ContentValues();
 
@@ -90,7 +87,6 @@ public class ProfileCrudTest extends WeightTrackerBaseCrudTest {
         values.put(Profile.COL_BIRTHDAY, tBirthday);
         values.put(Profile.COL_GENDER, tGender);
         values.put(Profile.COL_HEIGHT, tHeight);
-        values.put(Profile.COL_WEIGHT, tWeight);
 
         return values;
     }

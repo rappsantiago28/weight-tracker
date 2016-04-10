@@ -36,7 +36,6 @@ public class WeightTrackerDbHelper extends SQLiteOpenHelper {
                     Profile.COL_NAME + " TEXT," +
                     Profile.COL_BIRTHDAY + " INTEGER," +
                     Profile.COL_GENDER + " TEXT," +
-                    Profile.COL_WEIGHT + " REAL," +
                     Profile.COL_HEIGHT + " REAL);";
 
     private static final String SQL_CREATE_TABLE_PROGRESS =

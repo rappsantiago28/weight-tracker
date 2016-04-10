@@ -61,9 +61,6 @@ public final class WeightTrackerContract {
 
         public static final String COL_GENDER = "gender";
 
-        // weight will be stored as kilograms
-        public static final String COL_WEIGHT = "weight";
-
         // height will be stored as centimeters
         public static final String COL_HEIGHT = "height";
     }
@@ -79,6 +76,7 @@ public final class WeightTrackerContract {
         public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE +
                 "/vnd." + AUTHORITY + "." + TABLE_NAME;
 
+        // weight will be stored as kilograms
         public static final String COL_NEW_WEIGHT = "new_weight";
 
         public static final String COL_TIMESTAMP = "timestamp";

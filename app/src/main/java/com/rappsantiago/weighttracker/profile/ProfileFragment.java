@@ -124,13 +124,11 @@ public class ProfileFragment extends Fragment implements LoaderManager.LoaderCal
                     String name = data.getString(DbConstants.IDX_PROFILE_NAME);
                     long birthdayInMillis = data.getLong(DbConstants.IDX_PROFILE_BIRTHDAY);
                     String gender = data.getString(DbConstants.IDX_PROFILE_GENDER);
-                    double weight = data.getDouble(DbConstants.IDX_PROFILE_WEIGHT);
                     double height = data.getDouble(DbConstants.IDX_PROFILE_HEIGHT);
 
                     mLblName.setText(name);
                     mLblBirthday.setText(DisplayUtil.getReadableDate(birthdayInMillis));
                     mLblGender.setText(DisplayUtil.getReadableGender(getContext(), gender));
-                    mLblCurrentWeight.setText(DisplayUtil.getFormattedWeight(getContext(), weight, null));
                     mLblHeight.setText(DisplayUtil.getFormattedHeight(getContext(), height, null));
 
                     getLoaderManager().restartLoader(LOAD_GOAL, null, this);

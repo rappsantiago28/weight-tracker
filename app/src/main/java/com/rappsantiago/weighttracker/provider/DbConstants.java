@@ -30,16 +30,13 @@ public final class DbConstants {
 
     public static final int IDX_PROFILE_GENDER = 3;
 
-    public static final int IDX_PROFILE_WEIGHT = 4;
-
-    public static final int IDX_PROFILE_HEIGHT = 5;
+    public static final int IDX_PROFILE_HEIGHT = 4;
 
     public static final String[] COLUMNS_PROFILE = {
             WeightTrackerContract.Profile._ID,
             WeightTrackerContract.Profile.COL_NAME,
             WeightTrackerContract.Profile.COL_BIRTHDAY,
             WeightTrackerContract.Profile.COL_GENDER,
-            WeightTrackerContract.Profile.COL_WEIGHT,
             WeightTrackerContract.Profile.COL_HEIGHT
     };
     // Profile - END ]

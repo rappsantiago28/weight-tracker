@@ -156,12 +156,6 @@ public class MainActivity extends AppCompatActivity
                     profileValues.put(Profile.COL_BIRTHDAY, birthdayInMillis);
                     profileValues.put(Profile.COL_GENDER, gender);
 
-                    if (Profile.WEIGHT_UNIT_KILOGRAMS.equals(weightUnit)) {
-                        profileValues.put(Profile.COL_WEIGHT, weight);
-                    } else {
-                        profileValues.put(Profile.COL_WEIGHT, Util.poundsToKilograms(weight));
-                    }
-
                     if (Profile.HEIGHT_UNIT_CENTIMETERS.equals(heightUnit)) {
                         profileValues.put(Profile.COL_HEIGHT, height);
                     } else {
