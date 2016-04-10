@@ -134,6 +134,7 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-
+        mLineChart.setData(null);
+        mLineChart.invalidate();
     }
 }
