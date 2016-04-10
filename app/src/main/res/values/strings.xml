@@ -49,6 +49,9 @@
     <string name="initial_weight">Initial weight</string>
     <string name="current_weight">Current weight</string>
     <string name="percent_complete_format">%.2f%% complete</string>
+    <string name="weight_in_kilograms">Weight in kilograms</string>
+    <string name="weight_in_pounds">Weight in pounds</string>
+    <string name="no_data_to_show">No data to show</string>
 
     <!-- String Arrays -->
     <string-array name="arr_weight_unit">
