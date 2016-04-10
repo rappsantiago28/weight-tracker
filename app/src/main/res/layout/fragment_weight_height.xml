@@ -20,6 +20,12 @@
     android:descendantFocusability="beforeDescendants"
     android:focusableInTouchMode="true">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:text="@string/initial_weight" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -35,7 +41,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="numberDecimal"
-                android:hint="@string/kilograms" />
+                android:hint="@string/initial_weight" />
         </android.support.design.widget.TextInputLayout>
 
         <Spinner
@@ -44,6 +50,12 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical" />
     </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:text="@string/height" />
 
     <LinearLayout
         android:layout_width="match_parent"
