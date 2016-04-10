@@ -269,9 +269,9 @@ public class MainActivity extends AppCompatActivity
                 mCurrentPage = R.id.nav_profile;
                 break;
 
-            case R.id.nav_history:
-                replaceMainContent(mHistoryFragment, R.string.history);
-                mCurrentPage = R.id.nav_history;
+            case R.id.nav_progress_history:
+                replaceMainContent(mHistoryFragment, R.string.progress_history);
+                mCurrentPage = R.id.nav_progress_history;
                 break;
 
             case R.id.nav_statistics:

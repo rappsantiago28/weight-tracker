@@ -27,7 +27,7 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="profile">Profile</string>
-    <string name="history">History</string>
+    <string name="progress_history">Progress History</string>
     <string name="statistics">Statistics</string>
     <string name="communicate">Communicate</string>
     <string name="share">Share</string>

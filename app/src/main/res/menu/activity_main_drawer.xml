@@ -8,9 +8,9 @@
             android:title="@string/profile" />
 
         <item
-            android:id="@+id/nav_history"
+            android:id="@+id/nav_progress_history"
             android:icon="@mipmap/ic_launcher"
-            android:title="@string/history" />
+            android:title="@string/progress_history" />
 
         <item
             android:id="@+id/nav_statistics"
