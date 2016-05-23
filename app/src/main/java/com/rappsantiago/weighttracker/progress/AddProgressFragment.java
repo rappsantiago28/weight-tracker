@@ -122,7 +122,7 @@ public class AddProgressFragment extends Fragment implements DatePickerDialog.On
                 // check if progress for the day is already existing
                 if (null != cursor && 0 < cursor.getCount() && cursor.moveToFirst()) {
 
-                    // TODO : add confirmation dialog
+                    // TODO : Add Confirmation Dialog
 
                     long progressId = cursor.getLong(DbConstants.IDX_PROGRESS_ID);
 

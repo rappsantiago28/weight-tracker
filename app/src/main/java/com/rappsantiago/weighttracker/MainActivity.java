@@ -182,6 +182,7 @@ public class MainActivity extends AppCompatActivity
                         profileValues.put(Profile.COL_HEIGHT, Util.footInchesToCentimeters(height, inches));
                     }
 
+                    // TODO : Move to WeightTrackerSaveService.java
                     Uri profileUri = getContentResolver().insert(Profile.CONTENT_URI, profileValues);
 
                     if (null != profileUri) {
@@ -191,17 +192,21 @@ public class MainActivity extends AppCompatActivity
                         PreferenceUtil.setHeightUnit(this, heightUnit);
 
                         // make current weight as initial progress
-                        ContentValues progressValues = new ContentValues();
-
+                        double newWeight = 0.0;
                         if (Profile.WEIGHT_UNIT_KILOGRAMS.equals(weightUnit)) {
-                            progressValues.put(Progress.COL_NEW_WEIGHT, weight);
+                            newWeight = weight;
                         } else {
-                            progressValues.put(Progress.COL_NEW_WEIGHT, Util.poundsToKilograms(weight));
+                            newWeight = Util.poundsToKilograms(weight);
                         }
 
-                        progressValues.put(Progress.COL_TIMESTAMP, Util.getCurrentDateInMillis());
+                        Intent insertProgressIntent = WeightTrackerSaveService.createInsertProgressIntent(
+                                this,
+                                newWeight,
+                                Util.getCurrentDateInMillis(),
+                                MainActivity.class,
+                                MainActivity.CALLBACK_ACTION_INSERT_PROGRESS);
 
-                        getContentResolver().insert(Progress.CONTENT_URI, progressValues);
+                        startService(insertProgressIntent);
                     }
 
                     // save goal
@@ -219,6 +224,7 @@ public class MainActivity extends AppCompatActivity
 
                         goalValues.put(Goal.COL_DUE_DATE, dueDateInMillis);
 
+                        // TODO : Move to WeightTrackerSaveService.java
                         getContentResolver().insert(Goal.CONTENT_URI, goalValues);
                     } else {
                         // user skipped and will set later
@@ -321,6 +327,10 @@ public class MainActivity extends AppCompatActivity
         String action = callbackIntent.getAction();
 
         switch (action) {
+            case CALLBACK_ACTION_INSERT_PROGRESS:
+                // do nothing
+                break;
+
             case CALLBACK_ACTION_DELETE_PROGRESS:
                 if (null != mHistoryFragment) {
                     mHistoryFragment.refreshList();
