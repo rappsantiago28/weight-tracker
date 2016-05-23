@@ -22,9 +22,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.rappsantiago.weighttracker.R;
@@ -49,6 +52,8 @@ public class HistoryFragment extends Fragment implements LoaderManager.LoaderCal
 
         mListView = (ListView) view;
 
+        registerForContextMenu(mListView);
+
         mCursorAdapter = new HistoryCursorAdapter(getContext());
 
         mListView.setAdapter(mCursorAdapter);
@@ -66,6 +71,30 @@ public class HistoryFragment extends Fragment implements LoaderManager.LoaderCal
     public void onResume() {
         super.onResume();
         getLoaderManager().restartLoader(0, null, this);
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        getActivity().getMenuInflater().inflate(R.menu.progress_list_context_menu, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+
+        switch (item.getItemId()) {
+            case R.id.action_edit:
+                break;
+
+            case R.id.action_delete:
+                break;
+
+            default:
+                return super.onContextItemSelected(item);
+        }
+
+        return true;
     }
 
     @Override

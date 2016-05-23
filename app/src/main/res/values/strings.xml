@@ -52,6 +52,8 @@
     <string name="weight_in_kilograms">Weight in kilograms</string>
     <string name="weight_in_pounds">Weight in pounds</string>
     <string name="no_data_to_show">No data to show</string>
+    <string name="action_edit">Edit</string>
+    <string name="action_delete">Delete</string>
 
     <!-- String Arrays -->
     <string-array name="arr_weight_unit">
