@@ -43,6 +43,7 @@ import com.rappsantiago.weighttracker.profile.setup.WeightHeightFragment;
 import com.rappsantiago.weighttracker.progress.AddProgressActivity;
 import com.rappsantiago.weighttracker.progress.HistoryFragment;
 import com.rappsantiago.weighttracker.progress.StatisticsFragment;
+import com.rappsantiago.weighttracker.service.WeightTrackerSaveService;
 import com.rappsantiago.weighttracker.settings.SettingsActivity;
 import com.rappsantiago.weighttracker.util.PreferenceUtil;
 import com.rappsantiago.weighttracker.util.Util;
@@ -50,13 +51,15 @@ import com.rappsantiago.weighttracker.util.Util;
 import static com.rappsantiago.weighttracker.provider.WeightTrackerContract.*;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener{
+        implements NavigationView.OnNavigationItemSelectedListener, WeightTrackerSaveService.Listener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private static final int REQUEST_PROFILE_SETUP = 0;
 
     private static final String KEY_CURRENT_PAGE = "MainActivity.KEY_CURRENT_PAGE";
+
+    public static final String CALLBACK_ACTION_DELETE_PROFILE = "MainActivity.CALLBACK_ACTION_DELETE_PROFILE";
 
     private int mCurrentPage;
 
@@ -102,6 +105,18 @@ public class MainActivity extends AppCompatActivity
 
             doNavigationAction(mCurrentPage);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        WeightTrackerSaveService.registerListener(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        WeightTrackerSaveService.unregisterListener(this);
     }
 
     @Override
@@ -294,6 +309,22 @@ public class MainActivity extends AppCompatActivity
         if (null == currentFragment || !currentFragment.getClass().equals(fragment.getClass())) {
             getSupportFragmentManager().beginTransaction().replace(R.id.main_content, fragment).commitAllowingStateLoss();
             getSupportActionBar().setTitle(resTitle);
+        }
+    }
+
+    @Override
+    public void onServiceCompleted(Intent callbackIntent) {
+        String action = callbackIntent.getAction();
+
+        switch (action) {
+            case CALLBACK_ACTION_DELETE_PROFILE:
+                if (null != mHistoryFragment) {
+                    mHistoryFragment.refreshList();
+                }
+                break;
+
+            default:
+                throw new IllegalArgumentException("Unknown action (" + action + ")");
         }
     }
 }

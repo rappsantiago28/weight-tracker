@@ -16,6 +16,7 @@
 
 package com.rappsantiago.weighttracker.progress;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -30,8 +31,10 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.rappsantiago.weighttracker.MainActivity;
 import com.rappsantiago.weighttracker.R;
 import com.rappsantiago.weighttracker.provider.DbConstants;
+import com.rappsantiago.weighttracker.service.WeightTrackerSaveService;
 
 import static com.rappsantiago.weighttracker.provider.WeightTrackerContract.*;
 
@@ -70,6 +73,10 @@ public class HistoryFragment extends Fragment implements LoaderManager.LoaderCal
     @Override
     public void onResume() {
         super.onResume();
+        refreshList();
+    }
+
+    public void refreshList() {
         getLoaderManager().restartLoader(0, null, this);
     }
 
@@ -88,6 +95,9 @@ public class HistoryFragment extends Fragment implements LoaderManager.LoaderCal
                 break;
 
             case R.id.action_delete:
+                Intent deleteProgressIntent = WeightTrackerSaveService.createDeleteProgressIntent(
+                        getActivity(), info.id, getActivity().getClass(), MainActivity.CALLBACK_ACTION_DELETE_PROFILE);
+                getActivity().startService(deleteProgressIntent);
                 break;
 
             default:
