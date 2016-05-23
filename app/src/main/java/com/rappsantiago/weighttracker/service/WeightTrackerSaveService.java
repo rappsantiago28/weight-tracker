@@ -19,13 +19,14 @@ package com.rappsantiago.weighttracker.service;
 import android.app.Activity;
 import android.app.IntentService;
 import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 
-import com.rappsantiago.weighttracker.provider.WeightTrackerContract;
+import static com.rappsantiago.weighttracker.provider.WeightTrackerContract.*;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -40,12 +41,20 @@ public class WeightTrackerSaveService extends IntentService {
     private static final String PREFIX = "com.rappsantiago.weighttracker.service.WeightTrackerSaveService";
 
     // actions
+    private static final String ACTION_INSERT_PROGRESS = PREFIX + ".ACTION_INSERT_PROGRESS";
+
+    private static final String ACTION_UPDATE_PROGRESS = PREFIX + ".ACTION_UPDATE_PROGRESS";
+
     private static final String ACTION_DELETE_PROGRESS = PREFIX + ".ACTION_DELETE_PROGRESS";
 
     // extras
     private static final String EXTRA_CALLBACK_INTENT = PREFIX + ".EXTRA_CALLBACK_INTENT";
 
     private static final String EXTRA_PROGRESS_ID = PREFIX + ".EXTRA_PROGRESS_ID";
+
+    private static final String EXTRA_PROGRESS_WEIGHT = PREFIX + ".EXTRA_PROGRESS_WEIGHT";
+
+    private static final String EXTRA_PROGRESS_DATE = PREFIX + ".EXTRA_PROGRESS_DATE";
 
     private static final CopyOnWriteArrayList<Listener> sListeners = new CopyOnWriteArrayList<>();
 
@@ -61,6 +70,14 @@ public class WeightTrackerSaveService extends IntentService {
         String action = intent.getAction();
 
         switch (action) {
+            case ACTION_INSERT_PROGRESS:
+                insertProgress(intent);
+                break;
+
+            case ACTION_UPDATE_PROGRESS:
+                updateProgress(intent);
+                break;
+
             case ACTION_DELETE_PROGRESS:
                 deleteProgress(intent);
                 break;
@@ -73,10 +90,46 @@ public class WeightTrackerSaveService extends IntentService {
     /**
      * Action Implementations
      */
+    private void insertProgress(Intent intent) {
+        double newWeight = intent.getDoubleExtra(EXTRA_PROGRESS_WEIGHT, 0.0);
+        long date = intent.getLongExtra(EXTRA_PROGRESS_DATE, 0L);
+
+        ContentValues values = new ContentValues();
+        values.put(Progress.COL_NEW_WEIGHT, newWeight);
+        values.put(Progress.COL_TIMESTAMP, date);
+
+        Uri result = getContentResolver().insert(Progress.CONTENT_URI, values);
+
+        if (null != result) {
+            Intent callbackIntent = intent.getParcelableExtra(EXTRA_CALLBACK_INTENT);
+            deliverCallback(callbackIntent);
+        }
+    }
+
+    private void updateProgress(Intent intent) {
+        long progressId = intent.getLongExtra(EXTRA_PROGRESS_ID, 0L);
+        double newWeight = intent.getDoubleExtra(EXTRA_PROGRESS_WEIGHT, 0.0);
+        long date = intent.getLongExtra(EXTRA_PROGRESS_DATE, 0L);
+
+        Uri updateProgressUri = ContentUris.withAppendedId(
+                Progress.CONTENT_URI, progressId);
+
+        ContentValues values = new ContentValues();
+        values.put(Progress.COL_NEW_WEIGHT, newWeight);
+        values.put(Progress.COL_TIMESTAMP, date);
+
+        int result = getContentResolver().update(updateProgressUri, values, null, null);
+
+        if (0 < result) {
+            Intent callbackIntent = intent.getParcelableExtra(EXTRA_CALLBACK_INTENT);
+            deliverCallback(callbackIntent);
+        }
+    }
+
     private void deleteProgress(Intent intent) {
         long progressId = intent.getLongExtra(EXTRA_PROGRESS_ID, 0L);
         Uri deleteProgressUri = ContentUris.withAppendedId(
-                WeightTrackerContract.Progress.CONTENT_URI, progressId);
+                Progress.CONTENT_URI, progressId);
         int result = getContentResolver().delete(deleteProgressUri, null, null);
 
         if (0 < result) {
@@ -89,6 +142,33 @@ public class WeightTrackerSaveService extends IntentService {
     /**
      * Intent Builders
      */
+    public static Intent createInsertProgressIntent(Context context, double newWeight, long dateInMillis, Class<? extends Activity> callbackActivity, String callbackAction) {
+        Intent insertProgressIntent = new Intent(context, WeightTrackerSaveService.class);
+        insertProgressIntent.setAction(ACTION_INSERT_PROGRESS);
+        insertProgressIntent.putExtra(EXTRA_PROGRESS_WEIGHT, newWeight);
+        insertProgressIntent.putExtra(EXTRA_PROGRESS_DATE, dateInMillis);
+
+        Intent callbackIntent = new Intent(context, callbackActivity);
+        callbackIntent.setAction(callbackAction);
+        insertProgressIntent.putExtra(EXTRA_CALLBACK_INTENT, callbackIntent);
+
+        return insertProgressIntent;
+    }
+
+    public static Intent createUpdateProgressIntent(Context context, long progressId, double newWeight, long dateInMillis, Class<? extends Activity> callbackActivity, String callbackAction) {
+        Intent updateProgressIntent = new Intent(context, WeightTrackerSaveService.class);
+        updateProgressIntent.setAction(ACTION_UPDATE_PROGRESS);
+        updateProgressIntent.putExtra(EXTRA_PROGRESS_ID, progressId);
+        updateProgressIntent.putExtra(EXTRA_PROGRESS_WEIGHT, newWeight);
+        updateProgressIntent.putExtra(EXTRA_PROGRESS_DATE, dateInMillis);
+
+        Intent callbackIntent = new Intent(context, callbackActivity);
+        callbackIntent.setAction(callbackAction);
+        updateProgressIntent.putExtra(EXTRA_CALLBACK_INTENT, callbackIntent);
+
+        return updateProgressIntent;
+    }
+
     public static Intent createDeleteProgressIntent(
             Context context, long progressId, Class<? extends Activity> callbackActivity, String callbackAction) {
         Intent deleteProgressIntent = new Intent(context, WeightTrackerSaveService.class);

@@ -18,6 +18,7 @@ package com.rappsantiago.weighttracker.progress;
 
 import android.app.DatePickerDialog;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -31,9 +32,11 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TextView;
 
+import com.rappsantiago.weighttracker.MainActivity;
 import com.rappsantiago.weighttracker.R;
 import com.rappsantiago.weighttracker.dialog.DatePickerDialogFragment;
 import com.rappsantiago.weighttracker.provider.DbConstants;
+import com.rappsantiago.weighttracker.service.WeightTrackerSaveService;
 import com.rappsantiago.weighttracker.util.DisplayUtil;
 import com.rappsantiago.weighttracker.util.PreferenceUtil;
 import com.rappsantiago.weighttracker.util.Util;
@@ -107,10 +110,6 @@ public class AddProgressFragment extends Fragment implements DatePickerDialog.On
                 return;
             }
 
-            ContentValues values = new ContentValues();
-            values.put(Progress.COL_NEW_WEIGHT, newWeight);
-            values.put(Progress.COL_TIMESTAMP, mDateInMillis);
-
             Log.d(TAG, "date = " + mDateInMillis);
 
             try (Cursor cursor = getActivity().getContentResolver().query(
@@ -121,24 +120,29 @@ public class AddProgressFragment extends Fragment implements DatePickerDialog.On
                     null)) {
 
                 // check if progress for the day is already existing
-                if (null != cursor && 0 < cursor.getCount()) {
+                if (null != cursor && 0 < cursor.getCount() && cursor.moveToFirst()) {
 
                     // TODO : add confirmation dialog
 
-                    int result = getActivity().getContentResolver().update(
-                            Progress.CONTENT_URI, values,
-                            Progress.COL_TIMESTAMP + " = ?",
-                            new String[]{Long.toString(mDateInMillis)});
+                    long progressId = cursor.getLong(DbConstants.IDX_PROGRESS_ID);
 
-                    if (0 < result) {
-                        getActivity().finish();
-                    }
+                    Intent updateProgressIntent = WeightTrackerSaveService.createUpdateProgressIntent(getActivity(),
+                            progressId,
+                            newWeight,
+                            mDateInMillis,
+                            AddProgressActivity.class,
+                            MainActivity.CALLBACK_ACTION_UPDATE_PROGRESS);
+
+                    getActivity().startService(updateProgressIntent);
                 } else {
-                    Uri progressUri = getActivity().getContentResolver().insert(Progress.CONTENT_URI, values);
+                    Intent insertProgressIntent = WeightTrackerSaveService.createInsertProgressIntent(
+                            getActivity(),
+                            newWeight,
+                            mDateInMillis,
+                            AddProgressActivity.class,
+                            MainActivity.CALLBACK_ACTION_INSERT_PROGRESS);
 
-                    if (null != progressUri) {
-                        getActivity().finish();
-                    }
+                    getActivity().startService(insertProgressIntent);
                 }
             }
         }

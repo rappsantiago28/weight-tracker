@@ -16,15 +16,19 @@
 
 package com.rappsantiago.weighttracker.progress;
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 
+import com.rappsantiago.weighttracker.MainActivity;
 import com.rappsantiago.weighttracker.R;
 import com.rappsantiago.weighttracker.SimpleActivityWithFragment;
+import com.rappsantiago.weighttracker.service.WeightTrackerSaveService;
 
 /**
  * Created by rappsantiago28 on 3/26/16.
  */
-public class AddProgressActivity extends SimpleActivityWithFragment {
+public class AddProgressActivity extends SimpleActivityWithFragment
+        implements WeightTrackerSaveService.Listener {
 
     @Override
     protected int getResTitle() {
@@ -34,5 +38,32 @@ public class AddProgressActivity extends SimpleActivityWithFragment {
     @Override
     protected Fragment getContent() {
         return new AddProgressFragment();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        WeightTrackerSaveService.registerListener(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        WeightTrackerSaveService.unregisterListener(this);
+    }
+
+    @Override
+    public void onServiceCompleted(Intent callbackIntent) {
+        String action = callbackIntent.getAction();
+
+        switch (action) {
+            case MainActivity.CALLBACK_ACTION_INSERT_PROGRESS:
+            case MainActivity.CALLBACK_ACTION_UPDATE_PROGRESS:
+                finish();
+                break;
+
+            default:
+                throw new IllegalArgumentException("Unknown action (" + action + ")");
+        }
     }
 }

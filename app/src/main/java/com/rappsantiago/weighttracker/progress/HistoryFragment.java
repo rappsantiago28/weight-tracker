@@ -96,7 +96,7 @@ public class HistoryFragment extends Fragment implements LoaderManager.LoaderCal
 
             case R.id.action_delete:
                 Intent deleteProgressIntent = WeightTrackerSaveService.createDeleteProgressIntent(
-                        getActivity(), info.id, getActivity().getClass(), MainActivity.CALLBACK_ACTION_DELETE_PROFILE);
+                        getActivity(), info.id, MainActivity.class, MainActivity.CALLBACK_ACTION_DELETE_PROGRESS);
                 getActivity().startService(deleteProgressIntent);
                 break;
 

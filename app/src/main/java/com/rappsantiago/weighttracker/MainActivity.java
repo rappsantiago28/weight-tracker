@@ -59,7 +59,11 @@ public class MainActivity extends AppCompatActivity
 
     private static final String KEY_CURRENT_PAGE = "MainActivity.KEY_CURRENT_PAGE";
 
-    public static final String CALLBACK_ACTION_DELETE_PROFILE = "MainActivity.CALLBACK_ACTION_DELETE_PROFILE";
+    public static final String CALLBACK_ACTION_INSERT_PROGRESS = "MainActivity.CALLBACK_ACTION_INSERT_PROGRESS";
+
+    public static final String CALLBACK_ACTION_UPDATE_PROGRESS = "MainActivity.CALLBACK_ACTION_UPDATE_PROGRESS";
+
+    public static final String CALLBACK_ACTION_DELETE_PROGRESS = "MainActivity.CALLBACK_ACTION_DELETE_PROGRESS";
 
     private int mCurrentPage;
 
@@ -317,7 +321,7 @@ public class MainActivity extends AppCompatActivity
         String action = callbackIntent.getAction();
 
         switch (action) {
-            case CALLBACK_ACTION_DELETE_PROFILE:
+            case CALLBACK_ACTION_DELETE_PROGRESS:
                 if (null != mHistoryFragment) {
                     mHistoryFragment.refreshList();
                 }
