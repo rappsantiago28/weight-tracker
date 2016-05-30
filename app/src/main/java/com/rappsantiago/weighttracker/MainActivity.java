@@ -59,11 +59,15 @@ public class MainActivity extends AppCompatActivity
 
     private static final String KEY_CURRENT_PAGE = "MainActivity.KEY_CURRENT_PAGE";
 
+    public static final String CALLBACK_ACTION_INSERT_PROFILE = "MainActivity.CALLBACK_ACTION_INSERT_PROFILE";
+
     public static final String CALLBACK_ACTION_INSERT_PROGRESS = "MainActivity.CALLBACK_ACTION_INSERT_PROGRESS";
 
     public static final String CALLBACK_ACTION_UPDATE_PROGRESS = "MainActivity.CALLBACK_ACTION_UPDATE_PROGRESS";
 
     public static final String CALLBACK_ACTION_DELETE_PROGRESS = "MainActivity.CALLBACK_ACTION_DELETE_PROGRESS";
+
+    public static final String CALLBACK_ACTION_INSERT_GOAL = "MainActivity.CALLBACK_ACTION_INSERT_GOAL";
 
     private int mCurrentPage;
 
@@ -167,69 +171,57 @@ public class MainActivity extends AppCompatActivity
                     double weight = profileData.getDouble(WeightHeightFragment.KEY_WEIGHT);
                     String weightUnit = profileData.getString(WeightHeightFragment.KEY_WEIGHT_UNIT);
                     double height = profileData.getDouble(WeightHeightFragment.KEY_HEIGHT);
+                    double inches = profileData.getDouble(WeightHeightFragment.KEY_HEIGHT_INCHES);
                     String heightUnit = profileData.getString(WeightHeightFragment.KEY_HEIGHT_UNIT);
 
-                    ContentValues profileValues = new ContentValues();
+                    Intent insertProfileIntent = WeightTrackerSaveService.createInsertProfileIntent(
+                            this,
+                            name,
+                            birthdayInMillis,
+                            gender,
+                            height,
+                            inches,
+                            heightUnit,
+                            MainActivity.class,
+                            CALLBACK_ACTION_INSERT_PROFILE);
 
-                    profileValues.put(Profile.COL_NAME, name);
-                    profileValues.put(Profile.COL_BIRTHDAY, birthdayInMillis);
-                    profileValues.put(Profile.COL_GENDER, gender);
+                    startService(insertProfileIntent);
 
-                    if (Profile.HEIGHT_UNIT_CENTIMETERS.equals(heightUnit)) {
-                        profileValues.put(Profile.COL_HEIGHT, height);
-                    } else {
-                        double inches = profileData.getDouble(WeightHeightFragment.KEY_HEIGHT_INCHES);
-                        profileValues.put(Profile.COL_HEIGHT, Util.footInchesToCentimeters(height, inches));
-                    }
+                    // set default weight and height units
+                    Log.d(TAG, "weightUnit = " + weightUnit + ", heightUnit = " + heightUnit);
+                    PreferenceUtil.setWeightUnit(this, weightUnit);
+                    PreferenceUtil.setHeightUnit(this, heightUnit);
 
-                    // TODO : Move to WeightTrackerSaveService.java
-                    Uri profileUri = getContentResolver().insert(Profile.CONTENT_URI, profileValues);
+                    // make current weight as initial progress
+                    Intent insertProgressIntent = WeightTrackerSaveService.createInsertProgressIntent(
+                            this,
+                            weight,
+                            Util.getCurrentDateInMillis(),
+                            weightUnit,
+                            MainActivity.class,
+                            MainActivity.CALLBACK_ACTION_INSERT_PROGRESS);
 
-                    if (null != profileUri) {
-                        // set default weight and height units
-                        Log.d(TAG, "weightUnit = " + weightUnit + ", heightUnit = " + heightUnit);
-                        PreferenceUtil.setWeightUnit(this, weightUnit);
-                        PreferenceUtil.setHeightUnit(this, heightUnit);
-
-                        // make current weight as initial progress
-                        double newWeight = 0.0;
-                        if (Profile.WEIGHT_UNIT_KILOGRAMS.equals(weightUnit)) {
-                            newWeight = weight;
-                        } else {
-                            newWeight = Util.poundsToKilograms(weight);
-                        }
-
-                        Intent insertProgressIntent = WeightTrackerSaveService.createInsertProgressIntent(
-                                this,
-                                newWeight,
-                                Util.getCurrentDateInMillis(),
-                                MainActivity.class,
-                                MainActivity.CALLBACK_ACTION_INSERT_PROGRESS);
-
-                        startService(insertProgressIntent);
-                    }
+                    startService(insertProgressIntent);
 
                     // save goal
                     double targetWeight = profileData.getDouble(TargetWeightFragment.KEY_TARGET_WEIGHT);
                     long dueDateInMillis = profileData.getLong(TargetWeightFragment.KEY_DUE_DATE);
 
                     if (0.0 < targetWeight) {
-                        ContentValues goalValues = new ContentValues();
+                        Intent insertGoalIntent = WeightTrackerSaveService.createInsertGoalIntent(
+                                this,
+                                targetWeight,
+                                dueDateInMillis,
+                                weightUnit,
+                                MainActivity.class,
+                                "");
 
-                        if (Profile.WEIGHT_UNIT_KILOGRAMS.equals(weightUnit)) {
-                            goalValues.put(Goal.COL_TARGET_WEIGHT, targetWeight);
-                        } else {
-                            goalValues.put(Goal.COL_TARGET_WEIGHT, Util.poundsToKilograms(targetWeight));
-                        }
-
-                        goalValues.put(Goal.COL_DUE_DATE, dueDateInMillis);
-
-                        // TODO : Move to WeightTrackerSaveService.java
-                        getContentResolver().insert(Goal.CONTENT_URI, goalValues);
+                        startService(insertGoalIntent);
                     } else {
                         // user skipped and will set later
                     }
 
+                    // TODO : start services one at a time
                     replaceMainContent(mProfileFragment, R.string.profile);
                 }
                 break;
@@ -327,14 +319,22 @@ public class MainActivity extends AppCompatActivity
         String action = callbackIntent.getAction();
 
         switch (action) {
+            case CALLBACK_ACTION_INSERT_PROFILE:
+                mProfileFragment.refreshPage();
+                break;
+
             case CALLBACK_ACTION_INSERT_PROGRESS:
-                // do nothing
+                mProfileFragment.refreshPage();
                 break;
 
             case CALLBACK_ACTION_DELETE_PROGRESS:
                 if (null != mHistoryFragment) {
                     mHistoryFragment.refreshList();
                 }
+                break;
+
+            case CALLBACK_ACTION_INSERT_GOAL:
+                mProfileFragment.refreshPage();
                 break;
 
             default:

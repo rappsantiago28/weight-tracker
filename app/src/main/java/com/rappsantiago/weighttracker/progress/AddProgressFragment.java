@@ -101,10 +101,6 @@ public class AddProgressFragment extends Fragment implements DatePickerDialog.On
 
             String weightUnit = PreferenceUtil.getWeightUnit(getContext());
 
-            if (Profile.WEIGHT_UNIT_POUNDS.equals(weightUnit)) {
-                newWeight = Util.poundsToKilograms(newWeight);
-            }
-
             if (0 >= newWeight) {
                 mTxtNewWeightWrapper.setError(getString(R.string.invalid_weight));
                 return;
@@ -130,6 +126,7 @@ public class AddProgressFragment extends Fragment implements DatePickerDialog.On
                             progressId,
                             newWeight,
                             mDateInMillis,
+                            weightUnit,
                             AddProgressActivity.class,
                             MainActivity.CALLBACK_ACTION_UPDATE_PROGRESS);
 
@@ -139,6 +136,7 @@ public class AddProgressFragment extends Fragment implements DatePickerDialog.On
                             getActivity(),
                             newWeight,
                             mDateInMillis,
+                            weightUnit,
                             AddProgressActivity.class,
                             MainActivity.CALLBACK_ACTION_INSERT_PROGRESS);
 

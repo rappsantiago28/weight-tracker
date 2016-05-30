@@ -90,6 +90,10 @@ public class ProfileFragment extends Fragment implements LoaderManager.LoaderCal
     @Override
     public void onResume() {
         super.onResume();
+        refreshPage();
+    }
+
+    public void refreshPage() {
         getLoaderManager().restartLoader(LOAD_PROFILE, null, this);
     }
 
