@@ -23,6 +23,8 @@ import static com.rappsantiago.weighttracker.provider.WeightTrackerContract.*;
 
 import org.joda.time.LocalDate;
 
+import java.util.Set;
+
 /**
  * Created by rappsantiago28 on 3/19/16.
  */
@@ -119,5 +121,14 @@ public final class Util {
         double progressInWeight = Math.abs(initialWeight - currentWeight);
 
         return Math.abs(progressInWeight / totalWeightDiff);
+    }
+
+    public static long[] convertLongSetToArray(Set<Long> ids) {
+        long[] arrIds = new long[ids.size()];
+        int idx = 0;
+        for (long id : ids) {
+            arrIds[idx++] = id;
+        }
+        return arrIds;
     }
 }

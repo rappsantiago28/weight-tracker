@@ -23,11 +23,14 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.view.ActionMode;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
@@ -35,6 +38,9 @@ import com.rappsantiago.weighttracker.MainActivity;
 import com.rappsantiago.weighttracker.R;
 import com.rappsantiago.weighttracker.provider.DbConstants;
 import com.rappsantiago.weighttracker.service.WeightTrackerSaveService;
+import com.rappsantiago.weighttracker.util.Util;
+
+import java.util.Set;
 
 import static com.rappsantiago.weighttracker.provider.WeightTrackerContract.*;
 
@@ -49,13 +55,67 @@ public class HistoryFragment extends Fragment implements LoaderManager.LoaderCal
 
     private HistoryCursorAdapter mCursorAdapter;
 
+    // TODO : create edit page
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_history, container, false);
 
         mListView = (ListView) view;
 
-        registerForContextMenu(mListView);
+        mListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+        mListView.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
+            @Override
+            public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
+                if (checked) {
+                    mCursorAdapter.addSelectedId(id);
+                } else {
+                    mCursorAdapter.removeSelectedId(id);
+                }
+            }
+
+            @Override
+            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+                mode.getMenuInflater().inflate(R.menu.progress_list_context_menu, menu);
+                mCursorAdapter.startMultipleSelection();
+                return true;
+            }
+
+            @Override
+            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+                return false;
+            }
+
+            @Override
+            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+
+                Set<Long> selectedIds = mCursorAdapter.getSelectedIds();
+
+                switch (item.getItemId()) {
+                    case R.id.action_delete:
+                        long[] arrSelectedIds = Util.convertLongSetToArray(selectedIds);
+                        Intent deleteProgressIntent = WeightTrackerSaveService.createBulkDeleteProgressIntent(
+                                getActivity(),
+                                arrSelectedIds,
+                                MainActivity.class,
+                                MainActivity.CALLBACK_ACTION_BULK_DELETE_PROGRESS);
+                        getActivity().startService(deleteProgressIntent);
+                        break;
+
+                    default:
+                        return false;
+                }
+
+                mode.finish();
+
+                return true;
+            }
+
+            @Override
+            public void onDestroyActionMode(ActionMode mode) {
+                mCursorAdapter.stopMultipleSelection();
+            }
+        });
 
         mCursorAdapter = new HistoryCursorAdapter(getContext());
 
@@ -77,35 +137,9 @@ public class HistoryFragment extends Fragment implements LoaderManager.LoaderCal
     }
 
     public void refreshList() {
-        getLoaderManager().restartLoader(0, null, this);
-    }
-
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
-        getActivity().getMenuInflater().inflate(R.menu.progress_list_context_menu, menu);
-    }
-
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-
-        switch (item.getItemId()) {
-            case R.id.action_edit:
-                // TODO : Create Edit Page
-                break;
-
-            case R.id.action_delete:
-                Intent deleteProgressIntent = WeightTrackerSaveService.createDeleteProgressIntent(
-                        getActivity(), info.id, MainActivity.class, MainActivity.CALLBACK_ACTION_DELETE_PROGRESS);
-                getActivity().startService(deleteProgressIntent);
-                break;
-
-            default:
-                return super.onContextItemSelected(item);
+        if (null != getActivity() && isAdded()) {
+            getLoaderManager().restartLoader(0, null, this);
         }
-
-        return true;
     }
 
     @Override

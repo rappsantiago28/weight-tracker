@@ -18,19 +18,25 @@ package com.rappsantiago.weighttracker.service;
 
 import android.app.Activity;
 import android.app.IntentService;
+import android.content.ContentProviderOperation;
+import android.content.ContentProviderResult;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.OperationApplicationException;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.RemoteException;
 
-import com.rappsantiago.weighttracker.profile.setup.WeightHeightFragment;
+import com.rappsantiago.weighttracker.provider.WeightTrackerContract;
+import com.rappsantiago.weighttracker.provider.WeightTrackerProvider;
 import com.rappsantiago.weighttracker.util.Util;
 
 import static com.rappsantiago.weighttracker.provider.WeightTrackerContract.*;
 
+import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
@@ -52,6 +58,8 @@ public class WeightTrackerSaveService extends IntentService {
 
     private static final String ACTION_DELETE_PROGRESS = PREFIX + ".ACTION_DELETE_PROGRESS";
 
+    private static final String ACTION_BULK_DELETE_PROGRESS = PREFIX + ".ACTION_BULK_DELETE_PROGRESS";
+
     private static final String ACTION_INSERT_GOAL = PREFIX + ".ACTION_INSERT_GOAL";
 
     // extras
@@ -68,6 +76,8 @@ public class WeightTrackerSaveService extends IntentService {
     private static final String EXTRA_PROFILE_HEIGHT_INCHES = PREFIX + ".EXTRA_PROFILE_HEIGHT_INCHES";
 
     private static final String EXTRA_PROGRESS_ID = PREFIX + ".EXTRA_PROGRESS_ID";
+
+    private static final String EXTRA_PROGRESS_IDS = PREFIX + ".EXTRA_PROGRESS_IDS";
 
     private static final String EXTRA_PROGRESS_WEIGHT = PREFIX + ".EXTRA_PROGRESS_WEIGHT";
 
@@ -107,6 +117,10 @@ public class WeightTrackerSaveService extends IntentService {
 
             case ACTION_DELETE_PROGRESS:
                 deleteProgress(intent);
+                break;
+
+            case ACTION_BULK_DELETE_PROGRESS:
+                bulkDeleteProgress(intent);
                 break;
 
             case ACTION_INSERT_GOAL:
@@ -232,6 +246,33 @@ public class WeightTrackerSaveService extends IntentService {
         }
     }
 
+    private void bulkDeleteProgress(Intent intent) {
+        long[] progressIds = intent.getLongArrayExtra(EXTRA_PROGRESS_IDS);
+
+        ArrayList<ContentProviderOperation> ops = new ArrayList<>();
+
+        for (long progressId : progressIds) {
+            Uri deleteProgressUri = ContentUris.withAppendedId(
+                    Progress.CONTENT_URI, progressId);
+            ops.add(ContentProviderOperation.newDelete(deleteProgressUri)
+                    .build());
+        }
+
+        ContentProviderResult[] results = null;
+        try {
+            results = getContentResolver().applyBatch(WeightTrackerContract.AUTHORITY, ops);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        } catch (OperationApplicationException e) {
+            e.printStackTrace();
+        }
+
+        if (0 < results.length) {
+            Intent callbackIntent = intent.getParcelableExtra(EXTRA_CALLBACK_INTENT);
+            deliverCallback(callbackIntent);
+        }
+    }
+
     private void insertGoal(Intent intent) {
         double targetWeight = intent.getDoubleExtra(EXTRA_PROGRESS_WEIGHT, 0.0);
         long dueDateInMillis = intent.getLongExtra(EXTRA_GOAL_DUE_DATE, 0L);
@@ -321,6 +362,19 @@ public class WeightTrackerSaveService extends IntentService {
         deleteProgressIntent.putExtra(EXTRA_CALLBACK_INTENT, callbackIntent);
 
         return deleteProgressIntent;
+    }
+
+    public static Intent createBulkDeleteProgressIntent(
+            Context context, long[] progressId, Class<? extends Activity> callbackActivity, String callbackAction) {
+        Intent bulkDeleteProgressIntent = new Intent(context, WeightTrackerSaveService.class);
+        bulkDeleteProgressIntent.setAction(ACTION_BULK_DELETE_PROGRESS);
+        bulkDeleteProgressIntent.putExtra(EXTRA_PROGRESS_IDS, progressId);
+
+        Intent callbackIntent = new Intent(context, callbackActivity);
+        callbackIntent.setAction(callbackAction);
+        bulkDeleteProgressIntent.putExtra(EXTRA_CALLBACK_INTENT, callbackIntent);
+
+        return bulkDeleteProgressIntent;
     }
 
     public static Intent createInsertGoalIntent(Context context, double targetWeight, long dueDateInMillis, String weightUnit, Class<? extends Activity> callbackActivity, String callbackAction) {

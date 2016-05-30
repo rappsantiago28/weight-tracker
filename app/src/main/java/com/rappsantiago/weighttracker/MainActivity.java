@@ -67,6 +67,8 @@ public class MainActivity extends AppCompatActivity
 
     public static final String CALLBACK_ACTION_DELETE_PROGRESS = "MainActivity.CALLBACK_ACTION_DELETE_PROGRESS";
 
+    public static final String CALLBACK_ACTION_BULK_DELETE_PROGRESS = "MainActivity.CALLBACK_ACTION_BULK_DELETE_PROGRESS";
+
     public static final String CALLBACK_ACTION_INSERT_GOAL = "MainActivity.CALLBACK_ACTION_INSERT_GOAL";
 
     private int mCurrentPage;
@@ -214,7 +216,7 @@ public class MainActivity extends AppCompatActivity
                                 dueDateInMillis,
                                 weightUnit,
                                 MainActivity.class,
-                                "");
+                                CALLBACK_ACTION_INSERT_GOAL);
 
                         startService(insertGoalIntent);
                     } else {
@@ -328,6 +330,7 @@ public class MainActivity extends AppCompatActivity
                 break;
 
             case CALLBACK_ACTION_DELETE_PROGRESS:
+            case CALLBACK_ACTION_BULK_DELETE_PROGRESS:
                 if (null != mHistoryFragment) {
                     mHistoryFragment.refreshList();
                 }

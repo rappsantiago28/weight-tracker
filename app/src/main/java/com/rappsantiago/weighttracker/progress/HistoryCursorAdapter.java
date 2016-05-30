@@ -21,6 +21,7 @@ import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
 
@@ -28,14 +29,21 @@ import com.rappsantiago.weighttracker.R;
 import com.rappsantiago.weighttracker.provider.DbConstants;
 import com.rappsantiago.weighttracker.util.DisplayUtil;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Created by rappsantiago28 on 3/27/16.
  */
 public class HistoryCursorAdapter extends CursorAdapter {
 
+    private Set<Long> mSelectedIds;
+
+    private boolean mIsMultipleSelection;
 
     public HistoryCursorAdapter(Context context) {
         super(context, null, 0);
+        mSelectedIds = new HashSet<>();
     }
 
     @Override
@@ -50,18 +58,51 @@ public class HistoryCursorAdapter extends CursorAdapter {
     public void bindView(View view, Context context, Cursor cursor) {
         ViewHolder vh = (ViewHolder) view.getTag();
 
+        long id = cursor.getLong(DbConstants.IDX_PROGRESS_ID);
         double newWeight = cursor.getDouble(DbConstants.IDX_PROGRESS_NEW_WEIGHT);
         long date = cursor.getLong(DbConstants.IDX_PROGRESS_TIMESTAMP);
+
+        vh.checkBox.setVisibility(mIsMultipleSelection ? View.VISIBLE : View.GONE);
+        vh.checkBox.setChecked(mSelectedIds.contains(id));
 
         vh.weight.setText(DisplayUtil.getFormattedWeight(context, newWeight, null));
         vh.date.setText(DisplayUtil.getReadableDate(date));
     }
 
+    public boolean addSelectedId(long id) {
+        boolean ret = mSelectedIds.add(id);
+        notifyDataSetChanged();
+        return ret;
+    }
+
+    public boolean removeSelectedId(long id) {
+        boolean ret = mSelectedIds.remove(id);
+        notifyDataSetChanged();
+        return ret;
+    }
+
+    public void startMultipleSelection() {
+        mIsMultipleSelection = true;
+        notifyDataSetChanged();
+    }
+
+    public void stopMultipleSelection() {
+        mIsMultipleSelection = false;
+        mSelectedIds.clear();
+        notifyDataSetChanged();
+    }
+
+    public Set<Long> getSelectedIds() {
+        return new HashSet<>(mSelectedIds);
+    }
+
     private final class ViewHolder {
+        private final CheckBox checkBox;
         private final TextView weight;
         private final TextView date;
 
         private ViewHolder(View view) {
+            checkBox = (CheckBox) view.findViewById(R.id.chk_selected);
             weight = (TextView) view.findViewById(R.id.lbl_weight);
             date = (TextView) view.findViewById(R.id.lbl_date);
         }
