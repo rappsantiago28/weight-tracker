@@ -26,12 +26,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.OperationApplicationException;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.RemoteException;
 
+import com.rappsantiago.weighttracker.profile.setup.NameBirthdayGenderFragment;
+import com.rappsantiago.weighttracker.profile.setup.TargetWeightFragment;
+import com.rappsantiago.weighttracker.profile.setup.WeightHeightFragment;
 import com.rappsantiago.weighttracker.provider.WeightTrackerContract;
-import com.rappsantiago.weighttracker.provider.WeightTrackerProvider;
+import com.rappsantiago.weighttracker.util.PreferenceUtil;
 import com.rappsantiago.weighttracker.util.Util;
 
 import static com.rappsantiago.weighttracker.provider.WeightTrackerContract.*;
@@ -50,6 +54,8 @@ public class WeightTrackerSaveService extends IntentService {
     private static final String PREFIX = "com.rappsantiago.weighttracker.service.WeightTrackerSaveService";
 
     // actions
+    private static final String ACTION_SETUP_PROFILE = PREFIX + ".ACTION_SETUP_PROFILE";
+
     private static final String ACTION_INSERT_PROFILE = PREFIX + ".ACTION_INSERT_PROFILE";
 
     private static final String ACTION_INSERT_PROGRESS = PREFIX + ".ACTION_INSERT_PROGRESS";
@@ -85,6 +91,8 @@ public class WeightTrackerSaveService extends IntentService {
 
     private static final String EXTRA_GOAL_DUE_DATE = PREFIX + ".EXTRA_GOAL_DUE_DATE";
 
+    private static final String EXTRA_GOAL_TARGET_WEIGHT = PREFIX + ".EXTRA_GOAL_TARGET_WEIGHT";
+
     private static final String EXTRA_WEIGHT_UNIT = PREFIX + ".EXTRA_WEIGHT_UNIT";
 
     private static final String EXTRA_HEIGHT_UNIT = PREFIX + ".EXTRA_HEIGHT_UNIT";
@@ -103,12 +111,16 @@ public class WeightTrackerSaveService extends IntentService {
         String action = intent.getAction();
 
         switch (action) {
+            case ACTION_SETUP_PROFILE:
+                setupProfile(intent);
+                break;
+
             case ACTION_INSERT_PROFILE:
-                insertProfile(intent);
+                insertProfile(intent, true);
                 break;
 
             case ACTION_INSERT_PROGRESS:
-                insertProgress(intent);
+                insertProgress(intent, true);
                 break;
 
             case ACTION_UPDATE_PROGRESS:
@@ -124,7 +136,7 @@ public class WeightTrackerSaveService extends IntentService {
                 break;
 
             case ACTION_INSERT_GOAL:
-                insertGoal(intent);
+                insertGoal(intent, true);
                 break;
 
             default:
@@ -135,7 +147,22 @@ public class WeightTrackerSaveService extends IntentService {
     /**
      * Action Implementations
      */
-    private void insertProfile(Intent intent) {
+    private void setupProfile(Intent intent) {
+        insertProfile(intent, false);
+        insertProgress(intent, false);
+        insertGoal(intent, false);
+
+        // set default weight and height unit of measurement
+        String weightUnit = intent.getStringExtra(EXTRA_WEIGHT_UNIT);
+        String heightUnit = intent.getStringExtra(EXTRA_HEIGHT_UNIT);
+        PreferenceUtil.setWeightUnit(this, weightUnit);
+        PreferenceUtil.setHeightUnit(this, heightUnit);
+
+        Intent callbackIntent = intent.getParcelableExtra(EXTRA_CALLBACK_INTENT);
+        deliverCallback(callbackIntent);
+    }
+
+    private void insertProfile(Intent intent, boolean deliverCallback) {
         String name = intent.getStringExtra(EXTRA_PROFILE_NAME);
         long birthdayInMillis = intent.getLongExtra(EXTRA_PROFILE_BIRTHDAY, 0L);
         String gender = intent.getStringExtra(EXTRA_PROFILE_GENDER);
@@ -164,13 +191,13 @@ public class WeightTrackerSaveService extends IntentService {
 
         Uri profileUri = getContentResolver().insert(Profile.CONTENT_URI, profileValues);
 
-        if (null != profileUri) {
+        if (deliverCallback && null != profileUri) {
             Intent callbackIntent = intent.getParcelableExtra(EXTRA_CALLBACK_INTENT);
             deliverCallback(callbackIntent);
         }
     }
 
-    private void insertProgress(Intent intent) {
+    private void insertProgress(Intent intent, boolean deliverCallback) {
         double newWeight = intent.getDoubleExtra(EXTRA_PROGRESS_WEIGHT, 0.0);
         long date = intent.getLongExtra(EXTRA_PROGRESS_DATE, 0L);
         String weightUnit = intent.getStringExtra(EXTRA_WEIGHT_UNIT);
@@ -194,7 +221,7 @@ public class WeightTrackerSaveService extends IntentService {
 
         Uri result = getContentResolver().insert(Progress.CONTENT_URI, values);
 
-        if (null != result) {
+        if (deliverCallback && null != result) {
             Intent callbackIntent = intent.getParcelableExtra(EXTRA_CALLBACK_INTENT);
             deliverCallback(callbackIntent);
         }
@@ -273,8 +300,8 @@ public class WeightTrackerSaveService extends IntentService {
         }
     }
 
-    private void insertGoal(Intent intent) {
-        double targetWeight = intent.getDoubleExtra(EXTRA_PROGRESS_WEIGHT, 0.0);
+    private void insertGoal(Intent intent, boolean deliverCallback) {
+        double targetWeight = intent.getDoubleExtra(EXTRA_GOAL_TARGET_WEIGHT, 0.0);
         long dueDateInMillis = intent.getLongExtra(EXTRA_GOAL_DUE_DATE, 0L);
         String weightUnit = intent.getStringExtra(EXTRA_WEIGHT_UNIT);
 
@@ -295,13 +322,54 @@ public class WeightTrackerSaveService extends IntentService {
 
         goalValues.put(Goal.COL_DUE_DATE, dueDateInMillis);
 
-        getContentResolver().insert(Goal.CONTENT_URI, goalValues);
+        Uri goalUri = getContentResolver().insert(Goal.CONTENT_URI, goalValues);
+
+        if (deliverCallback && null != goalUri) {
+            Intent callbackIntent = intent.getParcelableExtra(EXTRA_CALLBACK_INTENT);
+            deliverCallback(callbackIntent);
+        }
     }
 
 
     /**
      * Intent Builders
      */
+    public static Intent createSetupProfileIntent(Context context, Bundle profileData, Class<? extends Activity> callbackActivity, String callbackAction) {
+        Intent setupProfileIntent = new Intent(context, WeightTrackerSaveService.class);
+        setupProfileIntent.setAction(ACTION_SETUP_PROFILE);
+
+        String name = profileData.getString(NameBirthdayGenderFragment.KEY_NAME);
+        long birthdayInMillis = profileData.getLong(NameBirthdayGenderFragment.KEY_BIRTHDAY);
+        String gender = profileData.getString(NameBirthdayGenderFragment.KEY_GENDER);
+        double weight = profileData.getDouble(WeightHeightFragment.KEY_WEIGHT);
+        String weightUnit = profileData.getString(WeightHeightFragment.KEY_WEIGHT_UNIT);
+        double height = profileData.getDouble(WeightHeightFragment.KEY_HEIGHT);
+        double inches = profileData.getDouble(WeightHeightFragment.KEY_HEIGHT_INCHES);
+        String heightUnit = profileData.getString(WeightHeightFragment.KEY_HEIGHT_UNIT);
+        double targetWeight = profileData.getDouble(TargetWeightFragment.KEY_TARGET_WEIGHT);
+        long dueDateInMillis = profileData.getLong(TargetWeightFragment.KEY_DUE_DATE);
+
+        setupProfileIntent.putExtra(EXTRA_PROFILE_NAME, name);
+        setupProfileIntent.putExtra(EXTRA_PROFILE_BIRTHDAY, birthdayInMillis);
+        setupProfileIntent.putExtra(EXTRA_PROFILE_GENDER, gender);
+        setupProfileIntent.putExtra(EXTRA_PROFILE_HEIGHT, height);
+        setupProfileIntent.putExtra(EXTRA_PROFILE_HEIGHT_INCHES, inches);
+        setupProfileIntent.putExtra(EXTRA_HEIGHT_UNIT, heightUnit);
+
+        setupProfileIntent.putExtra(EXTRA_PROGRESS_WEIGHT, weight);
+        setupProfileIntent.putExtra(EXTRA_PROGRESS_DATE, Util.getCurrentDateInMillis());
+        setupProfileIntent.putExtra(EXTRA_WEIGHT_UNIT, weightUnit);
+
+        setupProfileIntent.putExtra(EXTRA_GOAL_TARGET_WEIGHT, targetWeight);
+        setupProfileIntent.putExtra(EXTRA_GOAL_DUE_DATE, dueDateInMillis);
+
+        Intent callbackIntent = new Intent(context, callbackActivity);
+        callbackIntent.setAction(callbackAction);
+        setupProfileIntent.putExtra(EXTRA_CALLBACK_INTENT, callbackIntent);
+
+        return setupProfileIntent;
+    }
+
     public static Intent createInsertProfileIntent(Context context, String name, long birthdayInMillis, String gender, double height, double inches,
             String heightUnit, Class<? extends Activity> callbackActivity, String callbackAction) {
         Intent insertProfileIntent = new Intent(context, WeightTrackerSaveService.class);
@@ -380,7 +448,7 @@ public class WeightTrackerSaveService extends IntentService {
     public static Intent createInsertGoalIntent(Context context, double targetWeight, long dueDateInMillis, String weightUnit, Class<? extends Activity> callbackActivity, String callbackAction) {
         Intent insertGoalIntent = new Intent(context, WeightTrackerSaveService.class);
         insertGoalIntent.setAction(ACTION_INSERT_GOAL);
-        insertGoalIntent.putExtra(EXTRA_PROGRESS_WEIGHT, targetWeight);
+        insertGoalIntent.putExtra(EXTRA_GOAL_TARGET_WEIGHT, targetWeight);
         insertGoalIntent.putExtra(EXTRA_GOAL_DUE_DATE, dueDateInMillis);
         insertGoalIntent.putExtra(EXTRA_WEIGHT_UNIT, weightUnit);
 
