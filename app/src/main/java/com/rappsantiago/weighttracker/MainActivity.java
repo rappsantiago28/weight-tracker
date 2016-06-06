@@ -71,6 +71,8 @@ public class MainActivity extends AppCompatActivity
 
     public static final String CALLBACK_ACTION_INSERT_GOAL = "MainActivity.CALLBACK_ACTION_INSERT_GOAL";
 
+    public static final String CALLBACK_ACTION_SETUP_PROFILE = "MainActivity.CALLBACK_ACTION_SETUP_PROFILE";
+
     private int mCurrentPage;
 
     private ProfileFragment mProfileFragment;
@@ -166,65 +168,13 @@ public class MainActivity extends AppCompatActivity
 
                     Bundle profileData = data.getExtras();
 
-                    // save profile
-                    String name = profileData.getString(NameBirthdayGenderFragment.KEY_NAME);
-                    long birthdayInMillis = profileData.getLong(NameBirthdayGenderFragment.KEY_BIRTHDAY);
-                    String gender = profileData.getString(NameBirthdayGenderFragment.KEY_GENDER);
-                    double weight = profileData.getDouble(WeightHeightFragment.KEY_WEIGHT);
-                    String weightUnit = profileData.getString(WeightHeightFragment.KEY_WEIGHT_UNIT);
-                    double height = profileData.getDouble(WeightHeightFragment.KEY_HEIGHT);
-                    double inches = profileData.getDouble(WeightHeightFragment.KEY_HEIGHT_INCHES);
-                    String heightUnit = profileData.getString(WeightHeightFragment.KEY_HEIGHT_UNIT);
-
-                    Intent insertProfileIntent = WeightTrackerSaveService.createInsertProfileIntent(
+                    Intent setupProfileIntent = WeightTrackerSaveService.createSetupProfileIntent(
                             this,
-                            name,
-                            birthdayInMillis,
-                            gender,
-                            height,
-                            inches,
-                            heightUnit,
+                            profileData,
                             MainActivity.class,
-                            CALLBACK_ACTION_INSERT_PROFILE);
+                            CALLBACK_ACTION_SETUP_PROFILE);
 
-                    startService(insertProfileIntent);
-
-                    // set default weight and height units
-                    Log.d(TAG, "weightUnit = " + weightUnit + ", heightUnit = " + heightUnit);
-                    PreferenceUtil.setWeightUnit(this, weightUnit);
-                    PreferenceUtil.setHeightUnit(this, heightUnit);
-
-                    // make current weight as initial progress
-                    Intent insertProgressIntent = WeightTrackerSaveService.createInsertProgressIntent(
-                            this,
-                            weight,
-                            Util.getCurrentDateInMillis(),
-                            weightUnit,
-                            MainActivity.class,
-                            MainActivity.CALLBACK_ACTION_INSERT_PROGRESS);
-
-                    startService(insertProgressIntent);
-
-                    // save goal
-                    double targetWeight = profileData.getDouble(TargetWeightFragment.KEY_TARGET_WEIGHT);
-                    long dueDateInMillis = profileData.getLong(TargetWeightFragment.KEY_DUE_DATE);
-
-                    if (0.0 < targetWeight) {
-                        Intent insertGoalIntent = WeightTrackerSaveService.createInsertGoalIntent(
-                                this,
-                                targetWeight,
-                                dueDateInMillis,
-                                weightUnit,
-                                MainActivity.class,
-                                CALLBACK_ACTION_INSERT_GOAL);
-
-                        startService(insertGoalIntent);
-                    } else {
-                        // user skipped and will set later
-                    }
-
-                    // TODO : start services one at a time
-                    replaceMainContent(mProfileFragment, R.string.profile);
+                    startService(setupProfileIntent);
                 }
                 break;
 
@@ -321,12 +271,7 @@ public class MainActivity extends AppCompatActivity
         String action = callbackIntent.getAction();
 
         switch (action) {
-            case CALLBACK_ACTION_INSERT_PROFILE:
-                mProfileFragment.refreshPage();
-                break;
-
             case CALLBACK_ACTION_INSERT_PROGRESS:
-                mProfileFragment.refreshPage();
                 break;
 
             case CALLBACK_ACTION_DELETE_PROGRESS:
@@ -336,8 +281,8 @@ public class MainActivity extends AppCompatActivity
                 }
                 break;
 
-            case CALLBACK_ACTION_INSERT_GOAL:
-                mProfileFragment.refreshPage();
+            case CALLBACK_ACTION_SETUP_PROFILE:
+                replaceMainContent(mProfileFragment, R.string.profile);
                 break;
 
             default:
