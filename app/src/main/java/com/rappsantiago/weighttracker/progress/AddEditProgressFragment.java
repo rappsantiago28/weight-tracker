@@ -18,6 +18,7 @@ package com.rappsantiago.weighttracker.progress;
 
 import android.app.DatePickerDialog;
 import android.content.ContentUris;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -36,6 +37,7 @@ import android.widget.TextView;
 
 import com.rappsantiago.weighttracker.MainActivity;
 import com.rappsantiago.weighttracker.R;
+import com.rappsantiago.weighttracker.dialog.ConfirmationDialogFragment;
 import com.rappsantiago.weighttracker.dialog.DatePickerDialogFragment;
 import com.rappsantiago.weighttracker.provider.DbConstants;
 import com.rappsantiago.weighttracker.service.WeightTrackerSaveService;
@@ -151,7 +153,7 @@ public class AddEditProgressFragment extends Fragment implements DatePickerDialo
         }
     };
 
-    private void doSaveOnCreate(double newWeight, String weightUnit) {
+    private void doSaveOnCreate(final double newWeight, final String weightUnit) {
         try (Cursor cursor = getActivity().getContentResolver().query(
                 Progress.CONTENT_URI,
                 DbConstants.COLUMNS_PROGRESS,
@@ -162,11 +164,21 @@ public class AddEditProgressFragment extends Fragment implements DatePickerDialo
             // check if progress for the day is already existing
             if (null != cursor && 0 < cursor.getCount() && cursor.moveToFirst()) {
 
-                // TODO : show warning dialog
+                final long progressId = cursor.getLong(DbConstants.IDX_PROGRESS_ID);
 
-                long progressId = cursor.getLong(DbConstants.IDX_PROGRESS_ID);
+                ConfirmationDialogFragment confirmationDialog =
+                        ConfirmationDialogFragment.createDialog(
+                                getString(R.string.warning),
+                                getString(R.string.date_already_exists));
 
-                startUpdateProgressService(progressId, newWeight, weightUnit);
+                confirmationDialog.setPositiveClickListener(new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        startUpdateProgressService(progressId, newWeight, weightUnit);
+                    }
+                });
+
+                confirmationDialog.show(getFragmentManager(), "");
             } else {
                 Intent insertProgressIntent = WeightTrackerSaveService.createInsertProgressIntent(
                         getActivity(),
@@ -181,7 +193,7 @@ public class AddEditProgressFragment extends Fragment implements DatePickerDialo
         }
     }
 
-    private void doSaveOnUpdate(long progressId, double newWeight, String weightUnit) {
+    private void doSaveOnUpdate(final long progressId, final double newWeight, final String weightUnit) {
         try (Cursor cursor = getActivity().getContentResolver().query(
                 Progress.CONTENT_URI,
                 DbConstants.COLUMNS_PROGRESS,
@@ -192,6 +204,23 @@ public class AddEditProgressFragment extends Fragment implements DatePickerDialo
             // check if progress for the day is already existing
             if (null != cursor && 0 < cursor.getCount() && cursor.moveToFirst()) {
                 // TODO : show warning dialog, YES -> remove other entry and update this
+
+                final long progressIdToDelete = cursor.getLong(DbConstants.IDX_PROGRESS_ID);
+
+                ConfirmationDialogFragment confirmationDialog =
+                        ConfirmationDialogFragment.createDialog(
+                                getString(R.string.warning),
+                                getString(R.string.date_already_exists));
+
+                confirmationDialog.setPositiveClickListener(new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // TODO : Make delete and update atomic in WeightTrackerSaveService
+                        // startUpdateProgressService(progressId, newWeight, weightUnit);
+                    }
+                });
+
+                confirmationDialog.show(getFragmentManager(), "");
             } else {
                 startUpdateProgressService(progressId, newWeight, weightUnit);
             }

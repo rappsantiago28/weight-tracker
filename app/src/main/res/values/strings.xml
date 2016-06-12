@@ -55,6 +55,8 @@
     <string name="no_data_to_show">No data to show</string>
     <string name="action_edit">Edit</string>
     <string name="action_delete">Delete</string>
+    <string name="warning">Warning</string>
+    <string name="date_already_exists">Date already exists. Do you want to replace existing entry?</string>
 
     <!-- String Arrays -->
     <string-array name="arr_weight_unit">
