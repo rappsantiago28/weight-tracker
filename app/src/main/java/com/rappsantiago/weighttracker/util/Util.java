@@ -18,6 +18,8 @@ package com.rappsantiago.weighttracker.util;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import static com.rappsantiago.weighttracker.provider.WeightTrackerContract.*;
 
@@ -130,5 +132,12 @@ public final class Util {
             arrIds[idx++] = id;
         }
         return arrIds;
+    }
+
+    public static void hideSoftKeyboard(Context context, View view) {
+        if (null != view) {
+            InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 }

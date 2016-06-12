@@ -21,7 +21,10 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
+import android.view.WindowManager;
 import android.widget.DatePicker;
+
+import com.rappsantiago.weighttracker.util.Util;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -45,7 +48,10 @@ public class DatePickerDialogFragment extends DialogFragment {
         int monthOfYear = now.getMonthOfYear();
         int dayOfMonth = now.getDayOfMonth();
 
-        return new DatePickerDialog(getActivity(), mOnDateSetListener, year, monthOfYear - 1, dayOfMonth);
+        Dialog datePickerDialog = new DatePickerDialog(getActivity(), mOnDateSetListener, year, monthOfYear - 1, dayOfMonth);
+        Util.hideSoftKeyboard(getContext(), getActivity().getCurrentFocus());
+
+        return datePickerDialog;
     }
 
 }
