@@ -112,6 +112,15 @@ public class WeightTrackerProvider extends ContentProvider {
                 cursor = db.query(Progress.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
                 break;
 
+            case PROGRESS_ID:
+                cursor = db.query(
+                        Progress.TABLE_NAME,
+                        projection,
+                        Progress._ID + " = ?",
+                        new String[]{Long.toString(ContentUris.parseId(uri))},
+                        null, null, sortOrder);
+                break;
+
             case GOAL:
                 cursor = db.query(Goal.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
                 break;

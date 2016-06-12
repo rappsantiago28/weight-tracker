@@ -22,7 +22,7 @@
         <activity android:name=".settings.SettingsActivity"
             android:parentActivityName=".MainActivity" />
 
-        <activity android:name=".progress.AddProgressActivity"
+        <activity android:name=".progress.AddEditProgressActivity"
             android:parentActivityName=".MainActivity" />
 
         <provider

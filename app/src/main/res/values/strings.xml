@@ -39,6 +39,7 @@
     <string name="invalid_height">Invalid height</string>
     <string name="unit_of_measurement">Unit of measurement</string>
     <string name="add_progress">Add Progress</string>
+    <string name="edit_progress">Edit Progress</string>
     <string name="new_weight">New weight</string>
     <string name="date">Date</string>
     <string name="done">Done</string>

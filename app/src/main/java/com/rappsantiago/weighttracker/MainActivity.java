@@ -17,10 +17,8 @@
 package com.rappsantiago.weighttracker;
 
 import android.app.Activity;
-import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -30,23 +28,17 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.rappsantiago.weighttracker.profile.ProfileFragment;
-import com.rappsantiago.weighttracker.profile.setup.NameBirthdayGenderFragment;
 import com.rappsantiago.weighttracker.profile.setup.ProfileSetupActivity;
-import com.rappsantiago.weighttracker.profile.setup.TargetWeightFragment;
-import com.rappsantiago.weighttracker.profile.setup.WeightHeightFragment;
-import com.rappsantiago.weighttracker.progress.AddProgressActivity;
+import com.rappsantiago.weighttracker.progress.AddEditProgressActivity;
 import com.rappsantiago.weighttracker.progress.HistoryFragment;
 import com.rappsantiago.weighttracker.progress.StatisticsFragment;
 import com.rappsantiago.weighttracker.service.WeightTrackerSaveService;
 import com.rappsantiago.weighttracker.settings.SettingsActivity;
-import com.rappsantiago.weighttracker.util.PreferenceUtil;
-import com.rappsantiago.weighttracker.util.Util;
 
 import static com.rappsantiago.weighttracker.provider.WeightTrackerContract.*;
 
@@ -142,7 +134,7 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent addProgressIntent = new Intent(MainActivity.this, AddProgressActivity.class);
+                Intent addProgressIntent = new Intent(MainActivity.this, AddEditProgressActivity.class);
                 startActivity(addProgressIntent);
             }
         });

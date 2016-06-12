@@ -24,7 +24,6 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.view.ActionMode;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -54,8 +53,6 @@ public class HistoryFragment extends Fragment implements LoaderManager.LoaderCal
     private ListView mListView;
 
     private HistoryCursorAdapter mCursorAdapter;
-
-    // TODO : create edit page
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -114,6 +111,15 @@ public class HistoryFragment extends Fragment implements LoaderManager.LoaderCal
             @Override
             public void onDestroyActionMode(ActionMode mode) {
                 mCursorAdapter.stopMultipleSelection();
+            }
+        });
+
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent editProgressIntent = new Intent(getContext(), AddEditProgressActivity.class);
+                editProgressIntent.putExtra(AddEditProgressActivity.EXTRA_EXISTING_PROGRESS_ID, id);
+                startActivity(editProgressIntent);
             }
         });
 

@@ -27,17 +27,32 @@ import com.rappsantiago.weighttracker.service.WeightTrackerSaveService;
 /**
  * Created by rappsantiago28 on 3/26/16.
  */
-public class AddProgressActivity extends SimpleActivityWithFragment
+public class AddEditProgressActivity extends SimpleActivityWithFragment
         implements WeightTrackerSaveService.Listener {
+
+    public static final String EXTRA_EXISTING_PROGRESS_ID = "com.rappsantiago.weighttracker.progress.AddEditProgressActivity.EXTRA_EXISTING_PROGRESS_ID";
+
+    private long mExistingProgressId = -1L;
+
+    @Override
+    protected void setup(Intent intent) {
+        if (null != intent) {
+            mExistingProgressId = intent.getLongExtra(EXTRA_EXISTING_PROGRESS_ID, -1L);
+        }
+    }
 
     @Override
     protected int getResTitle() {
-        return R.string.add_progress;
+        if (-1 != mExistingProgressId) {
+            return R.string.edit_progress;
+        } else {
+            return R.string.add_progress;
+        }
     }
 
     @Override
     protected Fragment getContent() {
-        return new AddProgressFragment();
+        return AddEditProgressFragment.createFragment(mExistingProgressId);
     }
 
     @Override

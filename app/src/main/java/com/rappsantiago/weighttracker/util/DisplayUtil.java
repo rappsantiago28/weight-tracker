@@ -70,15 +70,15 @@ public final class DisplayUtil {
         switch (weightUnit) {
             case Profile.WEIGHT_UNIT_KILOGRAMS:
                 formattedWeight = String.format(
-                        "%.2f %s",
-                        weightInKilograms,
+                        "%s %s",
+                        getWeightString(context, weightInKilograms, weightUnit),
                         context.getString(R.string.kilograms));
                 break;
 
             case Profile.WEIGHT_UNIT_POUNDS:
                 formattedWeight = String.format(
-                        "%.2f %s",
-                        autoConvert ? Util.kilogramsToPounds(weightInKilograms) : weightInKilograms,
+                        "%s %s",
+                        getWeightString(context, weightInKilograms, autoConvert ? null : weightUnit),
                         context.getString(R.string.pounds));
                 break;
 
@@ -87,6 +87,36 @@ public final class DisplayUtil {
         }
 
         return formattedWeight;
+    }
+
+    public static String getWeightString(Context context, double weightInKilograms, String weightUnit) {
+
+        boolean autoConvert = false;
+
+        // if no weight unit is specified, use weight unit in preference and auto-convert values
+        if (null == weightUnit || !Util.isStringGood(weightUnit)) {
+            weightUnit = PreferenceUtil.getWeightUnit(context);
+            autoConvert = true;
+        }
+
+        String strWeight = "";
+
+        switch (weightUnit) {
+            case Profile.WEIGHT_UNIT_KILOGRAMS:
+                strWeight = String.format("%.2f", weightInKilograms);
+                break;
+
+            case Profile.WEIGHT_UNIT_POUNDS:
+                strWeight = String.format(
+                        "%.2f",
+                        autoConvert ? Util.kilogramsToPounds(weightInKilograms) : weightInKilograms);
+                break;
+
+            default:
+                throw new IllegalArgumentException();
+        }
+
+        return strWeight;
     }
 
     public static String getFormattedHeight(Context context, double height, double heightInches, String heightUnit) {
