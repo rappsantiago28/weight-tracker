@@ -60,6 +60,8 @@ public class WeightTrackerSaveService extends IntentService {
 
     private static final String ACTION_INSERT_PROGRESS = PREFIX + ".ACTION_INSERT_PROGRESS";
 
+    private static final String ACTION_REPLACE_PROGRESS = PREFIX + ".ACTION_REPLACE_PROGRESS";
+
     private static final String ACTION_UPDATE_PROGRESS = PREFIX + ".ACTION_UPDATE_PROGRESS";
 
     private static final String ACTION_DELETE_PROGRESS = PREFIX + ".ACTION_DELETE_PROGRESS";
@@ -82,6 +84,8 @@ public class WeightTrackerSaveService extends IntentService {
     private static final String EXTRA_PROFILE_HEIGHT_INCHES = PREFIX + ".EXTRA_PROFILE_HEIGHT_INCHES";
 
     private static final String EXTRA_PROGRESS_ID = PREFIX + ".EXTRA_PROGRESS_ID";
+
+    private static final String EXTRA_PROGRESS_ID2 = PREFIX + ".EXTRA_PROGRESS_ID2";
 
     private static final String EXTRA_PROGRESS_IDS = PREFIX + ".EXTRA_PROGRESS_IDS";
 
@@ -123,12 +127,16 @@ public class WeightTrackerSaveService extends IntentService {
                 insertProgress(intent, true);
                 break;
 
+            case ACTION_REPLACE_PROGRESS:
+                replaceProgress(intent);
+                break;
+
             case ACTION_UPDATE_PROGRESS:
-                updateProgress(intent);
+                updateProgress(intent, true);
                 break;
 
             case ACTION_DELETE_PROGRESS:
-                deleteProgress(intent);
+                deleteProgress(intent, true);
                 break;
 
             case ACTION_BULK_DELETE_PROGRESS:
@@ -227,7 +235,19 @@ public class WeightTrackerSaveService extends IntentService {
         }
     }
 
-    private void updateProgress(Intent intent) {
+    private void replaceProgress(Intent intent) {
+        long progressToDelete = intent.getLongExtra(EXTRA_PROGRESS_ID2, 0L);
+        int result = deleteProgress(progressToDelete);
+
+        if (0 < result) {
+            updateProgress(intent, false);
+        }
+
+        Intent callbackIntent = intent.getParcelableExtra(EXTRA_CALLBACK_INTENT);
+        deliverCallback(callbackIntent);
+    }
+
+    private void updateProgress(Intent intent, boolean deliverCallback) {
         long progressId = intent.getLongExtra(EXTRA_PROGRESS_ID, 0L);
         double newWeight = intent.getDoubleExtra(EXTRA_PROGRESS_WEIGHT, 0.0);
         long date = intent.getLongExtra(EXTRA_PROGRESS_DATE, 0L);
@@ -255,22 +275,27 @@ public class WeightTrackerSaveService extends IntentService {
 
         int result = getContentResolver().update(updateProgressUri, values, null, null);
 
-        if (0 < result) {
+        if (deliverCallback && 0 < result) {
             Intent callbackIntent = intent.getParcelableExtra(EXTRA_CALLBACK_INTENT);
             deliverCallback(callbackIntent);
         }
     }
 
-    private void deleteProgress(Intent intent) {
+    private void deleteProgress(Intent intent, boolean deliverCallback) {
         long progressId = intent.getLongExtra(EXTRA_PROGRESS_ID, 0L);
-        Uri deleteProgressUri = ContentUris.withAppendedId(
-                Progress.CONTENT_URI, progressId);
-        int result = getContentResolver().delete(deleteProgressUri, null, null);
+        int result = deleteProgress(progressId);
 
-        if (0 < result) {
+        if (deliverCallback && 0 < result) {
             Intent callbackIntent = intent.getParcelableExtra(EXTRA_CALLBACK_INTENT);
             deliverCallback(callbackIntent);
         }
+    }
+
+    private int deleteProgress(long progressId) {
+        Uri deleteProgressUri = ContentUris.withAppendedId(
+                Progress.CONTENT_URI, progressId);
+        int result = getContentResolver().delete(deleteProgressUri, null, null);
+        return result;
     }
 
     private void bulkDeleteProgress(Intent intent) {
@@ -401,6 +426,25 @@ public class WeightTrackerSaveService extends IntentService {
         insertProgressIntent.putExtra(EXTRA_CALLBACK_INTENT, callbackIntent);
 
         return insertProgressIntent;
+    }
+
+    public static Intent createReplaceProgressIntent(Context context, long progressId,
+        double newWeight, long dateInMillis, String weightUnit,
+        long progressIdToDelete, Class<? extends Activity> callbackActivity, String callbackAction) {
+
+        Intent replaceProgressIntent = new Intent(context, WeightTrackerSaveService.class);
+        replaceProgressIntent.setAction(ACTION_REPLACE_PROGRESS);
+        replaceProgressIntent.putExtra(EXTRA_PROGRESS_ID, progressId);
+        replaceProgressIntent.putExtra(EXTRA_PROGRESS_ID2, progressIdToDelete);
+        replaceProgressIntent.putExtra(EXTRA_PROGRESS_WEIGHT, newWeight);
+        replaceProgressIntent.putExtra(EXTRA_PROGRESS_DATE, dateInMillis);
+        replaceProgressIntent.putExtra(EXTRA_WEIGHT_UNIT, weightUnit);
+
+        Intent callbackIntent = new Intent(context, callbackActivity);
+        callbackIntent.setAction(callbackAction);
+        replaceProgressIntent.putExtra(EXTRA_CALLBACK_INTENT, callbackIntent);
+
+        return replaceProgressIntent;
     }
 
     public static Intent createUpdateProgressIntent(Context context, long progressId,

@@ -203,7 +203,6 @@ public class AddEditProgressFragment extends Fragment implements DatePickerDialo
 
             // check if progress for the day is already existing
             if (null != cursor && 0 < cursor.getCount() && cursor.moveToFirst()) {
-                // TODO : show warning dialog, YES -> remove other entry and update this
 
                 final long progressIdToDelete = cursor.getLong(DbConstants.IDX_PROGRESS_ID);
 
@@ -215,8 +214,7 @@ public class AddEditProgressFragment extends Fragment implements DatePickerDialo
                 confirmationDialog.setPositiveClickListener(new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        // TODO : Make delete and update atomic in WeightTrackerSaveService
-                        // startUpdateProgressService(progressId, newWeight, weightUnit);
+                        startReplaceProgressService(progressId, newWeight, weightUnit, progressIdToDelete);
                     }
                 });
 
@@ -237,6 +235,19 @@ public class AddEditProgressFragment extends Fragment implements DatePickerDialo
                 MainActivity.CALLBACK_ACTION_UPDATE_PROGRESS);
 
         getActivity().startService(updateProgressIntent);
+    }
+
+    private void startReplaceProgressService(long progressId, double newWeight, String weightUnit, long progressIdToDelete) {
+        Intent replaceProgressIntent = WeightTrackerSaveService.createReplaceProgressIntent(getActivity(),
+                progressId,
+                newWeight,
+                mDateInMillis,
+                weightUnit,
+                progressIdToDelete,
+                AddEditProgressActivity.class,
+                MainActivity.CALLBACK_ACTION_REPLACE_PROGRESS);
+
+        getActivity().startService(replaceProgressIntent);
     }
 
     @Override

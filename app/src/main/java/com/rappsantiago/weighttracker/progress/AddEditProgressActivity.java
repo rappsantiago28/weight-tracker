@@ -74,6 +74,7 @@ public class AddEditProgressActivity extends SimpleActivityWithFragment
         switch (action) {
             case MainActivity.CALLBACK_ACTION_INSERT_PROGRESS:
             case MainActivity.CALLBACK_ACTION_UPDATE_PROGRESS:
+            case MainActivity.CALLBACK_ACTION_REPLACE_PROGRESS:
                 finish();
                 break;
 

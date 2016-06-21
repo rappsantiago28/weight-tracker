@@ -55,6 +55,8 @@ public class MainActivity extends AppCompatActivity
 
     public static final String CALLBACK_ACTION_INSERT_PROGRESS = "MainActivity.CALLBACK_ACTION_INSERT_PROGRESS";
 
+    public static final String CALLBACK_ACTION_REPLACE_PROGRESS = "MainActivity.CALLBACK_ACTION_REPLACE_PROGRESS";
+
     public static final String CALLBACK_ACTION_UPDATE_PROGRESS = "MainActivity.CALLBACK_ACTION_UPDATE_PROGRESS";
 
     public static final String CALLBACK_ACTION_DELETE_PROGRESS = "MainActivity.CALLBACK_ACTION_DELETE_PROGRESS";
