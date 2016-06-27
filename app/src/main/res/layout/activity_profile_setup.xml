@@ -51,6 +51,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:background="@drawable/selector_common_button"
                 android:text="@string/back"
                 android:onClick="performBackOrNextAction"
                 android:enabled="false" />
@@ -60,6 +61,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:background="@drawable/selector_common_button"
                 android:text="@string/next"
                 android:onClick="performBackOrNextAction" />
         </LinearLayout>

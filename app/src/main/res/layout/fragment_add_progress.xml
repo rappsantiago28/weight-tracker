@@ -48,6 +48,7 @@
         android:id="@+id/btn_done"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/selector_common_button"
         android:text="@string/done" />
 
 </LinearLayout>
