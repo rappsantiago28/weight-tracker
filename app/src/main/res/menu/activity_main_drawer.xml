@@ -4,17 +4,17 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_profile"
-            android:icon="@mipmap/ic_launcher"
+            android:icon="@drawable/ic_account_circle_white_48dp"
             android:title="@string/profile" />
 
         <item
             android:id="@+id/nav_progress_history"
-            android:icon="@mipmap/ic_launcher"
+            android:icon="@drawable/ic_watch_later_white_48dp"
             android:title="@string/progress_history" />
 
         <item
             android:id="@+id/nav_statistics"
-            android:icon="@mipmap/ic_launcher"
+            android:icon="@drawable/ic_timeline_white_48dp"
             android:title="@string/statistics" />
     </group>
 
@@ -22,12 +22,12 @@
         <menu>
             <item
                 android:id="@+id/nav_share"
-                android:icon="@mipmap/ic_launcher"
+                android:icon="@drawable/ic_share_white_48dp"
                 android:title="@string/share" />
 
             <item
                 android:id="@+id/nav_about"
-                android:icon="@mipmap/ic_launcher"
+                android:icon="@drawable/ic_face_white_48dp"
                 android:title="@string/about" />
         </menu>
     </item>
