@@ -36,6 +36,10 @@ public class WeightProgressCursorLoader extends CursorLoader {
 
     public static String COL_PERCENT_COMPLETE = "percent_complete";
 
+    public static String COL_REMAINING_WEIGHT = "remaining_weight";
+
+    public static String COL_WEIGHT_LOST = "weight_lost";
+
     public static int IDX_WEIGHT_PROGRESS_ID = 0;
 
     public static int IDX_WEIGHT_PROGRESS_INITIAL_WEIGHT = 1;
@@ -44,11 +48,17 @@ public class WeightProgressCursorLoader extends CursorLoader {
 
     public static int IDX_WEIGHT_PROGRESS_PERCENT_COMPLETE = 3;
 
+    public static int IDX_WEIGHT_PROGRESS_REMAINING = 4;
+
+    public static int IDX_WEIGHT_PROGRESS_LOST = 5;
+
     public static final String[] COLS_WEIGHT_PROGRESS = {
             COL_ID,
             COL_INITIAL_WEIGHT,
             COL_CURRENT_WEIGHT,
-            COL_PERCENT_COMPLETE
+            COL_PERCENT_COMPLETE,
+            COL_REMAINING_WEIGHT,
+            COL_WEIGHT_LOST
     };
 
     public WeightProgressCursorLoader(Context context) {
@@ -69,11 +79,17 @@ public class WeightProgressCursorLoader extends CursorLoader {
         double percentComplete = Util.getPercentComplete(
                 initialWeight, currentWeight, targetWeight);
 
+        double remainingWeight = Util.getRemainingWeight(currentWeight, targetWeight);
+
+        double weightLost = Util.getWeightLost(initialWeight, currentWeight);
+
         matrixCursor.addRow(new Object[]{
                 1,
                 initialWeight,
                 currentWeight,
-                percentComplete
+                percentComplete,
+                remainingWeight,
+                weightLost
         });
 
         return matrixCursor;

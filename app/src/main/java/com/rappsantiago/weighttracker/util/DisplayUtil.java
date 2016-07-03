@@ -65,26 +65,10 @@ public final class DisplayUtil {
             autoConvert = true;
         }
 
-        String formattedWeight = "";
-
-        switch (weightUnit) {
-            case Profile.WEIGHT_UNIT_KILOGRAMS:
-                formattedWeight = String.format(
-                        "%s %s",
-                        getWeightString(context, weightInKilograms, weightUnit),
-                        context.getString(R.string.kilograms));
-                break;
-
-            case Profile.WEIGHT_UNIT_POUNDS:
-                formattedWeight = String.format(
-                        "%s %s",
-                        getWeightString(context, weightInKilograms, autoConvert ? null : weightUnit),
-                        context.getString(R.string.pounds));
-                break;
-
-            default:
-                throw new IllegalArgumentException();
-        }
+        String formattedWeight = String.format(
+                "%s %s",
+                getWeightString(context, weightInKilograms, autoConvert ? null : weightUnit),
+                getWeightUnitString(context, weightUnit));
 
         return formattedWeight;
     }
@@ -117,6 +101,28 @@ public final class DisplayUtil {
         }
 
         return strWeight;
+    }
+
+    public static String getWeightUnitString(Context context, String weightUnit) {
+        if (null == weightUnit || !Util.isStringGood(weightUnit)) {
+            weightUnit = PreferenceUtil.getWeightUnit(context);
+        }
+
+        String strWeightUnit = "";
+        switch (weightUnit) {
+            case Profile.WEIGHT_UNIT_KILOGRAMS:
+                strWeightUnit = context.getString(R.string.kilograms);
+                break;
+
+            case Profile.WEIGHT_UNIT_POUNDS:
+                strWeightUnit = context.getString(R.string.pounds);
+                break;
+
+            default:
+                throw new IllegalArgumentException();
+        }
+
+        return strWeightUnit;
     }
 
     public static String getFormattedHeight(Context context, double height, double heightInches, String heightUnit) {

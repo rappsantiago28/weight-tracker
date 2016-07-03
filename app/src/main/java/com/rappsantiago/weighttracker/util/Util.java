@@ -120,9 +120,17 @@ public final class Util {
     public static double getPercentComplete(double initialWeight, double currentWeight, double targetWeight) {
 
         double totalWeightDiff = Math.abs(initialWeight - targetWeight);
-        double progressInWeight = Math.abs(initialWeight - currentWeight);
+        double weightLost = getWeightLost(initialWeight, currentWeight);
 
-        return Math.abs(progressInWeight / totalWeightDiff);
+        return Math.abs(weightLost / totalWeightDiff);
+    }
+
+    public static double getWeightLost(double initialWeight, double currentWeight) {
+        return Math.abs(initialWeight - currentWeight);
+    }
+
+    public static double getRemainingWeight(double currentWeight, double targetWeight) {
+        return Math.abs(currentWeight - targetWeight);
     }
 
     public static long[] convertLongSetToArray(Set<Long> ids) {

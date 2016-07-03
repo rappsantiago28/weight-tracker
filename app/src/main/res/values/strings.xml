@@ -47,9 +47,12 @@
     <string name="due_date">Due date</string>
     <string name="not_applicable">N/A</string>
     <string name="status">Status</string>
+    <string name="remaining">Remaining</string>
     <string name="initial_weight">Initial weight</string>
     <string name="current_weight">Current weight</string>
-    <string name="percent_complete_format">%.2f%% complete</string>
+    <string name="percent_complete_format">%.2f%%</string>
+    <string name="complete">Complete</string>
+    <string name="weight_lost">Weight lost</string>
     <string name="weight_in_kilograms">Weight in kilograms</string>
     <string name="weight_in_pounds">Weight in pounds</string>
     <string name="no_data_to_show">No data to show</string>

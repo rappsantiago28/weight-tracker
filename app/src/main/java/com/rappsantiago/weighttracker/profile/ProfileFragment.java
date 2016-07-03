@@ -64,6 +64,12 @@ public class ProfileFragment extends Fragment implements LoaderManager.LoaderCal
 
     private TextView mLblStatus;
 
+    private TextView mLblRemaining;
+
+    private TextView mLblWeightLost;
+
+    private TextView mLblWeightLostWeightUnit;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
@@ -77,6 +83,9 @@ public class ProfileFragment extends Fragment implements LoaderManager.LoaderCal
         mLblTargetWeight = (TextView) view.findViewById(R.id.lbl_target_weight);
         mLblDueDate = (TextView) view.findViewById(R.id.lbl_due_date);
         mLblStatus = (TextView) view.findViewById(R.id.lbl_status);
+        mLblRemaining = (TextView) view.findViewById(R.id.lbl_remaining);
+        mLblWeightLost = (TextView) view.findViewById(R.id.lbl_weight_lost);
+        mLblWeightLostWeightUnit = (TextView) view.findViewById(R.id.lbl_weight_lost_weight_unit);
 
         return view;
     }
@@ -161,10 +170,15 @@ public class ProfileFragment extends Fragment implements LoaderManager.LoaderCal
                     double intialWeight = data.getDouble(WeightProgressCursorLoader.IDX_WEIGHT_PROGRESS_INITIAL_WEIGHT);
                     double currentWeight = data.getDouble(WeightProgressCursorLoader.IDX_WEIGHT_PROGRESS_CURRENT_WEIGHT);
                     double percentComplete = data.getDouble(WeightProgressCursorLoader.IDX_WEIGHT_PROGRESS_PERCENT_COMPLETE);
+                    double remainingWeight = data.getDouble(WeightProgressCursorLoader.IDX_WEIGHT_PROGRESS_REMAINING);
+                    double weightLost = data.getDouble(WeightProgressCursorLoader.IDX_WEIGHT_PROGRESS_LOST);
 
                     mLblInitialWeight.setText(DisplayUtil.getFormattedWeight(getActivity(), intialWeight, null));
                     mLblCurrentWeight.setText(DisplayUtil.getFormattedWeight(getActivity(), currentWeight, null));
                     mLblStatus.setText(getString(R.string.percent_complete_format, percentComplete * 100.0));
+                    mLblRemaining.setText(DisplayUtil.getFormattedWeight(getActivity(), remainingWeight, null));
+                    mLblWeightLost.setText(DisplayUtil.getWeightString(getActivity(), weightLost, null));
+                    mLblWeightLostWeightUnit.setText(DisplayUtil.getWeightUnitString(getActivity(), null));
                 }
                 break;
 
@@ -176,10 +190,5 @@ public class ProfileFragment extends Fragment implements LoaderManager.LoaderCal
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        mLblName.setText("");
-        mLblBirthday.setText("");
-        mLblGender.setText("");
-        mLblCurrentWeight.setText("");
-        mLblHeight.setText("");
     }
 }
