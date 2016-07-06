@@ -63,11 +63,14 @@ public final class DbConstants {
 
     public static final int IDX_GOAL_TARGET_WEIGHT = 1;
 
-    public static final int IDX_GOAL_DUE_DATE = 2;
+    public static final int IDX_GOAL_TARGET_BODY_FAT_INDEX = 2;
+
+    public static final int IDX_GOAL_DUE_DATE = 3;
 
     public static final String[] COLUMNS_GOAL = {
             WeightTrackerContract.Goal._ID,
             WeightTrackerContract.Goal.COL_TARGET_WEIGHT,
+            WeightTrackerContract.Goal.COL_TARGET_BODY_FAT_INDEX,
             WeightTrackerContract.Goal.COL_DUE_DATE
     };
     // Goal - END ]

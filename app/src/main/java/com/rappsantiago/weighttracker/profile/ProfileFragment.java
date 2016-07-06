@@ -70,6 +70,12 @@ public class ProfileFragment extends Fragment implements LoaderManager.LoaderCal
 
     private TextView mLblWeightLostWeightUnit;
 
+    private TextView mLblInitialBodyFatIndex;
+
+    private TextView mLblCurrentBodyFatIndex;
+
+    private TextView mLblTargetBodyFatIndex;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
@@ -86,6 +92,9 @@ public class ProfileFragment extends Fragment implements LoaderManager.LoaderCal
         mLblRemaining = (TextView) view.findViewById(R.id.lbl_remaining);
         mLblWeightLost = (TextView) view.findViewById(R.id.lbl_weight_lost);
         mLblWeightLostWeightUnit = (TextView) view.findViewById(R.id.lbl_weight_lost_weight_unit);
+        mLblInitialBodyFatIndex = (TextView) view.findViewById(R.id.lbl_initial_body_fat_index);
+        mLblCurrentBodyFatIndex = (TextView) view.findViewById(R.id.lbl_current_body_fat_index);
+        mLblTargetBodyFatIndex = (TextView) view.findViewById(R.id.lbl_target_body_fat_index);
 
         return view;
     }
@@ -151,9 +160,14 @@ public class ProfileFragment extends Fragment implements LoaderManager.LoaderCal
             case LOAD_GOAL:
                 if (null != data && (0 < data.getCount()) && data.moveToFirst()) {
                     double targetWeight = data.getDouble(DbConstants.IDX_GOAL_TARGET_WEIGHT);
+                    double targetBodyFatIndex = data.getDouble(DbConstants.IDX_GOAL_TARGET_BODY_FAT_INDEX);
                     long dueDateInMillis = data.getLong(DbConstants.IDX_GOAL_DUE_DATE);
 
                     mLblTargetWeight.setText(DisplayUtil.getFormattedWeight(getContext(), targetWeight, null));
+
+                    mLblInitialBodyFatIndex.setText(String.format("%.2f%%", 0.0));
+                    mLblCurrentBodyFatIndex.setText(String.format("%.2f%%", 0.0));
+                    mLblTargetBodyFatIndex.setText(String.format("%.2f%%", targetBodyFatIndex));
 
                     if (0 < dueDateInMillis) {
                         mLblDueDate.setText(DisplayUtil.getReadableDate(dueDateInMillis));
