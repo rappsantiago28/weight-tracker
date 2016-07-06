@@ -46,11 +46,14 @@ public final class DbConstants {
 
     public static final int IDX_PROGRESS_NEW_WEIGHT = 1;
 
-    public static final int IDX_PROGRESS_TIMESTAMP = 2;
+    public static final int IDX_PROGRESS_BODY_FAT_INDEX = 2;
+
+    public static final int IDX_PROGRESS_TIMESTAMP = 3;
 
     public static final String[] COLUMNS_PROGRESS = {
             WeightTrackerContract.Progress._ID,
-            WeightTrackerContract.Progress.COL_NEW_WEIGHT,
+            WeightTrackerContract.Progress.COL_WEIGHT,
+            WeightTrackerContract.Progress.COL_BODY_FAT_INDEX,
             WeightTrackerContract.Progress.COL_TIMESTAMP
     };
     // Progress - END ]

@@ -73,7 +73,7 @@ public final class Util {
 
         try (Cursor cursor = context.getContentResolver().query(
                 Progress.CONTENT_URI,
-                new String[]{Progress.COL_NEW_WEIGHT},
+                new String[]{Progress.COL_WEIGHT},
                 null, null, Progress.COL_TIMESTAMP + " ASC LIMIT 1")) {
 
             if (cursor.moveToFirst()) {
@@ -89,7 +89,7 @@ public final class Util {
 
         try (Cursor cursor = context.getContentResolver().query(
                 Progress.CONTENT_URI,
-                new String[]{Progress.COL_NEW_WEIGHT},
+                new String[]{Progress.COL_WEIGHT},
                 null, null, Progress.COL_TIMESTAMP + " DESC LIMIT 1")) {
 
             if (cursor.moveToFirst()) {

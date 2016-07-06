@@ -214,11 +214,11 @@ public class WeightTrackerSaveService extends IntentService {
 
         switch (weightUnit) {
             case Profile.WEIGHT_UNIT_KILOGRAMS:
-                values.put(Progress.COL_NEW_WEIGHT, newWeight);
+                values.put(Progress.COL_WEIGHT, newWeight);
                 break;
 
             case Profile.WEIGHT_UNIT_POUNDS:
-                values.put(Progress.COL_NEW_WEIGHT, Util.poundsToKilograms(newWeight));
+                values.put(Progress.COL_WEIGHT, Util.poundsToKilograms(newWeight));
                 break;
 
             default:
@@ -260,11 +260,11 @@ public class WeightTrackerSaveService extends IntentService {
 
         switch (weightUnit) {
             case Profile.WEIGHT_UNIT_KILOGRAMS:
-                values.put(Progress.COL_NEW_WEIGHT, newWeight);
+                values.put(Progress.COL_WEIGHT, newWeight);
                 break;
 
             case Profile.WEIGHT_UNIT_POUNDS:
-                values.put(Progress.COL_NEW_WEIGHT, Util.poundsToKilograms(newWeight));
+                values.put(Progress.COL_WEIGHT, Util.poundsToKilograms(newWeight));
                 break;
 
             default:
