@@ -218,7 +218,13 @@ public class ProfileSetupActivity extends AppCompatActivity {
                     if (((String) obj).trim().isEmpty()) {
                         errors.add(key);
                     }
-                } else if (obj instanceof Double) { // weight, height
+                } else if (obj instanceof Double) { // weight, body fat index, height
+
+                    // body fat index is optional
+                    if (WeightHeightFragment.KEY_BODY_FAT_INDEX == key ||
+                            TargetWeightFragment.KEY_TARGET_BODY_FAT_INDEX == key) {
+                        continue;
+                    }
 
                     // inches is allowed to be 0 if foot is not less than or equal to 0
                     if (WeightHeightFragment.KEY_HEIGHT_INCHES == key) {

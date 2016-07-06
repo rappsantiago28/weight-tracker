@@ -42,6 +42,8 @@ public class WeightHeightFragment extends Fragment implements PageWithData, Adap
 
     public static final String KEY_WEIGHT_UNIT = "WeightHeightFragment.KEY_WEIGHT_UNIT";
 
+    public static final String KEY_BODY_FAT_INDEX = "WeightHeightFragment.KEY_BODY_FAT_INDEX";
+
     public static final String KEY_HEIGHT = "WeightHeightFragment.KEY_HEIGHT";
 
     public static final String KEY_HEIGHT_INCHES = "WeightHeightFragment.KEY_HEIGHT_INCHES";
@@ -53,6 +55,8 @@ public class WeightHeightFragment extends Fragment implements PageWithData, Adap
     private ArrayAdapter<CharSequence> mWeightUnitAdapter;
 
     private int mWeightUnitPos;
+
+    private TextInputLayout mTxtBodyFatIndexWrapper;
 
     private TextInputLayout mTxtHeightWrapper;
 
@@ -67,6 +71,7 @@ public class WeightHeightFragment extends Fragment implements PageWithData, Adap
         View view = inflater.inflate(R.layout.fragment_weight_height, container, false);
 
         mTxtWeightWrapper = (TextInputLayout) view.findViewById(R.id.txt_weight_wrapper);
+        mTxtBodyFatIndexWrapper = (TextInputLayout) view.findViewById(R.id.txt_bfi_wrapper);
         mTxtHeightWrapper = (TextInputLayout) view.findViewById(R.id.txt_height_wrapper);
         mTxtHeightInchesWrapper = (TextInputLayout) view.findViewById(R.id.txt_height_inches_wrapper);
 
@@ -93,6 +98,9 @@ public class WeightHeightFragment extends Fragment implements PageWithData, Adap
         double weight = Util.parseDouble(strWeight, 0.0);
         String weightUnit = getWeightUnit();
 
+        String strBodyFatIndex = mTxtBodyFatIndexWrapper.getEditText().getText().toString();
+        double bodyFatIndex = Util.parseDouble(strBodyFatIndex, 0.0);
+
         String strHeight = mTxtHeightWrapper.getEditText().getText().toString();
         double height = Util.parseDouble(strHeight, 0.0);
 
@@ -103,6 +111,8 @@ public class WeightHeightFragment extends Fragment implements PageWithData, Adap
 
         data.putDouble(KEY_WEIGHT, weight);
         data.putString(KEY_WEIGHT_UNIT, weightUnit);
+
+        data.putDouble(KEY_BODY_FAT_INDEX, bodyFatIndex);
 
         data.putDouble(KEY_HEIGHT, height);
         if (heightUnit.equals(Profile.HEIGHT_UNIT_FOOT_INCHES)) {
