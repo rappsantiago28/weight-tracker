@@ -33,13 +33,24 @@
         android:focusable="false"
         android:clickable="false" />
 
-    <TextView
-        android:id="@+id/lbl_weight"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
         android:layout_centerVertical="true"
         android:layout_toRightOf="@+id/chk_selected"
-        android:layout_marginLeft="8dp" />
+        android:layout_marginLeft="8dp">
+
+        <TextView
+            android:id="@+id/lbl_weight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/lbl_body_fat_index"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/lbl_date"

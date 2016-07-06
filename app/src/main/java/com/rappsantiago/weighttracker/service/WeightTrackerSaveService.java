@@ -256,6 +256,7 @@ public class WeightTrackerSaveService extends IntentService {
     private void updateProgress(Intent intent, boolean deliverCallback) {
         long progressId = intent.getLongExtra(EXTRA_PROGRESS_ID, 0L);
         double newWeight = intent.getDoubleExtra(EXTRA_PROGRESS_WEIGHT, 0.0);
+        double newBodyFatIndex = intent.getDoubleExtra(EXTRA_PROGRESS_BODY_FAT_INDEX, 0.0);
         long date = intent.getLongExtra(EXTRA_PROGRESS_DATE, 0L);
         String weightUnit = intent.getStringExtra(EXTRA_WEIGHT_UNIT);
 
@@ -277,6 +278,7 @@ public class WeightTrackerSaveService extends IntentService {
                 throw new IllegalArgumentException("Unknown weight unit (" + weightUnit + ")");
         }
 
+        values.put(Progress.COL_BODY_FAT_INDEX, newBodyFatIndex);
         values.put(Progress.COL_TIMESTAMP, date);
 
         int result = getContentResolver().update(updateProgressUri, values, null, null);
@@ -426,12 +428,13 @@ public class WeightTrackerSaveService extends IntentService {
     }
 
     public static Intent createInsertProgressIntent(Context context, double newWeight,
-            long dateInMillis, String weightUnit, Class<? extends Activity> callbackActivity, String callbackAction) {
+            long dateInMillis, String weightUnit, double newBodyFatIndex, Class<? extends Activity> callbackActivity, String callbackAction) {
         Intent insertProgressIntent = new Intent(context, WeightTrackerSaveService.class);
         insertProgressIntent.setAction(ACTION_INSERT_PROGRESS);
         insertProgressIntent.putExtra(EXTRA_PROGRESS_WEIGHT, newWeight);
         insertProgressIntent.putExtra(EXTRA_PROGRESS_DATE, dateInMillis);
         insertProgressIntent.putExtra(EXTRA_WEIGHT_UNIT, weightUnit);
+        insertProgressIntent.putExtra(EXTRA_PROGRESS_BODY_FAT_INDEX, newBodyFatIndex);
 
         Intent callbackIntent = new Intent(context, callbackActivity);
         callbackIntent.setAction(callbackAction);
@@ -441,7 +444,7 @@ public class WeightTrackerSaveService extends IntentService {
     }
 
     public static Intent createReplaceProgressIntent(Context context, long progressId,
-        double newWeight, long dateInMillis, String weightUnit,
+        double newWeight, long dateInMillis, String weightUnit, double newBodyFatIndex,
         long progressIdToDelete, Class<? extends Activity> callbackActivity, String callbackAction) {
 
         Intent replaceProgressIntent = new Intent(context, WeightTrackerSaveService.class);
@@ -451,6 +454,7 @@ public class WeightTrackerSaveService extends IntentService {
         replaceProgressIntent.putExtra(EXTRA_PROGRESS_WEIGHT, newWeight);
         replaceProgressIntent.putExtra(EXTRA_PROGRESS_DATE, dateInMillis);
         replaceProgressIntent.putExtra(EXTRA_WEIGHT_UNIT, weightUnit);
+        replaceProgressIntent.putExtra(EXTRA_PROGRESS_BODY_FAT_INDEX, newBodyFatIndex);
 
         Intent callbackIntent = new Intent(context, callbackActivity);
         callbackIntent.setAction(callbackAction);
@@ -460,13 +464,14 @@ public class WeightTrackerSaveService extends IntentService {
     }
 
     public static Intent createUpdateProgressIntent(Context context, long progressId,
-            double newWeight, long dateInMillis, String weightUnit, Class<? extends Activity> callbackActivity, String callbackAction) {
+            double newWeight, long dateInMillis, String weightUnit, double newBodyFatIndex, Class<? extends Activity> callbackActivity, String callbackAction) {
         Intent updateProgressIntent = new Intent(context, WeightTrackerSaveService.class);
         updateProgressIntent.setAction(ACTION_UPDATE_PROGRESS);
         updateProgressIntent.putExtra(EXTRA_PROGRESS_ID, progressId);
         updateProgressIntent.putExtra(EXTRA_PROGRESS_WEIGHT, newWeight);
         updateProgressIntent.putExtra(EXTRA_PROGRESS_DATE, dateInMillis);
         updateProgressIntent.putExtra(EXTRA_WEIGHT_UNIT, weightUnit);
+        updateProgressIntent.putExtra(EXTRA_PROGRESS_BODY_FAT_INDEX, newBodyFatIndex);
 
         Intent callbackIntent = new Intent(context, callbackActivity);
         callbackIntent.setAction(callbackAction);

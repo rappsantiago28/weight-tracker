@@ -44,7 +44,7 @@ public final class DbConstants {
     // [ Progress - START
     public static final int IDX_PROGRESS_ID = 0;
 
-    public static final int IDX_PROGRESS_NEW_WEIGHT = 1;
+    public static final int IDX_PROGRESS_WEIGHT = 1;
 
     public static final int IDX_PROGRESS_BODY_FAT_INDEX = 2;
 

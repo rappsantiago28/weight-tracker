@@ -41,6 +41,8 @@
     <string name="add_progress">Add Progress</string>
     <string name="edit_progress">Edit Progress</string>
     <string name="new_weight">New weight</string>
+    <string name="new_weight_with_unit">New weight (%s)</string>
+    <string name="weight_with_unit">Weight (%s)</string>
     <string name="date">Date</string>
     <string name="done">Done</string>
     <string name="target_weight">Target weight</string>
@@ -67,6 +69,7 @@
     <string name="body_fat_index">Body Fat Index</string>
     <string name="body_fat_index_percentage">Body Fat Index (%)</string>
     <string name="target_body_fat_index_percentage">Target Body Fat Index (%)</string>
+    <string name="new_body_fat_index_percentage">New Body Fat Index (%)</string>
     <string name="initial">Initial</string>
     <string name="current">Current</string>
     <string name="target">Target</string>

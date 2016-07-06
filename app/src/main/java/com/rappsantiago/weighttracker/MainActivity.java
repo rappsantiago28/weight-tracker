@@ -42,6 +42,7 @@ import com.rappsantiago.weighttracker.settings.SettingsActivity;
 
 import static com.rappsantiago.weighttracker.provider.WeightTrackerContract.*;
 
+// TODO : Implement edit goal / targets
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, WeightTrackerSaveService.Listener {
 
