@@ -91,11 +91,15 @@ public class WeightTrackerSaveService extends IntentService {
 
     private static final String EXTRA_PROGRESS_WEIGHT = PREFIX + ".EXTRA_PROGRESS_WEIGHT";
 
+    private static final String EXTRA_PROGRESS_BODY_FAT_INDEX = PREFIX + ".EXTRA_PROGRESS_BODY_FAT_INDEX";
+
     private static final String EXTRA_PROGRESS_DATE = PREFIX + ".EXTRA_PROGRESS_DATE";
 
     private static final String EXTRA_GOAL_DUE_DATE = PREFIX + ".EXTRA_GOAL_DUE_DATE";
 
     private static final String EXTRA_GOAL_TARGET_WEIGHT = PREFIX + ".EXTRA_GOAL_TARGET_WEIGHT";
+
+    private static final String EXTRA_GOAL_TARGET_BODY_FAT_INDEX = PREFIX + ".EXTRA_GOAL_TARGET_BODY_FAT_INDEX";
 
     private static final String EXTRA_WEIGHT_UNIT = PREFIX + ".EXTRA_WEIGHT_UNIT";
 
@@ -207,6 +211,7 @@ public class WeightTrackerSaveService extends IntentService {
 
     private void insertProgress(Intent intent, boolean deliverCallback) {
         double newWeight = intent.getDoubleExtra(EXTRA_PROGRESS_WEIGHT, 0.0);
+        double bodyFatIndex = intent.getDoubleExtra(EXTRA_PROGRESS_BODY_FAT_INDEX, 0.0);
         long date = intent.getLongExtra(EXTRA_PROGRESS_DATE, 0L);
         String weightUnit = intent.getStringExtra(EXTRA_WEIGHT_UNIT);
 
@@ -225,6 +230,7 @@ public class WeightTrackerSaveService extends IntentService {
                 throw new IllegalArgumentException("Unknown weight unit (" + weightUnit + ")");
         }
 
+        values.put(Progress.COL_BODY_FAT_INDEX, bodyFatIndex);
         values.put(Progress.COL_TIMESTAMP, date);
 
         Uri result = getContentResolver().insert(Progress.CONTENT_URI, values);
@@ -327,6 +333,7 @@ public class WeightTrackerSaveService extends IntentService {
 
     private void insertGoal(Intent intent, boolean deliverCallback) {
         double targetWeight = intent.getDoubleExtra(EXTRA_GOAL_TARGET_WEIGHT, 0.0);
+        double targetBodyFatIndex = intent.getDoubleExtra(EXTRA_GOAL_TARGET_BODY_FAT_INDEX, 0.0);
         long dueDateInMillis = intent.getLongExtra(EXTRA_GOAL_DUE_DATE, 0L);
         String weightUnit = intent.getStringExtra(EXTRA_WEIGHT_UNIT);
 
@@ -345,6 +352,7 @@ public class WeightTrackerSaveService extends IntentService {
                 throw new IllegalArgumentException("Unknown weight unit (" + weightUnit + ")");
         }
 
+        goalValues.put(Goal.COL_TARGET_BODY_FAT_INDEX, targetBodyFatIndex);
         goalValues.put(Goal.COL_DUE_DATE, dueDateInMillis);
 
         Uri goalUri = getContentResolver().insert(Goal.CONTENT_URI, goalValues);
@@ -368,10 +376,12 @@ public class WeightTrackerSaveService extends IntentService {
         String gender = profileData.getString(NameBirthdayGenderFragment.KEY_GENDER);
         double weight = profileData.getDouble(WeightHeightFragment.KEY_WEIGHT);
         String weightUnit = profileData.getString(WeightHeightFragment.KEY_WEIGHT_UNIT);
+        double bodyFatIndex = profileData.getDouble(WeightHeightFragment.KEY_BODY_FAT_INDEX);
         double height = profileData.getDouble(WeightHeightFragment.KEY_HEIGHT);
         double inches = profileData.getDouble(WeightHeightFragment.KEY_HEIGHT_INCHES);
         String heightUnit = profileData.getString(WeightHeightFragment.KEY_HEIGHT_UNIT);
         double targetWeight = profileData.getDouble(TargetWeightFragment.KEY_TARGET_WEIGHT);
+        double targetBodyFatIndex = profileData.getDouble(TargetWeightFragment.KEY_TARGET_BODY_FAT_INDEX);
         long dueDateInMillis = profileData.getLong(TargetWeightFragment.KEY_DUE_DATE);
 
         setupProfileIntent.putExtra(EXTRA_PROFILE_NAME, name);
@@ -382,10 +392,12 @@ public class WeightTrackerSaveService extends IntentService {
         setupProfileIntent.putExtra(EXTRA_HEIGHT_UNIT, heightUnit);
 
         setupProfileIntent.putExtra(EXTRA_PROGRESS_WEIGHT, weight);
+        setupProfileIntent.putExtra(EXTRA_PROGRESS_BODY_FAT_INDEX, bodyFatIndex);
         setupProfileIntent.putExtra(EXTRA_PROGRESS_DATE, Util.getCurrentDateInMillis());
         setupProfileIntent.putExtra(EXTRA_WEIGHT_UNIT, weightUnit);
 
         setupProfileIntent.putExtra(EXTRA_GOAL_TARGET_WEIGHT, targetWeight);
+        setupProfileIntent.putExtra(EXTRA_GOAL_TARGET_BODY_FAT_INDEX, targetBodyFatIndex);
         setupProfileIntent.putExtra(EXTRA_GOAL_DUE_DATE, dueDateInMillis);
 
         Intent callbackIntent = new Intent(context, callbackActivity);
