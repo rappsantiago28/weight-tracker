@@ -37,7 +37,7 @@ public class ProgressCrudTest extends WeightTrackerBaseCrudTest {
 
         ContentValues values = new ContentValues();
 
-        values.put(Progress.COL_NEW_WEIGHT, tWeight);
+        values.put(Progress.COL_WEIGHT, tWeight);
         values.put(Progress.COL_TIMESTAMP, tTimestamp);
 
         return values;
@@ -63,7 +63,7 @@ public class ProgressCrudTest extends WeightTrackerBaseCrudTest {
     @Override
     protected String[] columns() {
         return new String[]{
-                Progress.COL_NEW_WEIGHT,
+                Progress.COL_WEIGHT,
                 Progress.COL_TIMESTAMP};
     }
 
@@ -74,7 +74,7 @@ public class ProgressCrudTest extends WeightTrackerBaseCrudTest {
 
         ContentValues values = new ContentValues();
 
-        values.put(Progress.COL_NEW_WEIGHT, tWeight);
+        values.put(Progress.COL_WEIGHT, tWeight);
         values.put(Progress.COL_TIMESTAMP, tTimestamp);
 
         return values;

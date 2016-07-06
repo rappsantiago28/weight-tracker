@@ -77,7 +77,9 @@ public final class WeightTrackerContract {
                 "/vnd." + AUTHORITY + "." + TABLE_NAME;
 
         // weight will be stored as kilograms
-        public static final String COL_NEW_WEIGHT = "new_weight";
+        public static final String COL_WEIGHT = "weight";
+
+        public static final String COL_BODY_FAT_INDEX = "body_fat_index";
 
         public static final String COL_TIMESTAMP = "timestamp";
     }
@@ -94,6 +96,8 @@ public final class WeightTrackerContract {
                 "/vnd." + AUTHORITY + "." + TABLE_NAME;
 
         public static final String COL_TARGET_WEIGHT = "target_weight";
+
+        public static final String COL_TARGET_BODY_FAT_INDEX = "target_body_fat_index";
 
         public static final String COL_DUE_DATE = "due_date";
     }

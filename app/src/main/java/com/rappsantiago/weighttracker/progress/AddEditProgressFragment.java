@@ -60,6 +60,8 @@ public class AddEditProgressFragment extends Fragment implements DatePickerDialo
 
     private TextInputLayout mTxtNewWeightWrapper;
 
+    private TextInputLayout mTxtNewBodyFatIndexWrapper;
+
     private TextView mLblDate;
 
     private Button mBtnDone;
@@ -93,11 +95,39 @@ public class AddEditProgressFragment extends Fragment implements DatePickerDialo
         View view = inflater.inflate(R.layout.fragment_add_progress, container, false);
 
         mTxtNewWeightWrapper = (TextInputLayout) view.findViewById(R.id.txt_new_weight_wrapper);
+        mTxtNewBodyFatIndexWrapper = (TextInputLayout) view.findViewById(R.id.txt_new_bfi_wrapper);
         mLblDate = (TextView) view.findViewById(R.id.lbl_date);
         mBtnDone = (Button) view.findViewById(R.id.btn_done);
 
         mLblDate.setOnClickListener(mSetDateClickListener);
         mBtnDone.setOnClickListener(mDoneClickListener);
+
+        String weightUnit = PreferenceUtil.getWeightUnit(getActivity());
+        String hint;
+
+        switch (weightUnit) {
+            case Profile.WEIGHT_UNIT_KILOGRAMS:
+                hint = String.format(getString(R.string.weight_with_unit), getString(R.string.kilograms));
+                break;
+
+            case Profile.WEIGHT_UNIT_POUNDS:
+                hint = String.format(getString(R.string.weight_with_unit), getString(R.string.pounds));
+                break;
+
+            default:
+                throw new IllegalArgumentException("Invalide weight unit");
+        }
+
+        mTxtNewWeightWrapper.setHint(hint);
+
+        if (!isEditMode()) {
+            if (0 >= mDateInMillis) {
+                mDateInMillis = Util.getCurrentDateInMillis();
+                mLblDate.setText(DisplayUtil.getReadableDate(mDateInMillis));
+            } else {
+                mLblDate.setText(DisplayUtil.getReadableDate(mDateInMillis));
+            }
+        }
 
         return view;
     }
@@ -108,13 +138,6 @@ public class AddEditProgressFragment extends Fragment implements DatePickerDialo
 
         if (isEditMode()) {
             getLoaderManager().initLoader(0, null, this);
-        } else {
-            if (0 >= mDateInMillis) {
-                mDateInMillis = Util.getCurrentDateInMillis();
-                mLblDate.setText(DisplayUtil.getReadableDate(mDateInMillis));
-            } else {
-                mLblDate.setText(DisplayUtil.getReadableDate(mDateInMillis));
-            }
         }
     }
 
@@ -134,7 +157,10 @@ public class AddEditProgressFragment extends Fragment implements DatePickerDialo
         public void onClick(View v) {
 
             String strNewWeight = mTxtNewWeightWrapper.getEditText().getText().toString();
-            double newWeight = Util.parseDouble(strNewWeight, -1);
+            double newWeight = Util.parseDouble(strNewWeight, 0.0);
+
+            String strNewBodyFatIndex = mTxtNewBodyFatIndexWrapper.getEditText().getText().toString();
+            double newBodyFatIndex = Util.parseDouble(strNewBodyFatIndex, 0.0);
 
             String weightUnit = PreferenceUtil.getWeightUnit(getContext());
 
@@ -146,14 +172,14 @@ public class AddEditProgressFragment extends Fragment implements DatePickerDialo
             Log.d(TAG, "date = " + mDateInMillis);
 
             if (isEditMode()) {
-                doSaveOnUpdate(mExistingProgressId, newWeight, weightUnit);
+                doSaveOnUpdate(mExistingProgressId, newWeight, weightUnit, newBodyFatIndex);
             } else {
-                doSaveOnCreate(newWeight, weightUnit);
+                doSaveOnCreate(newWeight, weightUnit, newBodyFatIndex);
             }
         }
     };
 
-    private void doSaveOnCreate(final double newWeight, final String weightUnit) {
+    private void doSaveOnCreate(final double newWeight, final String weightUnit, final double newBodyFatIndex) {
         try (Cursor cursor = getActivity().getContentResolver().query(
                 Progress.CONTENT_URI,
                 DbConstants.COLUMNS_PROGRESS,
@@ -174,7 +200,7 @@ public class AddEditProgressFragment extends Fragment implements DatePickerDialo
                 confirmationDialog.setPositiveClickListener(new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        startUpdateProgressService(progressId, newWeight, weightUnit);
+                        startUpdateProgressService(progressId, newWeight, weightUnit, newBodyFatIndex);
                     }
                 });
 
@@ -185,6 +211,7 @@ public class AddEditProgressFragment extends Fragment implements DatePickerDialo
                         newWeight,
                         mDateInMillis,
                         weightUnit,
+                        newBodyFatIndex,
                         AddEditProgressActivity.class,
                         MainActivity.CALLBACK_ACTION_INSERT_PROGRESS);
 
@@ -193,7 +220,7 @@ public class AddEditProgressFragment extends Fragment implements DatePickerDialo
         }
     }
 
-    private void doSaveOnUpdate(final long progressId, final double newWeight, final String weightUnit) {
+    private void doSaveOnUpdate(final long progressId, final double newWeight, final String weightUnit, final double newBodyFatIndex) {
         try (Cursor cursor = getActivity().getContentResolver().query(
                 Progress.CONTENT_URI,
                 DbConstants.COLUMNS_PROGRESS,
@@ -214,35 +241,37 @@ public class AddEditProgressFragment extends Fragment implements DatePickerDialo
                 confirmationDialog.setPositiveClickListener(new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        startReplaceProgressService(progressId, newWeight, weightUnit, progressIdToDelete);
+                        startReplaceProgressService(progressId, newWeight, weightUnit, newBodyFatIndex, progressIdToDelete);
                     }
                 });
 
                 confirmationDialog.show(getFragmentManager(), "");
             } else {
-                startUpdateProgressService(progressId, newWeight, weightUnit);
+                startUpdateProgressService(progressId, newWeight, weightUnit, newBodyFatIndex);
             }
         }
     }
 
-    private void startUpdateProgressService(long progressId, double newWeight, String weightUnit) {
+    private void startUpdateProgressService(long progressId, double newWeight, String weightUnit, double newBodyFatIndex) {
         Intent updateProgressIntent = WeightTrackerSaveService.createUpdateProgressIntent(getActivity(),
                 progressId,
                 newWeight,
                 mDateInMillis,
                 weightUnit,
+                newBodyFatIndex,
                 AddEditProgressActivity.class,
                 MainActivity.CALLBACK_ACTION_UPDATE_PROGRESS);
 
         getActivity().startService(updateProgressIntent);
     }
 
-    private void startReplaceProgressService(long progressId, double newWeight, String weightUnit, long progressIdToDelete) {
+    private void startReplaceProgressService(long progressId, double newWeight, String weightUnit, double newBodyFatIndex, long progressIdToDelete) {
         Intent replaceProgressIntent = WeightTrackerSaveService.createReplaceProgressIntent(getActivity(),
                 progressId,
                 newWeight,
                 mDateInMillis,
                 weightUnit,
+                newBodyFatIndex,
                 progressIdToDelete,
                 AddEditProgressActivity.class,
                 MainActivity.CALLBACK_ACTION_REPLACE_PROGRESS);
@@ -274,11 +303,12 @@ public class AddEditProgressFragment extends Fragment implements DatePickerDialo
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         if (null != data && 0 < data.getCount() && data.moveToFirst()) {
-            double weight = data.getDouble(DbConstants.IDX_PROGRESS_NEW_WEIGHT);
+            double weight = data.getDouble(DbConstants.IDX_PROGRESS_WEIGHT);
+            double bodyFatIndex = data.getDouble(DbConstants.IDX_PROGRESS_BODY_FAT_INDEX);
             long dateInMillis = data.getLong(DbConstants.IDX_PROGRESS_TIMESTAMP);
 
-            mTxtNewWeightWrapper.getEditText().setText(
-                    DisplayUtil.getWeightString(getContext(), weight, null));
+            mTxtNewWeightWrapper.getEditText().setText(String.format("%.2f", weight));
+            mTxtNewBodyFatIndexWrapper.getEditText().setText(String.format("%.2f", bodyFatIndex));
 
             mDateInMillis = dateInMillis;
             mLblDate.setText(DisplayUtil.getReadableDate(dateInMillis));

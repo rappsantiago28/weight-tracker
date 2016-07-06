@@ -39,9 +39,13 @@ public class ProfileSetupSummaryFragment extends Fragment {
 
     private TextView mWeight;
 
+    private TextView mBodyFatIndex;
+
     private TextView mHeight;
 
     private TextView mTargetWeight;
+
+    private TextView mTargetBodyFatIndex;
 
     private TextView mDueDate;
 
@@ -53,8 +57,10 @@ public class ProfileSetupSummaryFragment extends Fragment {
         mBirthday = (TextView) view.findViewById(R.id.lbl_birthday);
         mGender = (TextView) view.findViewById(R.id.lbl_gender);
         mWeight = (TextView) view.findViewById(R.id.lbl_weight);
+        mBodyFatIndex = (TextView) view.findViewById(R.id.lbl_body_fat_index);
         mHeight = (TextView) view.findViewById(R.id.lbl_height);
         mTargetWeight = (TextView) view.findViewById(R.id.lbl_target_weight);
+        mTargetBodyFatIndex = (TextView) view.findViewById(R.id.lbl_target_body_fat_index);
         mDueDate = (TextView) view.findViewById(R.id.lbl_due_date);
 
         return view;
@@ -83,6 +89,11 @@ public class ProfileSetupSummaryFragment extends Fragment {
             mWeight.setText(DisplayUtil.getFormattedWeight(getContext(), weight, weightUnit));
         }
 
+        if (profileData.containsKey(WeightHeightFragment.KEY_BODY_FAT_INDEX)) {
+            double bodyFatIndex = profileData.getDouble(WeightHeightFragment.KEY_BODY_FAT_INDEX);
+            mBodyFatIndex.setText(bodyFatIndex + "%");
+        }
+
         if (profileData.containsKey(WeightHeightFragment.KEY_HEIGHT) &&
                 profileData.containsKey(WeightHeightFragment.KEY_HEIGHT_UNIT)) {
 
@@ -101,6 +112,11 @@ public class ProfileSetupSummaryFragment extends Fragment {
             String weightUnit = profileData.getString(WeightHeightFragment.KEY_WEIGHT_UNIT);
             double targetWeight = profileData.getDouble(TargetWeightFragment.KEY_TARGET_WEIGHT);
             mTargetWeight.setText(DisplayUtil.getFormattedWeight(getContext(), targetWeight, weightUnit));
+        }
+
+        if (profileData.containsKey(TargetWeightFragment.KEY_TARGET_BODY_FAT_INDEX)) {
+            double targetBodyFatIndex = profileData.getDouble(TargetWeightFragment.KEY_TARGET_BODY_FAT_INDEX);
+            mTargetBodyFatIndex.setText(targetBodyFatIndex  + "%");
         }
 
         if (profileData.containsKey(TargetWeightFragment.KEY_DUE_DATE)) {

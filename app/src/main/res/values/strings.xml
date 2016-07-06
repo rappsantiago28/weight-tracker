@@ -41,9 +41,12 @@
     <string name="add_progress">Add Progress</string>
     <string name="edit_progress">Edit Progress</string>
     <string name="new_weight">New weight</string>
+    <string name="new_weight_with_unit">New weight (%s)</string>
+    <string name="weight_with_unit">Weight (%s)</string>
     <string name="date">Date</string>
     <string name="done">Done</string>
     <string name="target_weight">Target weight</string>
+    <string name="target_weight_with_unit">Target weight (%s)</string>
     <string name="due_date">Due date</string>
     <string name="not_applicable">N/A</string>
     <string name="status">Status</string>
@@ -60,6 +63,16 @@
     <string name="action_delete">Delete</string>
     <string name="warning">Warning</string>
     <string name="date_already_exists">Date already exists. Do you want to replace existing entry?</string>
+    <string name="initial_body_fat_index">Initial Body Fat Index</string>
+    <string name="current_body_fat_index">Current Body Fat Index</string>
+    <string name="target_body_fat_index">Target Body Fat Index</string>
+    <string name="body_fat_index">Body Fat Index</string>
+    <string name="body_fat_index_percentage">Body Fat Index (%)</string>
+    <string name="target_body_fat_index_percentage">Target Body Fat Index (%)</string>
+    <string name="new_body_fat_index_percentage">New Body Fat Index (%)</string>
+    <string name="initial">Initial</string>
+    <string name="current">Current</string>
+    <string name="target">Target</string>
 
     <!-- String Arrays -->
     <string-array name="arr_weight_unit">

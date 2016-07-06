@@ -46,11 +46,13 @@ public class TargetWeightFragment extends Fragment
 
     public static final String KEY_TARGET_WEIGHT = "TargetWeightFragment.KEY_TARGET_WEIGHT";
 
+    public static final String KEY_TARGET_BODY_FAT_INDEX = "TargetWeightFragment.KEY_TARGET_BODY_FAT_INDEX";
+
     public static final String KEY_DUE_DATE = "TargetWeightFragment.KEY_DUE_DATE";
 
     private TextInputLayout mTxtTargetWeightWrapper;
 
-    private TextView mLblWeightUnit;
+    private TextInputLayout mTxtTargetBodyFatIndexWrapper;
 
     private CheckBox mChkDueDate;
 
@@ -63,7 +65,7 @@ public class TargetWeightFragment extends Fragment
         View view = inflater.inflate(R.layout.fragment_target_weight, container, false);
 
         mTxtTargetWeightWrapper = (TextInputLayout) view.findViewById(R.id.txt_target_weight_wrapper);
-        mLblWeightUnit = (TextView) view.findViewById(R.id.lbl_weight_unit);
+        mTxtTargetBodyFatIndexWrapper = (TextInputLayout) view.findViewById(R.id.txt_target_bfi_wrapper);
         mChkDueDate = (CheckBox) view.findViewById(R.id.chk_due_date);
         mLblDueDate = (TextView) view.findViewById(R.id.lbl_due_date);
 
@@ -88,7 +90,11 @@ public class TargetWeightFragment extends Fragment
         String strTargetWeight = mTxtTargetWeightWrapper.getEditText().getText().toString();
         double targetWeight = Util.parseDouble(strTargetWeight, 0.0);
 
+        String strTargetBodyFatIndex = mTxtTargetBodyFatIndexWrapper.getEditText().getText().toString();
+        double targetBodyFatIndex = Util.parseDouble(strTargetBodyFatIndex, 0.0);
+
         data.putDouble(KEY_TARGET_WEIGHT, targetWeight);
+        data.putDouble(KEY_TARGET_BODY_FAT_INDEX, targetBodyFatIndex);
 
         boolean isDueDateChecked = mChkDueDate.isChecked();
 
@@ -160,7 +166,8 @@ public class TargetWeightFragment extends Fragment
                 throw new IllegalArgumentException("Invalid weight unit");
         }
 
-        mLblWeightUnit.setText(resString);
+        String hint = String.format(getString(R.string.target_weight_with_unit), getString(resString));
+        mTxtTargetWeightWrapper.setHint(hint);
     }
 
 }

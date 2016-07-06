@@ -41,13 +41,15 @@ public class WeightTrackerDbHelper extends SQLiteOpenHelper {
     private static final String SQL_CREATE_TABLE_PROGRESS =
             "CREATE TABLE " + Progress.TABLE_NAME + " (" +
                     Progress._ID + " INTEGER PRIMARY KEY," +
-                    Progress.COL_NEW_WEIGHT + " REAL," +
+                    Progress.COL_WEIGHT + " REAL," +
+                    Progress.COL_BODY_FAT_INDEX + " REAL," +
                     Progress.COL_TIMESTAMP + " INTEGER);";
 
     private static final String SQL_CREATE_TABLE_GOAL =
             "CREATE TABLE " + Goal.TABLE_NAME + " (" +
                     Goal._ID + " INTEGER PRIMARY KEY," +
                     Goal.COL_TARGET_WEIGHT + " REAL," +
+                    Goal.COL_TARGET_BODY_FAT_INDEX + " REAL," +
                     Goal.COL_DUE_DATE + " INTEGER)";
 
     private static final String SQL_DROP_TABLE_PROFILE = "DROP TABLE IF EXISTS " + Profile.TABLE_NAME;

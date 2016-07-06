@@ -88,7 +88,7 @@ public class StatisticsFragment extends Fragment implements LoaderManager.Loader
 
             while (data.moveToNext()) {
 
-                float weight = data.getFloat(DbConstants.IDX_PROGRESS_NEW_WEIGHT);
+                float weight = data.getFloat(DbConstants.IDX_PROGRESS_WEIGHT);
                 long dateInMillis = data.getLong(DbConstants.IDX_PROGRESS_TIMESTAMP);
 
                 switch (weightUnit) {

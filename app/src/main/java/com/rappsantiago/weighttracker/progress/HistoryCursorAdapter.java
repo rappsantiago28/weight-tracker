@@ -59,13 +59,15 @@ public class HistoryCursorAdapter extends CursorAdapter {
         ViewHolder vh = (ViewHolder) view.getTag();
 
         long id = cursor.getLong(DbConstants.IDX_PROGRESS_ID);
-        double newWeight = cursor.getDouble(DbConstants.IDX_PROGRESS_NEW_WEIGHT);
+        double newWeight = cursor.getDouble(DbConstants.IDX_PROGRESS_WEIGHT);
+        double bodyFatIndex = cursor.getDouble(DbConstants.IDX_PROGRESS_BODY_FAT_INDEX);
         long date = cursor.getLong(DbConstants.IDX_PROGRESS_TIMESTAMP);
 
         vh.checkBox.setVisibility(mIsMultipleSelection ? View.VISIBLE : View.GONE);
         vh.checkBox.setChecked(mSelectedIds.contains(id));
 
         vh.weight.setText(DisplayUtil.getFormattedWeight(context, newWeight, null));
+        vh.bodyFatIndex.setText(String.format("%.2f%%", bodyFatIndex));
         vh.date.setText(DisplayUtil.getReadableDate(date));
     }
 
@@ -99,11 +101,13 @@ public class HistoryCursorAdapter extends CursorAdapter {
     private final class ViewHolder {
         private final CheckBox checkBox;
         private final TextView weight;
+        private final TextView bodyFatIndex;
         private final TextView date;
 
         private ViewHolder(View view) {
             checkBox = (CheckBox) view.findViewById(R.id.chk_selected);
             weight = (TextView) view.findViewById(R.id.lbl_weight);
+            bodyFatIndex = (TextView) view.findViewById(R.id.lbl_body_fat_index);
             date = (TextView) view.findViewById(R.id.lbl_date);
         }
     }
