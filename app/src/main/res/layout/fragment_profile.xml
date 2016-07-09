@@ -199,6 +199,18 @@
                 android:id="@+id/lbl_target_body_fat_index"
                 style="@style/ProfileItemValue" />
         </RelativeLayout>
+
+        <RelativeLayout
+            style="@style/ProfileItemWrapper">
+
+            <TextView
+                style="@style/ProfileItemLabel"
+                android:text="@string/remaining" />
+
+            <TextView
+                android:id="@+id/lbl_remaining_body_fat_index"
+                style="@style/ProfileItemValue" />
+        </RelativeLayout>
     </LinearLayout>
 
     <!-- Other Details -->

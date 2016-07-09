@@ -76,6 +76,8 @@ public class ProfileFragment extends Fragment implements LoaderManager.LoaderCal
 
     private TextView mLblTargetBodyFatIndex;
 
+    private TextView mLblRemainingBodyFatIndex;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
@@ -95,6 +97,7 @@ public class ProfileFragment extends Fragment implements LoaderManager.LoaderCal
         mLblInitialBodyFatIndex = (TextView) view.findViewById(R.id.lbl_initial_body_fat_index);
         mLblCurrentBodyFatIndex = (TextView) view.findViewById(R.id.lbl_current_body_fat_index);
         mLblTargetBodyFatIndex = (TextView) view.findViewById(R.id.lbl_target_body_fat_index);
+        mLblRemainingBodyFatIndex = (TextView) view.findViewById(R.id.lbl_remaining_body_fat_index);
 
         return view;
     }
@@ -164,9 +167,6 @@ public class ProfileFragment extends Fragment implements LoaderManager.LoaderCal
                     long dueDateInMillis = data.getLong(DbConstants.IDX_GOAL_DUE_DATE);
 
                     mLblTargetWeight.setText(DisplayUtil.getFormattedWeight(getContext(), targetWeight, null));
-
-                    mLblInitialBodyFatIndex.setText(String.format("%.2f%%", 0.0));
-                    mLblCurrentBodyFatIndex.setText(String.format("%.2f%%", 0.0));
                     mLblTargetBodyFatIndex.setText(String.format("%.2f%%", targetBodyFatIndex));
 
                     if (0 < dueDateInMillis) {
@@ -184,8 +184,11 @@ public class ProfileFragment extends Fragment implements LoaderManager.LoaderCal
                     double intialWeight = data.getDouble(WeightProgressCursorLoader.IDX_WEIGHT_PROGRESS_INITIAL_WEIGHT);
                     double currentWeight = data.getDouble(WeightProgressCursorLoader.IDX_WEIGHT_PROGRESS_CURRENT_WEIGHT);
                     double percentComplete = data.getDouble(WeightProgressCursorLoader.IDX_WEIGHT_PROGRESS_PERCENT_COMPLETE);
-                    double remainingWeight = data.getDouble(WeightProgressCursorLoader.IDX_WEIGHT_PROGRESS_REMAINING);
+                    double remainingWeight = data.getDouble(WeightProgressCursorLoader.IDX_WEIGHT_PROGRESS_REMAINING_WEIGHT);
                     double weightLost = data.getDouble(WeightProgressCursorLoader.IDX_WEIGHT_PROGRESS_LOST);
+                    double initialBodyFatIndex = data.getDouble(WeightProgressCursorLoader.IDX_WEIGHT_PROGRESS_INITIAL_BODY_FAT_INDEX);
+                    double currentBodyFatIndex = data.getDouble(WeightProgressCursorLoader.IDX_WEIGHT_PROGRESS_CURRENT_BODY_FAT_INDEX);
+                    double remainingBodyFatIndex = data.getDouble(WeightProgressCursorLoader.IDX_WEIGHT_PROGRESS_REMAINING_BODY_FAT_INDEX);
 
                     mLblInitialWeight.setText(DisplayUtil.getFormattedWeight(getActivity(), intialWeight, null));
                     mLblCurrentWeight.setText(DisplayUtil.getFormattedWeight(getActivity(), currentWeight, null));
@@ -193,6 +196,10 @@ public class ProfileFragment extends Fragment implements LoaderManager.LoaderCal
                     mLblRemaining.setText(DisplayUtil.getFormattedWeight(getActivity(), remainingWeight, null));
                     mLblWeightLost.setText(DisplayUtil.getWeightString(getActivity(), weightLost, null));
                     mLblWeightLostWeightUnit.setText(DisplayUtil.getWeightUnitString(getActivity(), null));
+
+                    mLblInitialBodyFatIndex.setText(String.format("%.2f%%", initialBodyFatIndex));
+                    mLblCurrentBodyFatIndex.setText(String.format("%.2f%%", currentBodyFatIndex));
+                    mLblRemainingBodyFatIndex.setText(String.format("%.2f%%", remainingBodyFatIndex));
                 }
                 break;
 

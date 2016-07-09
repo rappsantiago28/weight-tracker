@@ -32,6 +32,7 @@ import java.util.Set;
  */
 public final class Util {
 
+    // TODO : Refactor -> Move methods with query to 'query helper classes'
     private Util() {
     }
 
@@ -117,20 +118,70 @@ public final class Util {
         return 0.0;
     }
 
-    public static double getPercentComplete(double initialWeight, double currentWeight, double targetWeight) {
+    public static double getTargetBodyFatIndex(Context context) {
 
-        double totalWeightDiff = Math.abs(initialWeight - targetWeight);
-        double weightLost = getWeightLost(initialWeight, currentWeight);
+        try (Cursor cursor = context.getContentResolver().query(
+                Goal.CONTENT_URI,
+                new String[]{Goal.COL_TARGET_BODY_FAT_INDEX},
+                null, null, Goal._ID + " ASC LIMIT 1")) {
+
+            if (cursor.moveToFirst()) {
+                double targetBodyFatIndex = cursor.getDouble(0);
+                return targetBodyFatIndex;
+            }
+        }
+
+        return 0.0;
+    }
+
+    public static double computePercentComplete(double initialValue, double currentValue, double targetValue) {
+
+        double totalWeightDiff = Math.abs(initialValue - targetValue);
+        double weightLost = computeValueLost(initialValue, currentValue);
 
         return Math.abs(weightLost / totalWeightDiff);
     }
 
-    public static double getWeightLost(double initialWeight, double currentWeight) {
-        return Math.abs(initialWeight - currentWeight);
+    public static double computeValueLost(double initialValue, double currentValue) {
+        return Math.abs(initialValue - currentValue);
     }
 
-    public static double getRemainingWeight(double currentWeight, double targetWeight) {
-        return Math.abs(currentWeight - targetWeight);
+    public static double computeRemainingValue(double currentValue, double targetValue) {
+        return Math.abs(currentValue - targetValue);
+    }
+
+    public static double getInitialBodyFatIndex(Context context) {
+
+        try (Cursor cursor = context.getContentResolver().query(
+                Progress.CONTENT_URI,
+                new String[]{Progress.COL_BODY_FAT_INDEX},
+                Progress.COL_BODY_FAT_INDEX + " > 0", null,
+                Progress.COL_TIMESTAMP + " ASC LIMIT 1")) {
+
+            if (cursor.moveToFirst()) {
+                double initialBodyFatIndex = cursor.getDouble(0);
+                return initialBodyFatIndex;
+            }
+        }
+
+        return 0.0;
+    }
+
+    public static double getCurrentBodyFatIndex(Context context) {
+
+        try (Cursor cursor = context.getContentResolver().query(
+                Progress.CONTENT_URI,
+                new String[]{Progress.COL_BODY_FAT_INDEX},
+                Progress.COL_BODY_FAT_INDEX + " > 0", null,
+                Progress.COL_TIMESTAMP + " DESC LIMIT 1")) {
+
+            if (cursor.moveToFirst()) {
+                double currentBodyFatIndex = cursor.getDouble(0);
+                return currentBodyFatIndex;
+            }
+        }
+
+        return 0.0;
     }
 
     public static long[] convertLongSetToArray(Set<Long> ids) {

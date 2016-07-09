@@ -40,6 +40,12 @@ public class WeightProgressCursorLoader extends CursorLoader {
 
     public static String COL_WEIGHT_LOST = "weight_lost";
 
+    public static String COL_INITIAL_BODY_FAT_INDEX = "initial_body_fat_index";
+
+    public static String COL_CURRENT_BODY_FAT_INDEX = "current_body_fat_index";
+
+    public static String COL_REMAINING_BODY_FAT_INDEX = "remaining_body_fat_index";
+
     public static int IDX_WEIGHT_PROGRESS_ID = 0;
 
     public static int IDX_WEIGHT_PROGRESS_INITIAL_WEIGHT = 1;
@@ -48,9 +54,15 @@ public class WeightProgressCursorLoader extends CursorLoader {
 
     public static int IDX_WEIGHT_PROGRESS_PERCENT_COMPLETE = 3;
 
-    public static int IDX_WEIGHT_PROGRESS_REMAINING = 4;
+    public static int IDX_WEIGHT_PROGRESS_REMAINING_WEIGHT = 4;
 
     public static int IDX_WEIGHT_PROGRESS_LOST = 5;
+
+    public static int IDX_WEIGHT_PROGRESS_INITIAL_BODY_FAT_INDEX = 6;
+
+    public static int IDX_WEIGHT_PROGRESS_CURRENT_BODY_FAT_INDEX = 7;
+
+    public static int IDX_WEIGHT_PROGRESS_REMAINING_BODY_FAT_INDEX = 8;
 
     public static final String[] COLS_WEIGHT_PROGRESS = {
             COL_ID,
@@ -58,7 +70,10 @@ public class WeightProgressCursorLoader extends CursorLoader {
             COL_CURRENT_WEIGHT,
             COL_PERCENT_COMPLETE,
             COL_REMAINING_WEIGHT,
-            COL_WEIGHT_LOST
+            COL_WEIGHT_LOST,
+            COL_INITIAL_BODY_FAT_INDEX,
+            COL_CURRENT_BODY_FAT_INDEX,
+            COL_REMAINING_BODY_FAT_INDEX
     };
 
     public WeightProgressCursorLoader(Context context) {
@@ -76,12 +91,20 @@ public class WeightProgressCursorLoader extends CursorLoader {
 
         double targetWeight = Util.getTargetWeight(getContext());
 
-        double percentComplete = Util.getPercentComplete(
+        double percentComplete = Util.computePercentComplete(
                 initialWeight, currentWeight, targetWeight);
 
-        double remainingWeight = Util.getRemainingWeight(currentWeight, targetWeight);
+        double remainingWeight = Util.computeRemainingValue(currentWeight, targetWeight);
 
-        double weightLost = Util.getWeightLost(initialWeight, currentWeight);
+        double weightLost = Util.computeValueLost(initialWeight, currentWeight);
+
+        double initialBodyFatIndex = Util.getInitialBodyFatIndex(getContext());
+
+        double currentBodyFatIndex = Util.getCurrentBodyFatIndex(getContext());
+
+        double targetBodyFatIndex = Util.getTargetBodyFatIndex(getContext());
+
+        double remainingBodyFatIndex = Util.computeRemainingValue(currentBodyFatIndex, targetBodyFatIndex);
 
         matrixCursor.addRow(new Object[]{
                 1,
@@ -89,7 +112,10 @@ public class WeightProgressCursorLoader extends CursorLoader {
                 currentWeight,
                 percentComplete,
                 remainingWeight,
-                weightLost
+                weightLost,
+                initialBodyFatIndex,
+                currentBodyFatIndex,
+                remainingBodyFatIndex
         });
 
         return matrixCursor;
