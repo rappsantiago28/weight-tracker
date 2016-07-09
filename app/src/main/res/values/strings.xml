@@ -73,6 +73,7 @@
     <string name="initial">Initial</string>
     <string name="current">Current</string>
     <string name="target">Target</string>
+    <string name="other_details">Other Details</string>
 
     <!-- String Arrays -->
     <string-array name="arr_weight_unit">

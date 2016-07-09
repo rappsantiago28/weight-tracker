@@ -28,4 +28,53 @@
         <item name="android:fontFamily">sans-serif-condensed</item>
     </style>
 
+    <style name="ProfileCardStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:padding">@dimen/profile_card_default_padding</item>
+        <item name="android:layout_marginBottom">@dimen/profile_card_default_margin_bottom</item>
+        <item name="android:background">@drawable/bg_border_shadow</item>
+    </style>
+
+    <style name="ProfileCardSmallStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">@dimen/profile_card_small_min_height</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:padding">@dimen/profile_card_default_padding</item>
+        <item name="android:background">@drawable/bg_border_shadow</item>
+    </style>
+
+    <style name="ProfileCardTitleStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="ProfileCardDividerStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/profile_card_divider_height</item>
+        <item name="android:background">@color/cardTitleAndBodyDivider</item>
+        <item name="android:layout_marginBottom">@dimen/profile_card_divider_margin_bottom</item>
+    </style>
+
+    <style name="ProfileItemWrapper">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingLeft">@dimen/profile_card_default_horizontal_margin</item>
+        <item name="android:paddingRight">@dimen/profile_card_default_horizontal_margin</item>
+    </style>
+
+    <style name="ProfileItemLabel">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_alignParentLeft">true</item>
+    </style>
+
+    <style name="ProfileItemValue">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentRight">true</item>
+    </style>
 </resources>
