@@ -34,7 +34,7 @@
         <item name="android:orientation">vertical</item>
         <item name="android:padding">@dimen/profile_card_default_padding</item>
         <item name="android:layout_marginBottom">@dimen/profile_card_default_margin_bottom</item>
-        <item name="android:background">@drawable/bg_border_shadow</item>
+        <item name="android:background">@drawable/bg_card_look_normal</item>
     </style>
 
     <style name="ProfileCardSmallStyle">
@@ -42,7 +42,7 @@
         <item name="android:layout_height">@dimen/profile_card_small_min_height</item>
         <item name="android:layout_weight">1</item>
         <item name="android:padding">@dimen/profile_card_default_padding</item>
-        <item name="android:background">@drawable/bg_border_shadow</item>
+        <item name="android:background">@drawable/bg_card_look_normal</item>
     </style>
 
     <style name="ProfileCardTitleStyle">

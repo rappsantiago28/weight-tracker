@@ -22,7 +22,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:minHeight="?android:attr/listPreferredItemHeightLarge"
-    android:background="@drawable/bg_border_shadow">
+    android:background="@drawable/bg_card_look_selector">
 
     <CheckBox
         android:id="@+id/chk_selected"
@@ -30,6 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"
+        android:layout_marginRight="8dp"
         android:visibility="gone"
         android:focusable="false"
         android:clickable="false" />
@@ -39,8 +40,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_centerVertical="true"
-        android:layout_toRightOf="@+id/chk_selected"
-        android:layout_marginLeft="8dp">
+        android:layout_toRightOf="@+id/chk_selected">
 
         <TextView
             android:id="@+id/lbl_weight"
