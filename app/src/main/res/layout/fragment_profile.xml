@@ -13,274 +13,300 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-
-<LinearLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:orientation="vertical">
+    android:paddingTop="@dimen/activity_vertical_margin">
 
-    <!-- Weight -->
-    <LinearLayout style="@style/ProfileCardStyle">
-
-        <TextView
-            style="@style/ProfileCardTitleStyle"
-            android:text="@string/weight" />
-
-        <View style="@style/ProfileCardDividerStyle" />
-
-        <RelativeLayout 
-            style="@style/ProfileItemWrapper">
-
-            <TextView
-                style="@style/ProfileItemLabel"
-                android:text="@string/initial" />
-
-            <TextView
-                android:id="@+id/lbl_initial_weight"
-                style="@style/ProfileItemValue" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            style="@style/ProfileItemWrapper">
-
-            <TextView
-                style="@style/ProfileItemLabel"
-                android:text="@string/current" />
-
-            <TextView
-                android:id="@+id/lbl_current_weight"
-                style="@style/ProfileItemValue" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            style="@style/ProfileItemWrapper">
-
-            <TextView
-                style="@style/ProfileItemLabel"
-                android:text="@string/target" />
-
-            <TextView
-                android:id="@+id/lbl_target_weight"
-                style="@style/ProfileItemValue" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            style="@style/ProfileItemWrapper">
-
-            <TextView
-                style="@style/ProfileItemLabel"
-                android:text="@string/remaining" />
-
-            <TextView
-                android:id="@+id/lbl_remaining"
-                style="@style/ProfileItemValue" />
-        </RelativeLayout>
-    </LinearLayout>
-
-    <!-- Status, Remaining -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginBottom="@dimen/profile_card_default_margin_bottom">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <RelativeLayout
-            style="@style/ProfileCardSmallStyle"
-            android:layout_marginRight="@dimen/profile_card_default_horizontal_margin">
+        <!-- Status, Remaining -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="@dimen/profile_card_default_margin_bottom">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textStyle="bold"
-                android:text="@string/weight_lost"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentLeft="true" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_centerInParent="true"
-                android:gravity="center">
+            <RelativeLayout
+                style="@style/ProfileCardSmallStyle"
+                android:layout_marginRight="@dimen/profile_card_default_horizontal_margin">
 
                 <TextView
-                    android:id="@+id/lbl_weight_lost"
+                    style="@style/ProfileCardSmallTitleStyle"
+                    android:text="@string/weight_lost"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true" />
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="@dimen/profile_card_large_status_text" />
+                    android:orientation="vertical"
+                    android:layout_centerInParent="true"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/lbl_weight_lost"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/profile_card_large_status_text" />
+
+                    <TextView
+                        android:id="@+id/lbl_weight_lost_weight_unit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                style="@style/ProfileCardSmallStyle"
+                android:layout_marginLeft="@dimen/profile_card_default_horizontal_margin">
 
                 <TextView
-                    android:id="@+id/lbl_weight_lost_weight_unit"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
+                    style="@style/ProfileCardSmallTitleStyle"
+                    android:text="@string/status"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true" />
 
-        </RelativeLayout>
-
-        <RelativeLayout
-            style="@style/ProfileCardSmallStyle"
-            android:layout_marginLeft="@dimen/profile_card_default_horizontal_margin">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textStyle="bold"
-                android:text="@string/status"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentLeft="true" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_centerInParent="true"
-                android:gravity="center">
-
-                <TextView
-                    android:id="@+id/lbl_status"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="@dimen/profile_card_large_status_text" />
+                    android:orientation="vertical"
+                    android:layout_centerInParent="true"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/lbl_status"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/profile_card_large_status_text" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/complete" />
+                </LinearLayout>
+            </RelativeLayout>
+        </LinearLayout>
+
+        <!-- Weight, Body Fat Index -->
+        <LinearLayout style="@style/ProfileCardStyle">
+
+            <TextView
+                style="@style/ProfileCardTitleStyle"
+                android:text="@string/weight" />
+
+            <View style="@style/ProfileCardDividerStyle" />
+
+            <RelativeLayout
+                style="@style/ProfileItemWrapper">
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/complete" />
-            </LinearLayout>
-        </RelativeLayout>
+                    style="@style/ProfileItemLabel"
+                    android:text="@string/initial" />
+
+                <TextView
+                    android:id="@+id/lbl_initial_weight"
+                    style="@style/ProfileItemValue" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                style="@style/ProfileItemWrapper">
+
+                <TextView
+                    style="@style/ProfileItemLabel"
+                    android:text="@string/current" />
+
+                <TextView
+                    android:id="@+id/lbl_current_weight"
+                    style="@style/ProfileItemValue" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                style="@style/ProfileItemWrapper">
+
+                <TextView
+                    style="@style/ProfileItemLabel"
+                    android:text="@string/target" />
+
+                <TextView
+                    android:id="@+id/lbl_target_weight"
+                    style="@style/ProfileItemValue" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                style="@style/ProfileItemWrapper">
+
+                <TextView
+                    style="@style/ProfileItemLabel"
+                    android:text="@string/remaining" />
+
+                <TextView
+                    android:id="@+id/lbl_remaining"
+                    style="@style/ProfileItemValue" />
+            </RelativeLayout>
+
+            <TextView
+                style="@style/ProfileCardTitleStyle"
+                android:text="@string/body_fat_index" />
+
+            <View style="@style/ProfileCardDividerStyle" />
+
+            <RelativeLayout
+                style="@style/ProfileItemWrapper">
+
+                <TextView
+                    style="@style/ProfileItemLabel"
+                    android:text="@string/initial" />
+
+                <TextView
+                    android:id="@+id/lbl_initial_body_fat_index"
+                    style="@style/ProfileItemValue" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                style="@style/ProfileItemWrapper">
+
+                <TextView
+                    style="@style/ProfileItemLabel"
+                    android:text="@string/current" />
+
+                <TextView
+                    android:id="@+id/lbl_current_body_fat_index"
+                    style="@style/ProfileItemValue" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                style="@style/ProfileItemWrapper">
+
+                <TextView
+                    style="@style/ProfileItemLabel"
+                    android:text="@string/target" />
+
+                <TextView
+                    android:id="@+id/lbl_target_body_fat_index"
+                    style="@style/ProfileItemValue" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                style="@style/ProfileItemWrapper">
+
+                <TextView
+                    style="@style/ProfileItemLabel"
+                    android:text="@string/remaining" />
+
+                <TextView
+                    android:id="@+id/lbl_remaining_body_fat_index"
+                    style="@style/ProfileItemValue" />
+            </RelativeLayout>
+
+            <TextView
+                style="@style/ProfileCardTitleStyle"
+                android:text="@string/current_mass_distribution" />
+
+            <View style="@style/ProfileCardDividerStyle" />
+
+            <RelativeLayout
+                style="@style/ProfileItemWrapper">
+
+                <TextView
+                    style="@style/ProfileItemLabel"
+                    android:text="@string/fat_mass" />
+
+                <TextView
+                    android:id="@+id/lbl_current_fat_mass"
+                    style="@style/ProfileItemValue" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                style="@style/ProfileItemWrapper">
+
+                <TextView
+                    style="@style/ProfileItemLabel"
+                    android:text="@string/muscle_mass" />
+
+                <TextView
+                    android:id="@+id/lbl_current_muscle_mass"
+                    style="@style/ProfileItemValue" />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <!-- Other Details -->
+        <LinearLayout style="@style/ProfileCardStyle">
+
+            <TextView
+                style="@style/ProfileCardTitleStyle"
+                android:text="@string/other_details" />
+
+            <View style="@style/ProfileCardDividerStyle" />
+
+            <RelativeLayout
+                style="@style/ProfileItemWrapper">
+
+                <TextView
+                    style="@style/ProfileItemLabel"
+                    android:text="@string/due_date" />
+
+                <TextView
+                    android:id="@+id/lbl_due_date"
+                    style="@style/ProfileItemValue" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                style="@style/ProfileItemWrapper">
+
+                <TextView
+                    style="@style/ProfileItemLabel"
+                    android:text="@string/name" />
+
+                <TextView
+                    android:id="@+id/lbl_name"
+                    style="@style/ProfileItemValue" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                style="@style/ProfileItemWrapper">
+
+                <TextView
+                    style="@style/ProfileItemLabel"
+                    android:text="@string/height" />
+
+                <TextView
+                    android:id="@+id/lbl_height"
+                    style="@style/ProfileItemValue" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                style="@style/ProfileItemWrapper">
+
+                <TextView
+                    style="@style/ProfileItemLabel"
+                    android:text="@string/birthday" />
+
+                <TextView
+                    android:id="@+id/lbl_birthday"
+                    style="@style/ProfileItemValue" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                style="@style/ProfileItemWrapper">
+
+                <TextView
+                    style="@style/ProfileItemLabel"
+                    android:text="@string/gender" />
+
+                <TextView
+                    android:id="@+id/lbl_gender"
+                    style="@style/ProfileItemValue" />
+            </RelativeLayout>
+        </LinearLayout>
+
     </LinearLayout>
-
-    <!-- Body Fat Index -->
-    <LinearLayout style="@style/ProfileCardStyle">
-
-        <TextView
-            style="@style/ProfileCardTitleStyle"
-            android:text="@string/body_fat_index" />
-
-        <View style="@style/ProfileCardDividerStyle" />
-
-        <RelativeLayout
-            style="@style/ProfileItemWrapper">
-
-            <TextView
-                style="@style/ProfileItemLabel"
-                android:text="@string/initial" />
-
-            <TextView
-                android:id="@+id/lbl_initial_body_fat_index"
-                style="@style/ProfileItemValue" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            style="@style/ProfileItemWrapper">
-
-            <TextView
-                style="@style/ProfileItemLabel"
-                android:text="@string/current" />
-
-            <TextView
-                android:id="@+id/lbl_current_body_fat_index"
-                style="@style/ProfileItemValue" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            style="@style/ProfileItemWrapper">
-
-            <TextView
-                style="@style/ProfileItemLabel"
-                android:text="@string/target" />
-
-            <TextView
-                android:id="@+id/lbl_target_body_fat_index"
-                style="@style/ProfileItemValue" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            style="@style/ProfileItemWrapper">
-
-            <TextView
-                style="@style/ProfileItemLabel"
-                android:text="@string/remaining" />
-
-            <TextView
-                android:id="@+id/lbl_remaining_body_fat_index"
-                style="@style/ProfileItemValue" />
-        </RelativeLayout>
-    </LinearLayout>
-
-    <!-- Other Details -->
-    <LinearLayout style="@style/ProfileCardStyle">
-
-        <TextView
-            style="@style/ProfileCardTitleStyle"
-            android:text="@string/other_details" />
-
-        <View style="@style/ProfileCardDividerStyle" />
-
-        <RelativeLayout
-            style="@style/ProfileItemWrapper">
-
-            <TextView
-                style="@style/ProfileItemLabel"
-                android:text="@string/due_date" />
-
-            <TextView
-                android:id="@+id/lbl_due_date"
-                style="@style/ProfileItemValue" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            style="@style/ProfileItemWrapper">
-
-            <TextView
-                style="@style/ProfileItemLabel"
-                android:text="@string/name" />
-
-            <TextView
-                android:id="@+id/lbl_name"
-                style="@style/ProfileItemValue" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            style="@style/ProfileItemWrapper">
-
-            <TextView
-                style="@style/ProfileItemLabel"
-                android:text="@string/height" />
-
-            <TextView
-                android:id="@+id/lbl_height"
-                style="@style/ProfileItemValue" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            style="@style/ProfileItemWrapper">
-
-            <TextView
-                style="@style/ProfileItemLabel"
-                android:text="@string/birthday" />
-
-            <TextView
-                android:id="@+id/lbl_birthday"
-                style="@style/ProfileItemValue" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            style="@style/ProfileItemWrapper">
-
-            <TextView
-                style="@style/ProfileItemLabel"
-                android:text="@string/gender" />
-
-            <TextView
-                android:id="@+id/lbl_gender"
-                style="@style/ProfileItemValue" />
-        </RelativeLayout>
-    </LinearLayout>
-
-</LinearLayout>
+</ScrollView>
