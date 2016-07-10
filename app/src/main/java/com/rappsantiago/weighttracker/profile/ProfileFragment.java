@@ -78,6 +78,10 @@ public class ProfileFragment extends Fragment implements LoaderManager.LoaderCal
 
     private TextView mLblRemainingBodyFatIndex;
 
+    private TextView mLblCurrentFatMass;
+
+    private TextView mLblCurrentMuscleMass;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
@@ -98,6 +102,8 @@ public class ProfileFragment extends Fragment implements LoaderManager.LoaderCal
         mLblCurrentBodyFatIndex = (TextView) view.findViewById(R.id.lbl_current_body_fat_index);
         mLblTargetBodyFatIndex = (TextView) view.findViewById(R.id.lbl_target_body_fat_index);
         mLblRemainingBodyFatIndex = (TextView) view.findViewById(R.id.lbl_remaining_body_fat_index);
+        mLblCurrentFatMass = (TextView) view.findViewById(R.id.lbl_current_fat_mass);
+        mLblCurrentMuscleMass = (TextView) view.findViewById(R.id.lbl_current_muscle_mass);
 
         return view;
     }
@@ -189,6 +195,8 @@ public class ProfileFragment extends Fragment implements LoaderManager.LoaderCal
                     double initialBodyFatIndex = data.getDouble(WeightProgressCursorLoader.IDX_WEIGHT_PROGRESS_INITIAL_BODY_FAT_INDEX);
                     double currentBodyFatIndex = data.getDouble(WeightProgressCursorLoader.IDX_WEIGHT_PROGRESS_CURRENT_BODY_FAT_INDEX);
                     double remainingBodyFatIndex = data.getDouble(WeightProgressCursorLoader.IDX_WEIGHT_PROGRESS_REMAINING_BODY_FAT_INDEX);
+                    double currentFatMass = data.getDouble(WeightProgressCursorLoader.IDX_WEIGHT_PROGRESS_CURRENT_FAT_MASS);
+                    double currentMuscleMass = data.getDouble(WeightProgressCursorLoader.IDX_WEIGHT_PROGRESS_CURRENT_MUSCLE_MASS);
 
                     mLblInitialWeight.setText(DisplayUtil.getFormattedWeight(getActivity(), intialWeight, null));
                     mLblCurrentWeight.setText(DisplayUtil.getFormattedWeight(getActivity(), currentWeight, null));
@@ -200,6 +208,8 @@ public class ProfileFragment extends Fragment implements LoaderManager.LoaderCal
                     mLblInitialBodyFatIndex.setText(String.format("%.2f%%", initialBodyFatIndex));
                     mLblCurrentBodyFatIndex.setText(String.format("%.2f%%", currentBodyFatIndex));
                     mLblRemainingBodyFatIndex.setText(String.format("%.2f%%", remainingBodyFatIndex));
+                    mLblCurrentFatMass.setText(DisplayUtil.getFormattedWeight(getActivity(), currentFatMass, null));
+                    mLblCurrentMuscleMass.setText(DisplayUtil.getFormattedWeight(getActivity(), currentMuscleMass, null));
                 }
                 break;
 

@@ -46,6 +46,10 @@ public class WeightProgressCursorLoader extends CursorLoader {
 
     public static String COL_REMAINING_BODY_FAT_INDEX = "remaining_body_fat_index";
 
+    public static String COL_CURRENT_FAT_MASS = "current_fat_mass";
+
+    public static String COL_CURRENT_MUSCLE_MASS = "current_muscle_mass";
+
     public static int IDX_WEIGHT_PROGRESS_ID = 0;
 
     public static int IDX_WEIGHT_PROGRESS_INITIAL_WEIGHT = 1;
@@ -64,6 +68,10 @@ public class WeightProgressCursorLoader extends CursorLoader {
 
     public static int IDX_WEIGHT_PROGRESS_REMAINING_BODY_FAT_INDEX = 8;
 
+    public static int IDX_WEIGHT_PROGRESS_CURRENT_FAT_MASS = 9;
+
+    public static int IDX_WEIGHT_PROGRESS_CURRENT_MUSCLE_MASS = 10;
+
     public static final String[] COLS_WEIGHT_PROGRESS = {
             COL_ID,
             COL_INITIAL_WEIGHT,
@@ -73,7 +81,9 @@ public class WeightProgressCursorLoader extends CursorLoader {
             COL_WEIGHT_LOST,
             COL_INITIAL_BODY_FAT_INDEX,
             COL_CURRENT_BODY_FAT_INDEX,
-            COL_REMAINING_BODY_FAT_INDEX
+            COL_REMAINING_BODY_FAT_INDEX,
+            COL_CURRENT_FAT_MASS,
+            COL_CURRENT_MUSCLE_MASS
     };
 
     public WeightProgressCursorLoader(Context context) {
@@ -106,6 +116,10 @@ public class WeightProgressCursorLoader extends CursorLoader {
 
         double remainingBodyFatIndex = Util.computeRemainingValue(currentBodyFatIndex, targetBodyFatIndex);
 
+        double currentFatMass = (currentBodyFatIndex / 100) * currentWeight;
+
+        double currentMuscleMass = ((100 - currentBodyFatIndex) / 100) * currentWeight;
+
         matrixCursor.addRow(new Object[]{
                 1,
                 initialWeight,
@@ -115,7 +129,9 @@ public class WeightProgressCursorLoader extends CursorLoader {
                 weightLost,
                 initialBodyFatIndex,
                 currentBodyFatIndex,
-                remainingBodyFatIndex
+                remainingBodyFatIndex,
+                currentFatMass,
+                currentMuscleMass
         });
 
         return matrixCursor;

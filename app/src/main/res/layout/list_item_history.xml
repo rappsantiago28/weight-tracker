@@ -19,9 +19,10 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingLeft="8dp"
     android:paddingRight="@dimen/activity_horizontal_margin"
-    android:minHeight="?android:attr/listPreferredItemHeight" >
+    android:minHeight="?android:attr/listPreferredItemHeightLarge"
+    android:background="@drawable/bg_card_look_selector">
 
     <CheckBox
         android:id="@+id/chk_selected"

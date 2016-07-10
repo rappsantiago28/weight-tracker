@@ -307,7 +307,7 @@ public class AddEditProgressFragment extends Fragment implements DatePickerDialo
             double bodyFatIndex = data.getDouble(DbConstants.IDX_PROGRESS_BODY_FAT_INDEX);
             long dateInMillis = data.getLong(DbConstants.IDX_PROGRESS_TIMESTAMP);
 
-            mTxtNewWeightWrapper.getEditText().setText(String.format("%.2f", weight));
+            mTxtNewWeightWrapper.getEditText().setText(DisplayUtil.getWeightString(getActivity(), weight, null));
             mTxtNewBodyFatIndexWrapper.getEditText().setText(String.format("%.2f", bodyFatIndex));
 
             mDateInMillis = dateInMillis;

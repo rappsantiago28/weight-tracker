@@ -74,6 +74,9 @@
     <string name="current">Current</string>
     <string name="target">Target</string>
     <string name="other_details">Other Details</string>
+    <string name="current_mass_distribution">Current Mass Distribution</string>
+    <string name="fat_mass">Fat mass</string>
+    <string name="muscle_mass">Muscle mass</string>
 
     <!-- String Arrays -->
     <string-array name="arr_weight_unit">

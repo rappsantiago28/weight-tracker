@@ -32,9 +32,11 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:orientation">vertical</item>
-        <item name="android:padding">@dimen/profile_card_default_padding</item>
+        <item name="android:paddingLeft">@dimen/profile_card_default_padding</item>
+        <item name="android:paddingRight">@dimen/profile_card_default_padding</item>
+        <item name="android:paddingBottom">@dimen/profile_card_default_padding</item>
         <item name="android:layout_marginBottom">@dimen/profile_card_default_margin_bottom</item>
-        <item name="android:background">@drawable/bg_border_shadow</item>
+        <item name="android:background">@drawable/bg_card_look_normal</item>
     </style>
 
     <style name="ProfileCardSmallStyle">
@@ -42,13 +44,18 @@
         <item name="android:layout_height">@dimen/profile_card_small_min_height</item>
         <item name="android:layout_weight">1</item>
         <item name="android:padding">@dimen/profile_card_default_padding</item>
-        <item name="android:background">@drawable/bg_border_shadow</item>
+        <item name="android:background">@drawable/bg_card_look_normal</item>
     </style>
 
-    <style name="ProfileCardTitleStyle">
+    <style name="ProfileCardSmallTitleStyle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textStyle">bold</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="ProfileCardTitleStyle" parent="ProfileCardSmallTitleStyle">
+        <item name="android:layout_marginTop">@dimen/profile_card_title_margin_top</item>
     </style>
 
     <style name="ProfileCardDividerStyle">
