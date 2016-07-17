@@ -16,6 +16,8 @@
 
 package com.rappsantiago.weighttracker.progress;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -23,6 +25,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -33,6 +36,7 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.rappsantiago.weighttracker.FabVisibilityListener;
 import com.rappsantiago.weighttracker.MainActivity;
 import com.rappsantiago.weighttracker.R;
 import com.rappsantiago.weighttracker.provider.DbConstants;
@@ -50,15 +54,29 @@ public class HistoryFragment extends Fragment implements LoaderManager.LoaderCal
 
     private static final String TAG = HistoryFragment.class.getSimpleName();
 
+    private FabVisibilityListener mFabVisibilityListener;
+
     private ListView mListView;
 
     private HistoryCursorAdapter mCursorAdapter;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof FabVisibilityListener) {
+            mFabVisibilityListener = (FabVisibilityListener) context;
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_history, container, false);
 
         mListView = (ListView) view;
+
+        if (null != mFabVisibilityListener) {
+            mListView.setOnScrollListener(mFabVisibilityListener.getDefaulScrollListener());
+        }
 
         mListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
         mListView.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {

@@ -20,6 +20,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -28,9 +29,11 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AbsListView;
 
 import com.rappsantiago.weighttracker.profile.ProfileFragment;
 import com.rappsantiago.weighttracker.profile.setup.ProfileSetupActivity;
@@ -45,7 +48,7 @@ import static com.rappsantiago.weighttracker.provider.WeightTrackerContract.*;
 // TODO : Implement correct logic for body fat index in the main page
 // TODO : Implement edit goal / targets
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, WeightTrackerSaveService.Listener {
+        implements NavigationView.OnNavigationItemSelectedListener, WeightTrackerSaveService.Listener, FabVisibilityListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -69,7 +72,23 @@ public class MainActivity extends AppCompatActivity
 
     public static final String CALLBACK_ACTION_SETUP_PROFILE = "MainActivity.CALLBACK_ACTION_SETUP_PROFILE";
 
+    private static final int FAB_ANIM_DURATION = 150;
+
     private int mCurrentPage;
+
+    private FloatingActionButton mFab;
+
+    private CountDownTimer mFabTimer = new CountDownTimer(1000, 1000) {
+        @Override
+        public void onTick(long millisUntilFinished) {
+
+        }
+
+        @Override
+        public void onFinish() {
+            showMainFab();
+        }
+    };
 
     private ProfileFragment mProfileFragment;
 
@@ -134,14 +153,82 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void setupFab() {
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        mFab = (FloatingActionButton) findViewById(R.id.fab);
+        mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent addProgressIntent = new Intent(MainActivity.this, AddEditProgressActivity.class);
                 startActivity(addProgressIntent);
             }
         });
+    }
+
+    @Override
+    public void showFab() {
+        showMainFabWithTimer();
+    }
+
+    @Override
+    public void hideFab() {
+        hideMainFab();
+    }
+
+    @Override
+    public AbsListView.OnScrollListener getDefaulScrollListener() {
+        return new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                Log.d(TAG, "scrollState = " + scrollState);
+                switch (scrollState) {
+                    case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
+                    case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
+                        hideFab();
+                        break;
+
+                    case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
+                        showMainFabWithTimer();
+                        break;
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+            }
+        };
+    }
+
+    private void showMainFabWithTimer() {
+        if (null != mFabTimer) {
+            mFabTimer.cancel();
+            mFabTimer.start();
+        }
+    }
+
+    private void showMainFab() {
+        mFab.animate().alpha(1.0F).translationY(0.0F)
+                .setDuration(FAB_ANIM_DURATION).withEndAction(new Runnable() {
+            @Override
+            public void run() {
+                mFab.setAlpha(1.0F);
+                mFab.setTranslationY(0.0F);
+            }
+        }).start();
+    }
+
+    private void hideMainFab() {
+        if (null != mFabTimer) {
+            mFabTimer.cancel();
+        }
+
+        mFab.animate().alpha(0.0F).translationY(mFab.getMeasuredHeight())
+                .setDuration(FAB_ANIM_DURATION).withEndAction(new Runnable() {
+            @Override
+            public void run() {
+                mFab.setAlpha(0.0F);
+                mFab.setTranslationY(mFab.getMeasuredHeight());
+            }
+        }).start();
     }
 
     private void setupNavigationDrawer(Toolbar toolbar) {

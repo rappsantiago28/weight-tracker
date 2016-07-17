@@ -35,6 +35,11 @@ public final class DisplayUtil {
         return formatter.print(dateInMillis);
     }
 
+    public static String getReadableDateNoYear(long dateInMillis) {
+        DateTimeFormatter formatter = DateTimeFormat.forPattern("MMMM dd");
+        return formatter.print(dateInMillis);
+    }
+
     public static String getReadableGender(Context context, String gender) {
 
         String readableGender = "";
