@@ -16,6 +16,7 @@
 
 package com.rappsantiago.weighttracker.profile;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -27,9 +28,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.rappsantiago.weighttracker.FabVisibilityListener;
 import com.rappsantiago.weighttracker.R;
 import com.rappsantiago.weighttracker.provider.DbConstants;
 import com.rappsantiago.weighttracker.util.DisplayUtil;
+import com.rappsantiago.weighttracker.view.OnScrollListenerScrollView;
 
 import static com.rappsantiago.weighttracker.provider.WeightTrackerContract.*;
 
@@ -82,9 +85,27 @@ public class ProfileFragment extends Fragment implements LoaderManager.LoaderCal
 
     private TextView mLblCurrentMuscleMass;
 
+    private OnScrollListenerScrollView mScrollView;
+
+    private FabVisibilityListener mFabVisibilityListener;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof FabVisibilityListener) {
+            mFabVisibilityListener = (FabVisibilityListener) context;
+        }
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
+
+        mScrollView = (OnScrollListenerScrollView) view;
+
+        if (null != mFabVisibilityListener) {
+            mScrollView.setOnScrollListener(mFabVisibilityListener.getDefaulScrollListener());
+        }
 
         mLblName = (TextView) view.findViewById(R.id.lbl_name);
         mLblBirthday = (TextView) view.findViewById(R.id.lbl_birthday);
@@ -158,7 +179,7 @@ public class ProfileFragment extends Fragment implements LoaderManager.LoaderCal
                     double height = data.getDouble(DbConstants.IDX_PROFILE_HEIGHT);
 
                     mLblName.setText(name);
-                    mLblBirthday.setText(DisplayUtil.getReadableDate(birthdayInMillis));
+                    mLblBirthday.setText(DisplayUtil.getReadableDateNoYear(birthdayInMillis));
                     mLblGender.setText(DisplayUtil.getReadableGender(getContext(), gender));
                     mLblHeight.setText(DisplayUtil.getFormattedHeight(getContext(), height, null));
 
