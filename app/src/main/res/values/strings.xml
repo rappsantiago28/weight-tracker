@@ -77,6 +77,7 @@
     <string name="current_mass_distribution">Current Mass Distribution</string>
     <string name="fat_mass">Fat mass</string>
     <string name="muscle_mass">Muscle mass</string>
+    <string name="profile_details">Profile Details</string>
 
     <!-- String Arrays -->
     <string-array name="arr_weight_unit">
