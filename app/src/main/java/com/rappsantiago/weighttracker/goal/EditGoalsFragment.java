@@ -30,7 +30,9 @@ import android.widget.TextView;
 
 import com.rappsantiago.weighttracker.R;
 import com.rappsantiago.weighttracker.dialog.DatePickerDialogFragment;
+import com.rappsantiago.weighttracker.model.Goal;
 import com.rappsantiago.weighttracker.provider.WeightTrackerContract;
+import com.rappsantiago.weighttracker.provider.queryhelpers.GoalsQueryHelper;
 import com.rappsantiago.weighttracker.util.DisplayUtil;
 import com.rappsantiago.weighttracker.util.PreferenceUtil;
 import com.rappsantiago.weighttracker.util.Util;
@@ -66,13 +68,6 @@ public class EditGoalsFragment extends Fragment implements DatePickerDialog.OnDa
         mLblDueDate = (TextView) view.findViewById(R.id.lbl_due_date);
 
         setWeightUnit();
-
-        if (0 >= mDueDateInMillis) {
-            mDueDateInMillis = Util.getCurrentDateInMillis();
-            mLblDueDate.setText(DisplayUtil.getReadableDate(mDueDateInMillis));
-        } else {
-            mLblDueDate.setText(DisplayUtil.getReadableDate(mDueDateInMillis));
-        }
 
         mChkDueDate.setOnCheckedChangeListener(mCheckedChangedListener);
         mLblDueDate.setOnClickListener(mSetDateClickListener);
@@ -126,5 +121,25 @@ public class EditGoalsFragment extends Fragment implements DatePickerDialog.OnDa
 
         String hint = String.format(getString(R.string.target_weight_with_unit), getString(resString));
         mTxtTargetWeightWrapper.setHint(hint);
+
+        GoalsQueryHelper goalsQueryHelper = new GoalsQueryHelper(getActivity());
+        Goal currentGoal = goalsQueryHelper.getCurrentGoal();
+
+        mTxtTargetWeightWrapper.getEditText().setText(
+                DisplayUtil.getWeightString(getActivity(),
+                        currentGoal.getTargetWeight(), null));
+
+        mTxtTargetBodyFatIndexWrapper.getEditText().setText(
+                Double.toString(currentGoal.getTargetBodyFatIndex()));
+
+        if (0 >= currentGoal.getDueDate()) {
+            mDueDateInMillis = Util.getCurrentDateInMillis();
+            mLblDueDate.setText(DisplayUtil.getReadableDate(mDueDateInMillis));
+            mChkDueDate.setChecked(false);
+        } else {
+            mDueDateInMillis = currentGoal.getDueDate();
+            mLblDueDate.setText(DisplayUtil.getReadableDate(currentGoal.getDueDate()));
+            mChkDueDate.setChecked(true);
+        }
     }
 }
