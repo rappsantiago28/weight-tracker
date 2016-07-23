@@ -89,6 +89,8 @@ public class ProfileFragment extends Fragment implements LoaderManager.LoaderCal
 
     private FabVisibilityListener mFabVisibilityListener;
 
+    private boolean mShowRemainingBfi;
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -194,7 +196,13 @@ public class ProfileFragment extends Fragment implements LoaderManager.LoaderCal
                     long dueDateInMillis = data.getLong(DbConstants.IDX_GOAL_DUE_DATE);
 
                     mLblTargetWeight.setText(DisplayUtil.getFormattedWeight(getContext(), targetWeight, null));
-                    mLblTargetBodyFatIndex.setText(String.format("%.2f%%", targetBodyFatIndex));
+
+                    if (0 < targetBodyFatIndex) {
+                        mLblTargetBodyFatIndex.setText(String.format("%.2f%%", targetBodyFatIndex));
+                        mShowRemainingBfi = true;
+                    } else {
+                        mLblTargetBodyFatIndex.setText(R.string.not_applicable);
+                    }
 
                     if (0 < dueDateInMillis) {
                         mLblDueDate.setText(DisplayUtil.getReadableDate(dueDateInMillis));
@@ -228,7 +236,15 @@ public class ProfileFragment extends Fragment implements LoaderManager.LoaderCal
 
                     mLblInitialBodyFatIndex.setText(String.format("%.2f%%", initialBodyFatIndex));
                     mLblCurrentBodyFatIndex.setText(String.format("%.2f%%", currentBodyFatIndex));
-                    mLblRemainingBodyFatIndex.setText(String.format("%.2f%%", remainingBodyFatIndex));
+
+                    if (mShowRemainingBfi) {
+                        mLblRemainingBodyFatIndex.setText(String.format("%.2f%%", remainingBodyFatIndex));
+                    } else {
+                        mLblRemainingBodyFatIndex.setText(R.string.not_applicable);
+                    }
+
+                    mShowRemainingBfi = false;
+
                     mLblCurrentFatMass.setText(DisplayUtil.getFormattedWeight(getActivity(), currentFatMass, null));
                     mLblCurrentMuscleMass.setText(DisplayUtil.getFormattedWeight(getActivity(), currentMuscleMass, null));
                 }

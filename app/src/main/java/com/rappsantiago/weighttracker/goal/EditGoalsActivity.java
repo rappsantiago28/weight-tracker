@@ -63,19 +63,7 @@ public class EditGoalsActivity extends SimpleActivityWithFragment
 
         if (R.id.action_save == id) {
             EditGoalsFragment editGoalsFragment = (EditGoalsFragment) mContentFragment;
-            Goal currentGoal = editGoalsFragment.getCurrentGoal();
-
-            Intent updateGoalIntent = WeightTrackerSaveService.createUpdateGoalIntent(
-                    this,
-                    currentGoal.getGoalId(),
-                    currentGoal.getTargetWeight(),
-                    currentGoal.getTargetBodyFatIndex(),
-                    currentGoal.getDueDate(),
-                    PreferenceUtil.getWeightUnit(this),
-                    EditGoalsActivity.class,
-                    CALLBACK_ACTION_UPDATE_GOAL);
-
-            startService(updateGoalIntent);
+            editGoalsFragment.saveCurrentValues();
             return true;
         }
 

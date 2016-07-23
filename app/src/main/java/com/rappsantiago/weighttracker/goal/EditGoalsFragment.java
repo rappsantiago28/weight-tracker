@@ -17,6 +17,7 @@
 package com.rappsantiago.weighttracker.goal;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
@@ -33,6 +34,7 @@ import com.rappsantiago.weighttracker.dialog.DatePickerDialogFragment;
 import com.rappsantiago.weighttracker.model.Goal;
 import com.rappsantiago.weighttracker.provider.WeightTrackerContract;
 import com.rappsantiago.weighttracker.provider.queryhelpers.GoalsQueryHelper;
+import com.rappsantiago.weighttracker.service.WeightTrackerSaveService;
 import com.rappsantiago.weighttracker.util.DisplayUtil;
 import com.rappsantiago.weighttracker.util.PreferenceUtil;
 import com.rappsantiago.weighttracker.util.Util;
@@ -137,17 +139,34 @@ public class EditGoalsFragment extends Fragment implements DatePickerDialog.OnDa
                 Double.toString(currentGoal.getTargetBodyFatIndex()));
 
         if (0 >= currentGoal.getDueDate()) {
-            mDueDateInMillis = Util.getCurrentDateInMillis();
-            mLblDueDate.setText(DisplayUtil.getReadableDate(mDueDateInMillis));
             mChkDueDate.setChecked(false);
+            mLblDueDate.setText(R.string.set_date);
+            mLblDueDate.setEnabled(false);
         } else {
             mDueDateInMillis = currentGoal.getDueDate();
-            mLblDueDate.setText(DisplayUtil.getReadableDate(currentGoal.getDueDate()));
             mChkDueDate.setChecked(true);
+            mLblDueDate.setText(DisplayUtil.getReadableDate(currentGoal.getDueDate()));
+            mLblDueDate.setEnabled(true);
         }
     }
 
-    public Goal getCurrentGoal() {
+    public void saveCurrentValues() {
+        Goal currentGoal = getCurrentGoal();
+
+        Intent updateGoalIntent = WeightTrackerSaveService.createUpdateGoalIntent(
+                getActivity(),
+                currentGoal.getGoalId(),
+                currentGoal.getTargetWeight(),
+                currentGoal.getTargetBodyFatIndex(),
+                currentGoal.getDueDate(),
+                PreferenceUtil.getWeightUnit(getActivity()),
+                EditGoalsActivity.class,
+                EditGoalsActivity.CALLBACK_ACTION_UPDATE_GOAL);
+
+        getActivity().startService(updateGoalIntent);
+    }
+
+    private Goal getCurrentGoal() {
         String strTargetWeight = mTxtTargetWeightWrapper.getEditText().getText().toString();
         double targetWeight = Util.parseDouble(strTargetWeight, 0.0);
 
@@ -156,7 +175,7 @@ public class EditGoalsFragment extends Fragment implements DatePickerDialog.OnDa
 
         return new Goal.Builder(mGoalId, targetWeight)
                 .targetBodyFatIndex(targetBodyFatIndex)
-                .dueDate(mDueDateInMillis)
+                .dueDate(mChkDueDate.isChecked() ? mDueDateInMillis : 0L)
                 .build();
     }
 }
