@@ -30,6 +30,8 @@ import android.view.MenuItem;
  */
 public abstract class SimpleActivityWithFragment extends AppCompatActivity {
 
+    protected Fragment mContentFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,8 +48,10 @@ public abstract class SimpleActivityWithFragment extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(getResTitle());
 
+        mContentFragment = getContent();
+
         getSupportFragmentManager().beginTransaction().replace(R.id.content,
-                getContent()).commit();
+                mContentFragment).commit();
     }
 
     @Override

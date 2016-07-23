@@ -14,9 +14,10 @@
  *  limitations under the License.
  **/
 
-package com.rappsantiago.weighttracker.profile.setup;
+package com.rappsantiago.weighttracker.goal;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
@@ -30,25 +31,20 @@ import android.widget.TextView;
 
 import com.rappsantiago.weighttracker.R;
 import com.rappsantiago.weighttracker.dialog.DatePickerDialogFragment;
+import com.rappsantiago.weighttracker.model.Goal;
 import com.rappsantiago.weighttracker.provider.WeightTrackerContract;
+import com.rappsantiago.weighttracker.provider.queryhelpers.GoalsQueryHelper;
+import com.rappsantiago.weighttracker.service.WeightTrackerSaveService;
 import com.rappsantiago.weighttracker.util.DisplayUtil;
+import com.rappsantiago.weighttracker.util.PreferenceUtil;
 import com.rappsantiago.weighttracker.util.Util;
 
 import org.joda.time.LocalDate;
 
-import java.util.Set;
-
 /**
- * Created by rappsantiago28 on 4/2/16.
+ * Created by ARKAS on 23/07/2016.
  */
-public class TargetWeightFragment extends Fragment
-        implements PageWithData, DatePickerDialog.OnDateSetListener {
-
-    public static final String KEY_TARGET_WEIGHT = "TargetWeightFragment.KEY_TARGET_WEIGHT";
-
-    public static final String KEY_TARGET_BODY_FAT_INDEX = "TargetWeightFragment.KEY_TARGET_BODY_FAT_INDEX";
-
-    public static final String KEY_DUE_DATE = "TargetWeightFragment.KEY_DUE_DATE";
+public class EditGoalsFragment extends Fragment implements DatePickerDialog.OnDateSetListener {
 
     private TextInputLayout mTxtTargetWeightWrapper;
 
@@ -60,68 +56,27 @@ public class TargetWeightFragment extends Fragment
 
     private long mDueDateInMillis;
 
+    private long mGoalId;
+
+    public static EditGoalsFragment createFragment() {
+        return new EditGoalsFragment();
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_target_weight, container, false);
+        View view = inflater.inflate(R.layout.fragment_set_goals, container, false);
 
         mTxtTargetWeightWrapper = (TextInputLayout) view.findViewById(R.id.txt_target_weight_wrapper);
         mTxtTargetBodyFatIndexWrapper = (TextInputLayout) view.findViewById(R.id.txt_target_bfi_wrapper);
         mChkDueDate = (CheckBox) view.findViewById(R.id.chk_due_date);
         mLblDueDate = (TextView) view.findViewById(R.id.lbl_due_date);
 
-        if (0 >= mDueDateInMillis) {
-            mDueDateInMillis = Util.getCurrentDateInMillis();
-            mLblDueDate.setText(DisplayUtil.getReadableDate(mDueDateInMillis));
-        } else {
-            mLblDueDate.setText(DisplayUtil.getReadableDate(mDueDateInMillis));
-        }
+        setCurrentValues();
 
         mChkDueDate.setOnCheckedChangeListener(mCheckedChangedListener);
         mLblDueDate.setOnClickListener(mSetDateClickListener);
 
         return view;
-    }
-
-    @Override
-    public Bundle getProfileData() {
-
-        Bundle data = new Bundle();
-
-        String strTargetWeight = mTxtTargetWeightWrapper.getEditText().getText().toString();
-        double targetWeight = Util.parseDouble(strTargetWeight, 0.0);
-
-        String strTargetBodyFatIndex = mTxtTargetBodyFatIndexWrapper.getEditText().getText().toString();
-        double targetBodyFatIndex = Util.parseDouble(strTargetBodyFatIndex, 0.0);
-
-        data.putDouble(KEY_TARGET_WEIGHT, targetWeight);
-        data.putDouble(KEY_TARGET_BODY_FAT_INDEX, targetBodyFatIndex);
-
-        boolean isDueDateChecked = mChkDueDate.isChecked();
-
-        if (isDueDateChecked) {
-            data.putLong(KEY_DUE_DATE, mDueDateInMillis);
-        } else {
-            data.putLong(KEY_DUE_DATE, 0L);
-        }
-
-        return data;
-    }
-
-    @Override
-    public void showErrorMessage(Set<String> errors) {
-        if (errors.contains(KEY_TARGET_WEIGHT)) {
-            mTxtTargetWeightWrapper.setError(getString(R.string.invalid_weight));
-        }
-    }
-
-    @Override
-    public void clearErrorMessage() {
-        mTxtTargetWeightWrapper.setErrorEnabled(false);
-        mTxtTargetWeightWrapper.requestFocus();
-
-        if (null != getView()) {
-            getView().requestFocus();
-        }
     }
 
     @Override
@@ -134,23 +89,25 @@ public class TargetWeightFragment extends Fragment
     private CompoundButton.OnCheckedChangeListener mCheckedChangedListener =
             new CompoundButton.OnCheckedChangeListener() {
 
-        @Override
-        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            mLblDueDate.setEnabled(isChecked);
-        }
-    };
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    mLblDueDate.setEnabled(isChecked);
+                }
+            };
 
     private View.OnClickListener mSetDateClickListener = new View.OnClickListener() {
 
         @Override
         public void onClick(View v) {
             DatePickerDialogFragment datePickerDialog = new DatePickerDialogFragment();
-            datePickerDialog.setOnDateSetListener(TargetWeightFragment.this);
+            datePickerDialog.setOnDateSetListener(EditGoalsFragment.this);
             datePickerDialog.show(getFragmentManager(), "");
         }
     };
 
-    public void setWeightUnit(String weightUnit) {
+    private void setCurrentValues() {
+        String weightUnit = PreferenceUtil.getWeightUnit(getActivity());
+
         int resString = -1;
 
         switch (weightUnit) {
@@ -168,6 +125,57 @@ public class TargetWeightFragment extends Fragment
 
         String hint = String.format(getString(R.string.target_weight_with_unit), getString(resString));
         mTxtTargetWeightWrapper.setHint(hint);
+
+        GoalsQueryHelper goalsQueryHelper = new GoalsQueryHelper(getActivity());
+        Goal currentGoal = goalsQueryHelper.getCurrentGoal();
+
+        mGoalId = currentGoal.getGoalId();
+
+        mTxtTargetWeightWrapper.getEditText().setText(
+                DisplayUtil.getWeightString(getActivity(),
+                        currentGoal.getTargetWeight(), null));
+
+        mTxtTargetBodyFatIndexWrapper.getEditText().setText(
+                Double.toString(currentGoal.getTargetBodyFatIndex()));
+
+        if (0 >= currentGoal.getDueDate()) {
+            mChkDueDate.setChecked(false);
+            mLblDueDate.setText(R.string.set_date);
+            mLblDueDate.setEnabled(false);
+        } else {
+            mDueDateInMillis = currentGoal.getDueDate();
+            mChkDueDate.setChecked(true);
+            mLblDueDate.setText(DisplayUtil.getReadableDate(currentGoal.getDueDate()));
+            mLblDueDate.setEnabled(true);
+        }
     }
 
+    public void saveCurrentValues() {
+        Goal currentGoal = getCurrentGoal();
+
+        Intent updateGoalIntent = WeightTrackerSaveService.createUpdateGoalIntent(
+                getActivity(),
+                currentGoal.getGoalId(),
+                currentGoal.getTargetWeight(),
+                currentGoal.getTargetBodyFatIndex(),
+                currentGoal.getDueDate(),
+                PreferenceUtil.getWeightUnit(getActivity()),
+                EditGoalsActivity.class,
+                EditGoalsActivity.CALLBACK_ACTION_UPDATE_GOAL);
+
+        getActivity().startService(updateGoalIntent);
+    }
+
+    private Goal getCurrentGoal() {
+        String strTargetWeight = mTxtTargetWeightWrapper.getEditText().getText().toString();
+        double targetWeight = Util.parseDouble(strTargetWeight, 0.0);
+
+        String strTargetBodyFatIndex = mTxtTargetBodyFatIndexWrapper.getEditText().getText().toString();
+        double targetBodyFatIndex = Util.parseDouble(strTargetBodyFatIndex, 0.0);
+
+        return new Goal.Builder(mGoalId, targetWeight)
+                .targetBodyFatIndex(targetBodyFatIndex)
+                .dueDate(mChkDueDate.isChecked() ? mDueDateInMillis : 0L)
+                .build();
+    }
 }

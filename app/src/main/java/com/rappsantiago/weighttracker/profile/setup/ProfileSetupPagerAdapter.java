@@ -58,7 +58,7 @@ public class ProfileSetupPagerAdapter extends FragmentStatePagerAdapter {
         mWelcomePageFragment = new WelcomePageFragment();
         mNameBirthdayGenderFragment = new NameBirthdayGenderFragment();
         mWeightHeightFragment = new WeightHeightFragment();
-        mTargetWeightFragment = new TargetWeightFragment();
+        mTargetWeightFragment = new SetGoalsFragment();
         mProfileSetupSummaryFragment = new ProfileSetupSummaryFragment();
 
         mPageMapping.put(PAGE_WELCOME, mWelcomePageFragment);

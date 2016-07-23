@@ -159,9 +159,9 @@ public class ProfileSetupActivity extends AppCompatActivity {
                 break;
 
             case ProfileSetupPagerAdapter.PAGE_WEIGHT_HEIGHT:
-                TargetWeightFragment targetWeightFragment =
-                        (TargetWeightFragment) mPagerAdapter.getItem(ProfileSetupPagerAdapter.PAGE_TARGET_WEIGHT);
-                targetWeightFragment.setWeightUnit(mProfileData.getString(WeightHeightFragment.KEY_WEIGHT_UNIT));
+                SetGoalsFragment setGoalsFragment =
+                        (SetGoalsFragment) mPagerAdapter.getItem(ProfileSetupPagerAdapter.PAGE_TARGET_WEIGHT);
+                setGoalsFragment.setWeightUnit(mProfileData.getString(WeightHeightFragment.KEY_WEIGHT_UNIT));
 
                 mViewPager.setCurrentItem(ProfileSetupPagerAdapter.PAGE_TARGET_WEIGHT, true);
                 break;
@@ -222,7 +222,7 @@ public class ProfileSetupActivity extends AppCompatActivity {
 
                     // body fat index is optional
                     if (WeightHeightFragment.KEY_BODY_FAT_INDEX == key ||
-                            TargetWeightFragment.KEY_TARGET_BODY_FAT_INDEX == key) {
+                            SetGoalsFragment.KEY_TARGET_BODY_FAT_INDEX == key) {
                         continue;
                     }
 
@@ -245,7 +245,7 @@ public class ProfileSetupActivity extends AppCompatActivity {
                 } else if (obj instanceof Long) { // birthday, due date
 
                     // due date is optional
-                    if (TargetWeightFragment.KEY_DUE_DATE == key) {
+                    if (SetGoalsFragment.KEY_DUE_DATE == key) {
                         continue;
                     }
 
