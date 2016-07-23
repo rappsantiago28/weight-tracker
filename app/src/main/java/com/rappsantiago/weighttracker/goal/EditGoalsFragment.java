@@ -54,6 +54,8 @@ public class EditGoalsFragment extends Fragment implements DatePickerDialog.OnDa
 
     private long mDueDateInMillis;
 
+    private long mGoalId;
+
     public static EditGoalsFragment createFragment() {
         return new EditGoalsFragment();
     }
@@ -67,7 +69,7 @@ public class EditGoalsFragment extends Fragment implements DatePickerDialog.OnDa
         mChkDueDate = (CheckBox) view.findViewById(R.id.chk_due_date);
         mLblDueDate = (TextView) view.findViewById(R.id.lbl_due_date);
 
-        setWeightUnit();
+        setCurrentValues();
 
         mChkDueDate.setOnCheckedChangeListener(mCheckedChangedListener);
         mLblDueDate.setOnClickListener(mSetDateClickListener);
@@ -101,7 +103,7 @@ public class EditGoalsFragment extends Fragment implements DatePickerDialog.OnDa
         }
     };
 
-    private void setWeightUnit() {
+    private void setCurrentValues() {
         String weightUnit = PreferenceUtil.getWeightUnit(getActivity());
 
         int resString = -1;
@@ -125,6 +127,8 @@ public class EditGoalsFragment extends Fragment implements DatePickerDialog.OnDa
         GoalsQueryHelper goalsQueryHelper = new GoalsQueryHelper(getActivity());
         Goal currentGoal = goalsQueryHelper.getCurrentGoal();
 
+        mGoalId = currentGoal.getGoalId();
+
         mTxtTargetWeightWrapper.getEditText().setText(
                 DisplayUtil.getWeightString(getActivity(),
                         currentGoal.getTargetWeight(), null));
@@ -141,5 +145,18 @@ public class EditGoalsFragment extends Fragment implements DatePickerDialog.OnDa
             mLblDueDate.setText(DisplayUtil.getReadableDate(currentGoal.getDueDate()));
             mChkDueDate.setChecked(true);
         }
+    }
+
+    public Goal getCurrentGoal() {
+        String strTargetWeight = mTxtTargetWeightWrapper.getEditText().getText().toString();
+        double targetWeight = Util.parseDouble(strTargetWeight, 0.0);
+
+        String strTargetBodyFatIndex = mTxtTargetBodyFatIndexWrapper.getEditText().getText().toString();
+        double targetBodyFatIndex = Util.parseDouble(strTargetBodyFatIndex, 0.0);
+
+        return new Goal.Builder(mGoalId, targetWeight)
+                .targetBodyFatIndex(targetBodyFatIndex)
+                .dueDate(mDueDateInMillis)
+                .build();
     }
 }

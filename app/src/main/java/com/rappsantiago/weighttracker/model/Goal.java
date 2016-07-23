@@ -22,9 +22,14 @@ import com.rappsantiago.weighttracker.util.PreferenceUtil;
  * Created by ARKAS on 23/07/2016.
  */
 public class Goal {
+    private final long goalId;
     private final double targetWeight;
     private final double targetBodyFatIndex;
     private final long dueDate;
+
+    public long getGoalId() {
+        return goalId;
+    }
 
     public double getTargetWeight() {
         return targetWeight;
@@ -39,11 +44,13 @@ public class Goal {
     }
 
     public static class Builder {
+        private final long goalId;
         private final double targetWeight;
         private double targetBodyFatIndex;
         private long dueDate;
 
-        public Builder(double targetWeight) {
+        public Builder(long goalId, double targetWeight) {
+            this.goalId = goalId;
             this.targetWeight = targetWeight;
         }
 
@@ -63,6 +70,7 @@ public class Goal {
     }
 
     private Goal(Builder builder) {
+        this.goalId = builder.goalId;
         this.targetWeight = builder.targetWeight;
         this.targetBodyFatIndex = builder.targetBodyFatIndex;
         this.dueDate = builder.dueDate;

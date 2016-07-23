@@ -39,18 +39,19 @@ public class GoalsQueryHelper extends QueryHelper {
                 null, null, WeightTrackerContract.Goal._ID + " ASC LIMIT 1")) {
 
             if (null != cursor && cursor.moveToFirst()) {
+                long goalId = cursor.getLong(DbConstants.IDX_GOAL_ID);
                 double weight = cursor.getDouble(DbConstants.IDX_GOAL_TARGET_WEIGHT);
                 double bodyFatIndex = cursor.getDouble(DbConstants.IDX_GOAL_TARGET_BODY_FAT_INDEX);
                 long dueDate = cursor.getLong(DbConstants.IDX_GOAL_DUE_DATE);
 
-                return new Goal.Builder(weight)
+                return new Goal.Builder(goalId, weight)
                         .targetBodyFatIndex(bodyFatIndex)
                         .dueDate(dueDate)
                         .build();
             }
         }
 
-        return new Goal.Builder(0.0)
+        return new Goal.Builder(0L, 0.0)
                 .targetBodyFatIndex(0.0)
                 .dueDate(0L)
                 .build();

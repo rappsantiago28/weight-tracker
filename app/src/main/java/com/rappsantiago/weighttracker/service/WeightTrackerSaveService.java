@@ -30,6 +30,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.RemoteException;
+import android.util.Log;
 
 import com.rappsantiago.weighttracker.profile.setup.NameBirthdayGenderFragment;
 import com.rappsantiago.weighttracker.profile.setup.SetGoalsFragment;
@@ -70,6 +71,8 @@ public class WeightTrackerSaveService extends IntentService {
 
     private static final String ACTION_INSERT_GOAL = PREFIX + ".ACTION_INSERT_GOAL";
 
+    private static final String ACTION_UPDATE_GOAL = PREFIX + ".ACTION_UPDATE_GOAL";
+
     // extras
     private static final String EXTRA_CALLBACK_INTENT = PREFIX + ".EXTRA_CALLBACK_INTENT";
 
@@ -94,6 +97,8 @@ public class WeightTrackerSaveService extends IntentService {
     private static final String EXTRA_PROGRESS_BODY_FAT_INDEX = PREFIX + ".EXTRA_PROGRESS_BODY_FAT_INDEX";
 
     private static final String EXTRA_PROGRESS_DATE = PREFIX + ".EXTRA_PROGRESS_DATE";
+
+    private static final String EXTRA_GOAL_ID = PREFIX + ".EXTRA_GOAL_ID";
 
     private static final String EXTRA_GOAL_DUE_DATE = PREFIX + ".EXTRA_GOAL_DUE_DATE";
 
@@ -149,6 +154,10 @@ public class WeightTrackerSaveService extends IntentService {
 
             case ACTION_INSERT_GOAL:
                 insertGoal(intent, true);
+                break;
+
+            case ACTION_UPDATE_GOAL:
+                updateGoal(intent);
                 break;
 
             default:
@@ -365,6 +374,40 @@ public class WeightTrackerSaveService extends IntentService {
         }
     }
 
+    private void updateGoal(Intent intent) {
+        long goalId = intent.getLongExtra(EXTRA_GOAL_ID, 0L);
+        double targetWeight = intent.getDoubleExtra(EXTRA_GOAL_TARGET_WEIGHT, 0.0);
+        double targetBodyFatIndex = intent.getDoubleExtra(EXTRA_GOAL_TARGET_BODY_FAT_INDEX, 0.0);
+        long dueDateInMillis = intent.getLongExtra(EXTRA_GOAL_DUE_DATE, 0L);
+        String weightUnit = intent.getStringExtra(EXTRA_WEIGHT_UNIT);
+
+        ContentValues goalValues = new ContentValues();
+
+        switch (weightUnit) {
+            case Profile.WEIGHT_UNIT_KILOGRAMS:
+                goalValues.put(Goal.COL_TARGET_WEIGHT, targetWeight);
+                break;
+
+            case Profile.WEIGHT_UNIT_POUNDS:
+                goalValues.put(Goal.COL_TARGET_WEIGHT, Util.poundsToKilograms(targetWeight));
+                break;
+
+            default:
+                throw new IllegalArgumentException("Unknown weight unit (" + weightUnit + ")");
+        }
+
+        goalValues.put(Goal.COL_TARGET_BODY_FAT_INDEX, targetBodyFatIndex);
+        goalValues.put(Goal.COL_DUE_DATE, dueDateInMillis);
+
+        int updateResult = getContentResolver().update(
+                ContentUris.withAppendedId(Goal.CONTENT_URI, goalId), goalValues, null, null);
+
+        if (0 < updateResult) {
+            Intent callbackIntent = intent.getParcelableExtra(EXTRA_CALLBACK_INTENT);
+            deliverCallback(callbackIntent);
+        }
+    }
+
 
     /**
      * Intent Builders
@@ -518,6 +561,24 @@ public class WeightTrackerSaveService extends IntentService {
         insertGoalIntent.putExtra(EXTRA_CALLBACK_INTENT, callbackIntent);
 
         return insertGoalIntent;
+    }
+
+    public static Intent createUpdateGoalIntent(
+            Context context, long goalId, double targetWeight, double targetBodyFatIndex, long dueDateInMillis, String weightUnit,
+            Class<? extends Activity> callbackActivity, String callbackAction) {
+        Intent updateGoalIntent = new Intent(context, WeightTrackerSaveService.class);
+        updateGoalIntent.setAction(ACTION_UPDATE_GOAL);
+        updateGoalIntent.putExtra(EXTRA_GOAL_ID, goalId);
+        updateGoalIntent.putExtra(EXTRA_GOAL_TARGET_WEIGHT, targetWeight);
+        updateGoalIntent.putExtra(EXTRA_GOAL_TARGET_BODY_FAT_INDEX, targetBodyFatIndex);
+        updateGoalIntent.putExtra(EXTRA_GOAL_DUE_DATE, dueDateInMillis);
+        updateGoalIntent.putExtra(EXTRA_WEIGHT_UNIT, weightUnit);
+
+        Intent callbackIntent = new Intent(context, callbackActivity);
+        callbackIntent.setAction(callbackAction);
+        updateGoalIntent.putExtra(EXTRA_CALLBACK_INTENT, callbackIntent);
+
+        return updateGoalIntent;
     }
 
     public interface Listener {
