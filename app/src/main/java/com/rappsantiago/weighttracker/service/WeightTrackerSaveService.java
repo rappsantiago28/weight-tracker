@@ -32,7 +32,7 @@ import android.os.Looper;
 import android.os.RemoteException;
 
 import com.rappsantiago.weighttracker.profile.setup.NameBirthdayGenderFragment;
-import com.rappsantiago.weighttracker.profile.setup.TargetWeightFragment;
+import com.rappsantiago.weighttracker.profile.setup.SetGoalsFragment;
 import com.rappsantiago.weighttracker.profile.setup.WeightHeightFragment;
 import com.rappsantiago.weighttracker.provider.WeightTrackerContract;
 import com.rappsantiago.weighttracker.util.PreferenceUtil;
@@ -382,9 +382,9 @@ public class WeightTrackerSaveService extends IntentService {
         double height = profileData.getDouble(WeightHeightFragment.KEY_HEIGHT);
         double inches = profileData.getDouble(WeightHeightFragment.KEY_HEIGHT_INCHES);
         String heightUnit = profileData.getString(WeightHeightFragment.KEY_HEIGHT_UNIT);
-        double targetWeight = profileData.getDouble(TargetWeightFragment.KEY_TARGET_WEIGHT);
-        double targetBodyFatIndex = profileData.getDouble(TargetWeightFragment.KEY_TARGET_BODY_FAT_INDEX);
-        long dueDateInMillis = profileData.getLong(TargetWeightFragment.KEY_DUE_DATE);
+        double targetWeight = profileData.getDouble(SetGoalsFragment.KEY_TARGET_WEIGHT);
+        double targetBodyFatIndex = profileData.getDouble(SetGoalsFragment.KEY_TARGET_BODY_FAT_INDEX);
+        long dueDateInMillis = profileData.getLong(SetGoalsFragment.KEY_DUE_DATE);
 
         setupProfileIntent.putExtra(EXTRA_PROFILE_NAME, name);
         setupProfileIntent.putExtra(EXTRA_PROFILE_BIRTHDAY, birthdayInMillis);

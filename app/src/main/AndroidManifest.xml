@@ -25,6 +25,9 @@
         <activity android:name=".progress.AddEditProgressActivity"
             android:parentActivityName=".MainActivity" />
 
+        <activity android:name=".goal.EditGoalsActivity"
+            android:parentActivityName=".MainActivity" />
+
         <provider
             android:name=".provider.WeightTrackerProvider"
             android:authorities="com.rappsantiago.weighttracker.provider"

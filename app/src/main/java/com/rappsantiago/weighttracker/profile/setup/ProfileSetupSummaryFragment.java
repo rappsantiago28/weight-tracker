@@ -108,19 +108,19 @@ public class ProfileSetupSummaryFragment extends Fragment {
             mHeight.setText(DisplayUtil.getFormattedHeight(getContext(), height, heightInches, heightUnit));
         }
 
-        if (profileData.containsKey(TargetWeightFragment.KEY_TARGET_WEIGHT)) {
+        if (profileData.containsKey(SetGoalsFragment.KEY_TARGET_WEIGHT)) {
             String weightUnit = profileData.getString(WeightHeightFragment.KEY_WEIGHT_UNIT);
-            double targetWeight = profileData.getDouble(TargetWeightFragment.KEY_TARGET_WEIGHT);
+            double targetWeight = profileData.getDouble(SetGoalsFragment.KEY_TARGET_WEIGHT);
             mTargetWeight.setText(DisplayUtil.getFormattedWeight(getContext(), targetWeight, weightUnit));
         }
 
-        if (profileData.containsKey(TargetWeightFragment.KEY_TARGET_BODY_FAT_INDEX)) {
-            double targetBodyFatIndex = profileData.getDouble(TargetWeightFragment.KEY_TARGET_BODY_FAT_INDEX);
+        if (profileData.containsKey(SetGoalsFragment.KEY_TARGET_BODY_FAT_INDEX)) {
+            double targetBodyFatIndex = profileData.getDouble(SetGoalsFragment.KEY_TARGET_BODY_FAT_INDEX);
             mTargetBodyFatIndex.setText(targetBodyFatIndex  + "%");
         }
 
-        if (profileData.containsKey(TargetWeightFragment.KEY_DUE_DATE)) {
-            long dueDateInMillis = profileData.getLong(TargetWeightFragment.KEY_DUE_DATE);
+        if (profileData.containsKey(SetGoalsFragment.KEY_DUE_DATE)) {
+            long dueDateInMillis = profileData.getLong(SetGoalsFragment.KEY_DUE_DATE);
 
             if (0 < dueDateInMillis) {
                 mDueDate.setText(DisplayUtil.getReadableDate(dueDateInMillis));

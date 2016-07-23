@@ -35,6 +35,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
 
+import com.rappsantiago.weighttracker.goal.EditGoalsActivity;
 import com.rappsantiago.weighttracker.profile.ProfileFragment;
 import com.rappsantiago.weighttracker.profile.setup.ProfileSetupActivity;
 import com.rappsantiago.weighttracker.progress.AddEditProgressActivity;
@@ -286,7 +287,11 @@ public class MainActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.action_settings) {
+        if (R.id.action_edit_goals == id) {
+            Intent editGoals = new Intent(this, EditGoalsActivity.class);
+            startActivity(editGoals);
+            return true;
+        } else if (R.id.action_settings == id) {
             Intent settings = new Intent(this, SettingsActivity.class);
             startActivity(settings);
             return true;
